@@ -29,6 +29,14 @@ jobs:
         run: npm run hostile
       - name: International files (every spreadsheet eval case in 8 languages, legacy encodings, comma decimals, kg and km)
         run: npm run intl
+      - name: Generated README sections match the agents (Linux only; the demo output holds paths)
+        if: runner.os == 'Linux'
+        run: npm run readme:check
+      - name: MCP conformance with the official SDK client (Linux, Node 22)
+        if: runner.os == 'Linux' && matrix.node == 22
+        run: |
+          npm i --no-save @modelcontextprotocol/sdk ajv ajv-formats
+          npm run mcp:check
       - name: Pack contents stay clean
         shell: bash
         run: |

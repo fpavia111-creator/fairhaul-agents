@@ -31,6 +31,10 @@ Jeder Agent hat eine `demo` mit fiktiven Dateien, ein `eval` mit eigenen Testfä
 - **Prüfprotokoll** unter `.lodestar/`, verkettet über Hashes, signiert, wenn Sie einen Ed25519-Schlüssel einrichten.
 - **Not-Aus:** `<agent> kill` stoppt alle Werkzeuge bis `<agent> unkill`.
 
+## Wie sie getestet werden
+
+Jeder Agent hat eigene Tests für seine Regeln, dieselben Vertragstests wie alle anderen (Argumente, Dateien außerhalb von `--root`, Prüfmodus, Not-Aus, Freigabe von Entwürfen, wiederholbare Ergebnisse) und 14 bis 22 Testfälle auf fiktiven Dateien. Jeder Fall mit Tabellen läuft zusätzlich als deutscher, französischer, spanischer, brasilianischer, italienischer, japanischer, chinesischer und koreanischer Export, und in die Dateien jedes Agenten werden feindliche Daten eingeschleust. Insgesamt 788 Tests und 520 Testfälle, bestanden auf Node 20, 22 und 24. [REVIEW-ver2.md](REVIEW-ver2.md) (englisch) listet die Änderungen in Version 2 und die gefundenen Fehler.
+
 ## Grenzen
 
 - Jeder Agent arbeitet nur mit den Dateien, die Sie ihm geben, und meldet sich bei keinem Frachtführer-, TMS-, ERP-, Bank- oder Behördensystem an.

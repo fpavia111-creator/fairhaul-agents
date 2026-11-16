@@ -204,6 +204,91 @@
           "As of 2026-11-16: 9 exception(s); 4 to file for 8840 (1 due within 30 days); 1 past the filing window (900); 1 already filed; 1 need more data"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "capella_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "capella_scan",
+      "args": {
+        "exceptions": "../../outside.csv",
+        "claims": "fixtures/claims-log.csv",
+        "terms": "fixtures/terms.json",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "capella_scan",
+      "args": {
+        "exceptions": "fixtures/exceptions.csv",
+        "claims": "fixtures/claims-log.csv",
+        "terms": "fixtures/terms.json",
+        "as_of": "2026-11-16"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.to_file": 4,
+          "result.file_now": 1,
+          "result.claimable": 8840,
+          "result.expired": 1,
+          "result.expired_value": 900,
+          "result.filed": 1,
+          "result.review": 1
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "capella_scan",
+      "args": {
+        "claims": "fixtures/claims-log.csv",
+        "terms": "fixtures/terms.json",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "exceptions"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "capella_write_report",
+      "args": {
+        "exceptions": "fixtures/exceptions.csv",
+        "claims": "fixtures/claims-log.csv",
+        "terms": "fixtures/terms.json",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/capella_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

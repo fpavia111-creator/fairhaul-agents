@@ -37,7 +37,10 @@ export const NOA_FIELDS = Object.freeze({
 export function settle(ratecons, { invoices = [], payments = [], noas = [], asOf, quickPayPct = 3, defaultTerms = 30, tolerance = 1 } = {}) {
   const today = isoDate(asOf) || new Date().toISOString().slice(0, 10);
   const inv = groupBy(invoices, (x) => str(x.load_id).toUpperCase()); const pay = groupBy(payments, (x) => str(x.load_id).toUpperCase());
-  const noaFor = (carrier, date) => noas.filter((n) => carrierKey(n.carrier) === carrierKey(carrier) && (!isoDate(n.effective) || isoDate(n.effective) <= date) && (!isoDate(n.released) || isoDate(n.released) > date)).sort((a, b) => str(b.effective).localeCompare(str(a.effective)))[0] || null;
+  // Notices indexed by carrier, latest first, with their dates read once.
+  const noaBy = new Map([...groupBy(noas, (n) => carrierKey(n.carrier))].map(([k, l]) => [k, l.map((n) => ({ n, from: isoDate(n.effective), to: isoDate(n.released), eff: str(n.effective) })).sort((a, b) => b.eff.localeCompare(a.eff))]));
+  const keyOf = new Map(); const ck = (c) => { if (!keyOf.has(c)) keyOf.set(c, carrierKey(c)); return keyOf.get(c); };
+  const noaFor = (carrier, date) => { const hit = (noaBy.get(ck(carrier)) || []).find((x) => (!x.from || x.from <= date) && (!x.to || x.to > date)); return hit ? hit.n : null; };
   const rows = []; const findings = [];
   const add = (load, code, detail, amount = null) => findings.push({ load_id: load, code, detail, amount: amount === null ? null : round2(amount) });
   const seen = new Set();
@@ -60,7 +63,7 @@ export function settle(ratecons, { invoices = [], payments = [], noas = [], asOf
     else if (paid - owed > tolerance) add(id, 'overpaid', `Paid ${paid}; owed ${owed}${qp ? ` after the ${quickPayPct}% quick-pay fee` : ''}.`, paid - owed);
     for (const p of pays) {
       const on = isoDate(p.paid_at) || recv || today; const n = noaFor(r.carrier, on); const owedTo = n ? str(n.factor) : str(r.carrier);
-      if (carrierKey(p.payee) !== carrierKey(owedTo)) add(id, 'paid_wrong_party', `Paid ${num(p.amount)} to ${p.payee}${isoDate(p.paid_at) ? ` on ${isoDate(p.paid_at)}` : ''}, but ${n ? `a notice of assignment in force then directs payment to ${n.factor}` : `the carrier is ${r.carrier}`}. ${n ? 'The factor can still claim the full amount.' : 'Check who was paid and why.'}`, num(p.amount));
+      if (ck(p.payee) !== ck(owedTo)) add(id, 'paid_wrong_party', `Paid ${num(p.amount)} to ${p.payee}${isoDate(p.paid_at) ? ` on ${isoDate(p.paid_at)}` : ''}, but ${n ? `a notice of assignment in force then directs payment to ${n.factor}` : `the carrier is ${r.carrier}`}. ${n ? 'The factor can still claim the full amount.' : 'Check who was paid and why.'}`, num(p.amount));
     }
     let status;
     if (pays.length) status = 'paid';

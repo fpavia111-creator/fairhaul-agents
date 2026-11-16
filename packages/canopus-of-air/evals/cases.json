@@ -193,6 +193,81 @@
           "dispute Skyline Logistics drafted for 349 with 3 open marker(s) ([TO CONFIRM Skyline Logistics billing contact], [TO CONFIRM your name and company], [ATTACH the rate sheet and the AWB with dimensions])"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "canopus_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "canopus_audit",
+      "args": {
+        "invoices": "../../outside.csv",
+        "rates": "fixtures/rates.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "canopus_audit",
+      "args": {
+        "invoices": "fixtures/air-invoices.csv",
+        "rates": "fixtures/rates.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.shipments": 5,
+          "result.billed": 6164.9,
+          "result.disputable": 349,
+          "result.with_findings": 4
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "canopus_audit",
+      "args": {
+        "rates": "fixtures/rates.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "invoices"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "canopus_draft_dispute",
+      "args": {
+        "invoices": "fixtures/air-invoices.csv",
+        "rates": "fixtures/rates.json",
+        "forwarder": "Skyline Logistics",
+        "out_dir": "lodestar-out/evals/canopus_draft_dispute"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

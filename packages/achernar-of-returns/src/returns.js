@@ -46,7 +46,7 @@ export function trackReturns(rmas, { receipts = [], credits = [], charges = [], 
   for (const r of rmas) {
     const id = str(r.rma); const trk = k(r.tracking); const auth = isoDate(r.authorised_at);
     if (/cancel|void/i.test(str(r.status))) continue;
-    const rec = [...(rByRma.get(k(id)) || []), ...(trk ? rByTrk.get(trk) || [] : [])].filter((x, i, a) => a.indexOf(x) === i);
+    const rec = [...new Set([...(rByRma.get(k(id)) || []), ...(trk ? rByTrk.get(trk) || [] : [])])];
     const cr = cByRma.get(k(id)) || []; const ch = trk ? chByTrk.get(trk) || [] : [];
     const units = num(r.units); const value = num(r.value) || 0;
     const got = rec.reduce((a, x) => a + (num(x.units_received) ?? units ?? 0), 0); const recAt = rec.map((x) => isoDate(x.received_at)).sort()[0] || null;

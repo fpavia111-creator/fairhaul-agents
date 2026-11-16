@@ -193,6 +193,94 @@
           "Next batch: 3 load(s), 6833"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "alnilam_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "alnilam_settle",
+      "args": {
+        "ratecons": "../../outside.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "alnilam_settle",
+      "args": {
+        "ratecons": "fixtures/ratecons.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.batch_total": 6833,
+          "result.batch_loads": 3,
+          "result.recoverable": 1750,
+          "result.wrong_party_exposure": 1890,
+          "result.held_back": 100,
+          "result.past_due": 2328
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "alnilam_settle",
+      "args": {
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "ratecons"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "alnilam_write_report",
+      "args": {
+        "ratecons": "fixtures/ratecons.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/alnilam_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-tms-update-carrier-pay",
+      "tool": "tms_update_carrier_pay",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

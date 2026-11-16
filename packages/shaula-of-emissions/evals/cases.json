@@ -180,6 +180,81 @@
           "Largest: ftl (8369.14 kg)"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "shaula_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "shaula_estimate",
+      "args": {
+        "shipments": "../../outside.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "shaula_estimate",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.estimated": 7,
+          "result.not_estimated": 2,
+          "result.kg_co2e": 10292.1,
+          "result.measured_distance_pct": 22,
+          "result.by_mode.0.mode": "ftl"
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "shaula_estimate",
+      "args": {
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "shipments"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "shaula_write_report",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/factors.json",
+        "out_dir": "lodestar-out/evals/shaula_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

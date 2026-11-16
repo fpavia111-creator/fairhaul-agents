@@ -209,6 +209,85 @@
           "dispute Example Linehaul drafted for 187.5 with 3 open marker(s) ([TO CONFIRM carrier billing contact], [TO CONFIRM your name and company], [ATTACH gate or dock log extract for each stop])"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "vega_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "vega_audit",
+      "args": {
+        "charges": "../../outside.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "vega_audit",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.charges": 9,
+          "result.disputable": 712.5,
+          "result.dispute": 7,
+          "result.review": 1
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "vega_audit",
+      "args": {
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "charges"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "vega_draft_dispute",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json",
+        "carrier": "Example Linehaul",
+        "out_dir": "lodestar-out/evals/vega_draft_dispute"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

@@ -175,6 +175,81 @@
           "routing change routing-guide drafted for 281.51 with 3 open marker(s) ([TO CONFIRM routing guide owner], [TO CONFIRM your name], [TO CONFIRM who approves routing changes])"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "regulus_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "regulus_rerate",
+      "args": {
+        "history": "../../outside.csv",
+        "contracts": "fixtures/contracts.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "regulus_rerate",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.shipments": 7,
+          "result.left_on_table": 281.51,
+          "result.not_rateable": 1,
+          "result.lanes_to_change": 2,
+          "result.lane_savings": 281.51
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "regulus_rerate",
+      "args": {
+        "contracts": "fixtures/contracts.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "history"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "regulus_draft_routing_change",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json",
+        "out_dir": "lodestar-out/evals/regulus_draft_routing_change"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

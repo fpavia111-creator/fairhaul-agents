@@ -1,7 +1,7 @@
 // Carrier warning signs: what raises a carrier, what does not, and what the request says.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { vetCarriers, verificationText } from '../src/index.js';
+import { vetCarriers, verificationText, WEIGHTS } from '../src/index.js';
 import { OPEN_MARKER } from 'lodestar-core';
 
 const AS_OF = '2026-11-16';
@@ -48,4 +48,15 @@ test('the internal note is an open marker, so the request cannot be approved wit
   assert.ok((text.match(OPEN_MARKER) || []).some((m) => /internal note/.test(m)));
   const outward = text.split('[CHECK: internal note')[0];
   assert.match(outward, /notice of assignment/); assert.match(outward, /call you on the number we already hold/); assert.doesNotMatch(outward, /changed 2026-11-10/);
+});
+
+test('a signal raised many times counts once in the score, and a value shared by many names only five of them', () => {
+  const one = c('C1', { phone: '312-555-0101', email: 'ops@ridgeline.example' });
+  const loads = [1, 2, 3, 4, 5, 6, 7].map((i) => ({ load_id: `L${i}`, carrier_id: 'C1', dispatch_phone: '773-555-0199' }));
+  const r = vetCarriers([one], loads, { asOf: '2026-11-16' }).rows[0];
+  assert.equal(r.score, WEIGHTS.contact_differs_on_load); assert.equal(r.signals, 'contact_differs_on_load');
+  assert.equal(r.details.length, 6); assert.match(r.details[5], /More loads with different contact details/);
+  const many = Array.from({ length: 8 }, (_, i) => c(`B${i}`, { name: `Carrier ${String.fromCharCode(65 + i)} Freight`, bank_last4: '4321' }));
+  const d = vetCarriers(many, [], { asOf: '2026-11-16' }).rows.find((x) => x.carrier_id === 'B0').details.find((x) => /Bank account/.test(x));
+  assert.match(d, /and 2 more\.$/); assert.equal((d.match(/\(B\d\)/g) || []).length, 5);
 });

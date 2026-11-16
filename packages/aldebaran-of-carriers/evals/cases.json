@@ -222,6 +222,86 @@
           "0 fact(s) found (memory is empty)"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "aldebaran_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "aldebaran_vet",
+      "args": {
+        "carriers": "../../outside.csv",
+        "loads": "fixtures/loads.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "aldebaran_vet",
+      "args": {
+        "carriers": "fixtures/carriers.csv",
+        "loads": "fixtures/loads.csv",
+        "as_of": "2026-11-16"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.high": 3,
+          "result.medium": 1,
+          "result.low": 1,
+          "result.clean": 1,
+          "result.loads_to_hold": 4,
+          "result.loads_to_verify": 1
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "aldebaran_vet",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "carriers"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "aldebaran_write_report",
+      "args": {
+        "carriers": "fixtures/carriers.csv",
+        "loads": "fixtures/loads.csv",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/aldebaran_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

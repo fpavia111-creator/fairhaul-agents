@@ -47,15 +47,15 @@ Aldebaran of Carriers demo (fictional carriers and loads, as of 2026-11-16) in <
 
 ▶ Draft a verification request to Swift Lane Logistics
   status: executed  decision: allow  (auto)
-  verification request SWFT drafted with 0 open marker(s). Nothing was sent.
+  verification request SWFT drafted with 1 open marker(s) ([CHECK: internal note below, for your team only; delete it before this goes to the carrier]). Nothing was sent.
 
 ▶ Approve sending it: waits for a named person even in Auto
   status: needs_approval  decision: ask
   reason: binding_send stays one-click, even in Auto
 
 ▶ Same call after the click (recorded; a person sends it)
-  status: executed  decision: ask  approved by: Ana Ruiz (fictional)
-  verification request SWFT approved and recorded. Nothing was sent or paid by the agent.
+  status: error  decision: ask
+  reason: the draft still has open markers ([CHECK: internal note below, for your team only; delete it before this goes to the carrier]); fix them, or pass accept_open_issues: true with a note saying why
 
 ▶ Agent tries to change a carrier's bank details itself
   status: blocked  decision: block

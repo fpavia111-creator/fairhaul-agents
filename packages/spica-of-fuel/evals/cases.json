@@ -177,6 +177,81 @@
           "Latest index week 2026-11-02 (4.08)"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "spica_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "spica_check",
+      "args": {
+        "invoices": "../../outside.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "spica_check",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.invoices": 11,
+          "result.disputable": 130,
+          "result.over": 3,
+          "result.wrong_week": 2,
+          "result.not_checked": 2
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "spica_check",
+      "args": {
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "invoices"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "spica_write_report",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "out_dir": "lodestar-out/evals/spica_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

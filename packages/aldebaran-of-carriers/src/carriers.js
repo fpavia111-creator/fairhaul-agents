@@ -40,13 +40,16 @@ export function vetCarriers(carriers, loads = [], { asOf, newAuthorityDays = 180
   const signals = new Map(carriers.map((c) => [str(c.carrier_id), []]));
   const add = (c, code, detail) => signals.get(str(c.carrier_id)).push({ code, weight: WEIGHTS[code], detail });
   const active = carriers.filter((c) => !/inactive|blocked|do not use/i.test(str(c.status)));
+  const isActive = new Set(active);
+  // Name at most five other carriers in a detail, so a value shared by hundreds stays readable (and fast).
+  const others = (list, c) => { const o = list.filter((x) => x !== c); const named = o.slice(0, 5).map((x) => `${x.name} (${x.carrier_id}${isActive.has(x) ? '' : `, ${str(x.status).toLowerCase()}`})`).join(', '); return o.length > 5 ? `${named} and ${o.length - 5} more` : named; };
   const shared = (field, f, code, label) => {
     // Inactive and blocked carriers are compared too: a blocked carrier's bank account or
     // phone turning up under a new name is the sign that matters most. Only active
     // carriers get the signal.
     for (const [k, list] of groupBy(carriers.filter((c) => f(c[field])), (c) => f(c[field]))) {
       const names = new Set(list.map((c) => carrierKey(c.name))); if (names.size < 2) continue;
-      for (const c of list.filter((x) => active.includes(x))) add(c, code, `${label} ${field === 'bank_last4' ? `ending ${k}` : str(c[field])} is also on ${list.filter((x) => x !== c).map((x) => `${x.name} (${x.carrier_id}${active.includes(x) ? '' : `, ${str(x.status).toLowerCase()}`})`).join(', ')}.`);
+      for (const c of list.filter((x) => isActive.has(x))) add(c, code, `${label} ${field === 'bank_last4' ? `ending ${k}` : str(c[field])} is also on ${others(list, c)}.`);
     }
   };
   shared('bank_last4', (v) => digits(v).slice(-4), 'shared_bank', 'Bank account');
@@ -79,14 +82,15 @@ export function vetCarriers(carriers, loads = [], { asOf, newAuthorityDays = 180
     if (str(l.dispatch_phone) && digits(c.phone) && digits(l.dispatch_phone) !== digits(c.phone)) reasons.push(`dispatch phone ${l.dispatch_phone} differs from the master ${c.phone}`);
     if (str(l.dispatch_email) && str(c.email) && str(l.dispatch_email).toLowerCase() !== str(c.email).toLowerCase()) reasons.push(`dispatch email ${l.dispatch_email} differs from the master ${c.email}`);
     for (const [t, v] of [['phone', l.dispatch_phone], ['email', l.dispatch_email], ['email_domain', l.dispatch_email]]) { const w = watched(t, v); if (w) reasons.push(`dispatch ${t.replace('_', ' ')} ${str(v)} is on your watch list: ${w.reason}`); }
-    if (reasons.length && signals.has(str(c.carrier_id))) add(c, 'contact_differs_on_load', `Load ${l.load_id}: ${reasons.join('; ')}.`);
+    if (reasons.length && signals.has(str(c.carrier_id))) { const s = signals.get(str(c.carrier_id)); const n = s.filter((x) => x.code === 'contact_differs_on_load').length; if (n < 5) add(c, 'contact_differs_on_load', `Load ${l.load_id}: ${reasons.join('; ')}.`); else if (n === 5) add(c, 'contact_differs_on_load', 'More loads with different contact details; see the load list.'); }
     const ins = isoDate(c.insurance_expiry); const pu = isoDate(l.pickup_date);
     if (ins && pu && ins < pu) reasons.push(`insurance expires ${ins}, before pickup ${pu}`);
     loadRows.push({ load_id: str(l.load_id), carrier_id: str(c.carrier_id), carrier: str(c.name), pickup_date: pu, value: l.value ?? null, _c: c, reasons: reasons.join('; ') });
   }
   const rows = carriers.map((c) => {
-    const s = signals.get(str(c.carrier_id)) || []; const score = s.reduce((a, x) => a + x.weight, 0);
-    return { carrier_id: str(c.carrier_id), name: str(c.name), mc: str(c.mc), status: str(c.status) || 'active', score, level: /inactive|blocked|do not use/i.test(str(c.status)) ? 'inactive' : LEVEL(score), signals: s.map((x) => x.code).join(' '), details: s.map((x) => x.detail), signal_list: s };
+    // Each kind of signal counts once in the score, however many loads or carriers raised it.
+    const s = signals.get(str(c.carrier_id)) || []; const score = [...new Set(s.map((x) => x.code))].reduce((a, code) => a + WEIGHTS[code], 0);
+    return { carrier_id: str(c.carrier_id), name: str(c.name), mc: str(c.mc), status: str(c.status) || 'active', score, level: /inactive|blocked|do not use/i.test(str(c.status)) ? 'inactive' : LEVEL(score), signals: [...new Set(s.map((x) => x.code))].join(' '), details: s.map((x) => x.detail), signal_list: s };
   }).sort((a, b) => b.score - a.score);
   const lvl = new Map(rows.map((r) => [r.carrier_id, r]));
   for (const l of loadRows) if (l._c) { const r = lvl.get(str(l._c.carrier_id)); l.level = r.level; l.action = r.level === 'high' || r.level === 'inactive' ? 'hold: verify by phone on a number you already had before releasing' : r.level === 'medium' || l.reasons ? 'verify before pickup' : 'none'; l.reasons = [l.reasons, r.signals].filter(Boolean).join('; '); delete l._c; }

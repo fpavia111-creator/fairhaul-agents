@@ -171,6 +171,89 @@
           "Best usable quotes total 6690 all-in (+590 against lane history)"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "nunki_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "nunki_compare",
+      "args": {
+        "loads": "../../outside.csv",
+        "quotes": "fixtures/quotes.csv",
+        "settings": "fixtures/settings.json",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "nunki_compare",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "quotes": "fixtures/quotes.csv",
+        "settings": "fixtures/settings.json",
+        "as_of": "2026-11-16"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.ready": 2,
+          "result.check_price": 1,
+          "result.requote": 1,
+          "result.no_quotes": 1,
+          "result.best_total": 6690
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "nunki_compare",
+      "args": {
+        "quotes": "fixtures/quotes.csv",
+        "settings": "fixtures/settings.json",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "loads"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "nunki_write_report",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "quotes": "fixtures/quotes.csv",
+        "settings": "fixtures/settings.json",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/nunki_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

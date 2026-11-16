@@ -172,6 +172,79 @@
           "hold orders for this lane to one ship day a week, or quote truckload above 10,000 lb])"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "mizar_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "mizar_analyse",
+      "args": {
+        "shipments": "../../outside.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "mizar_analyse",
+      "args": {
+        "shipments": "fixtures/shipments.csv"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.shipments": 12,
+          "result.spend": 15990,
+          "result.lanes_count": 3,
+          "result.consolidation_groups": 1,
+          "result.consolidation_saving": 526.25,
+          "result.heavy_ltl": 1,
+          "result.heavy_ltl_saving": 511
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "mizar_analyse",
+      "args": {},
+      "expect": {
+        "status": "error",
+        "contains": [
+          "shipments"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "mizar_draft_consolidation_plan",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "tl_rate_per_mile": 2.5,
+        "out_dir": "lodestar-out/evals/mizar_draft_consolidation_plan"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-tms-tender-load",
+      "tool": "tms_tender_load",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

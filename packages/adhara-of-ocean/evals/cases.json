@@ -154,6 +154,80 @@
           "rate_over 1, surcharge_out_of_window 1, surcharge_included 1, duplicate_charge 1, surcharge_not_in_contract 1, container_count 1, contract_expired 1, currency_mismatch 1"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "adhara_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "adhara_audit",
+      "args": {
+        "invoices": "../../outside.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "adhara_audit",
+      "args": {
+        "invoices": "fixtures/ocean-invoices.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.bills": 6,
+          "result.billed": 28566,
+          "result.disputable": 3355,
+          "result.with_findings": 5
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "adhara_audit",
+      "args": {
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "invoices"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "adhara_write_report",
+      "args": {
+        "invoices": "fixtures/ocean-invoices.csv",
+        "contract": "fixtures/contract.json",
+        "out_dir": "lodestar-out/evals/adhara_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

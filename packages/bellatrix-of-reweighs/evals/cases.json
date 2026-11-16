@@ -157,6 +157,91 @@
           "8 correction(s) added 784.15: 3 worth challenging (224.3), 1 need the certificate first (46.8), 3 point to your own product data, 1 look right"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "bellatrix_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "bellatrix_review",
+      "args": {
+        "corrections": "../../outside.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "bellatrix_review",
+      "args": {
+        "corrections": "fixtures/corrections.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.corrections": 8,
+          "result.amount_added": 784.15,
+          "result.challenge": 3,
+          "result.challenge_amount": 224.3,
+          "result.ask_for_certificate": 1,
+          "result.fix_our_data": 3,
+          "result.accepted": 1
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "bellatrix_review",
+      "args": {
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "corrections"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "bellatrix_write_report",
+      "args": {
+        "corrections": "fixtures/corrections.csv",
+        "terms": "fixtures/terms.json",
+        "out_dir": "lodestar-out/evals/bellatrix_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-ap-pay-invoice",
+      "tool": "ap_pay_invoice",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

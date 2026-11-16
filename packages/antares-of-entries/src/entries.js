@@ -38,6 +38,7 @@ export function checkEntries(entries, invoices, { tolerancePct = 1, asOf = null,
   const invBy = groupBy(invoices, (i) => key(i.invoice_number, i.sku));
   const findings = []; const seen = new Map();
   const add = (e, code, detail, duty_impact = null) => findings.push({ entry_number: str(e.entry_number), line: str(e.line), invoice_number: str(e.invoice_number), sku: str(e.sku), code, detail, duty_impact: duty_impact === null ? null : round2(duty_impact) });
+  const groups = groupBy(entries, (x) => `${str(x.entry_number)}#${key(x.invoice_number, x.sku)}`);
   for (const e of entries) {
     const k = key(e.invoice_number, e.sku); const value = num(e.entered_value) || 0; const rate = rateOf(e.duty_rate);
     if (seen.has(k) && seen.get(k) !== str(e.entry_number)) add(e, 'entered_twice', `Invoice ${e.invoice_number} ${e.sku} is also on entry ${seen.get(k)}. If both are right, ignore; if not, one may have paid duty twice.`, rate !== null ? -value * rate : null);
@@ -48,7 +49,7 @@ export function checkEntries(entries, invoices, { tolerancePct = 1, asOf = null,
     const inv = invBy.get(k);
     if (!inv) { add(e, 'not_on_invoice', `${e.sku} is not on commercial invoice ${e.invoice_number} in these files.`); continue; }
     // One invoice line may be split over several lines of the same entry: compare their total, once.
-    const group = entries.filter((x) => str(x.entry_number) === str(e.entry_number) && key(x.invoice_number, x.sku) === k);
+    const group = groups.get(`${str(e.entry_number)}#${k}`);
     const firstOfGroup = group[0] === e;
     const gValue = round2(group.reduce((a, x) => a + (num(x.entered_value) || 0), 0)); const gQty = group.every((x) => num(x.quantity) === null) ? null : group.reduce((a, x) => a + (num(x.quantity) || 0), 0);
     const split = group.length > 1 ? ` (${group.length} entry lines together)` : '';
@@ -70,9 +71,10 @@ export function checkEntries(entries, invoices, { tolerancePct = 1, asOf = null,
     const rates = [...new Set(list.map((e) => rateOf(e.duty_rate)))];
     if (rates.length > 1) { const [hts, o] = k.split('|'); findings.push({ entry_number: [...new Set(list.map((e) => str(e.entry_number)))].join(' '), line: '', invoice_number: '', sku: [...new Set(list.map((e) => str(e.sku)))].join(' '), code: 'rate_inconsistent', detail: `Tariff code ${hts} from ${o || 'unknown origin'} carries ${rates.map((r) => `${Math.round(r * 10000) / 100}%`).join(' and ')} on different lines. Dates or programs may explain it; ask your broker.`, duty_impact: null }); }
   }
+  const fBy = new Map(); for (const x of findings) for (const n of new Set(x.entry_number.split(' '))) { if (!fBy.has(n)) fBy.set(n, []); fBy.get(n).push(x); }
   const byEntry = [...groupBy(entries, (e) => str(e.entry_number))].map(([n, ls]) => {
     const d = isoDate(ls[0].entry_date); const deadline = d && windowDays ? addDays(d, windowDays) : null; const left = deadline && asOf ? daysBetween(isoDate(asOf), deadline) : null;
-    const f = findings.filter((x) => x.entry_number.split(' ').includes(n));
+    const f = fBy.get(n) || [];
     return { entry_number: n, entry_date: d, lines: ls.length, entered_value: round2(ls.reduce((a, e) => a + (num(e.entered_value) || 0), 0)), duty: round2(ls.reduce((a, e) => a + (num(e.duty) || 0), 0)), findings: f.length, duty_impact: round2(f.reduce((a, x) => a + (x.duty_impact || 0), 0)), correct_by: deadline, days_left: left, urgency: left === null ? '' : left < 0 ? 'window_passed' : left <= 30 ? 'urgent' : 'open' };
   }).sort((a, b) => (a.days_left ?? 1e9) - (b.days_left ?? 1e9));
   const byCode = {}; for (const f of findings) byCode[f.code] = (byCode[f.code] || 0) + 1;

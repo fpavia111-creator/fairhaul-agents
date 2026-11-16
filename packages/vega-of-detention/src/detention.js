@@ -115,7 +115,8 @@ export function auditCharges(charges, stops, terms = {}) {
 /** Dwell and detention cost by facility, worst first: where your own docks cost you money. */
 export function facilities(stops, charges = [], terms = {}) {
   const cost = new Map();
-  for (const c of charges) { if (!['detention', 'layover'].includes(chargeCode(c.charge_type))) continue; const s = stops.find((x) => key(x.load_id, x.stop) === key(c.load_id, c.stop)) || stops.find((x) => str(x.load_id).toLowerCase() === str(c.load_id).toLowerCase()); const fac = s ? str(s.facility) || '(no facility)' : '(no stop record)'; cost.set(fac, round2((cost.get(fac) || 0) + (num(c.amount) || 0))); }
+  const sIdx = new Map(stops.map((s) => [key(s.load_id, s.stop), s])); const lIdx = new Map(); for (const s of stops) { const l = str(s.load_id).toLowerCase(); if (!lIdx.has(l)) lIdx.set(l, s); }
+  for (const c of charges) { if (!['detention', 'layover'].includes(chargeCode(c.charge_type))) continue; const s = sIdx.get(key(c.load_id, c.stop)) || lIdx.get(str(c.load_id).toLowerCase()); const fac = s ? str(s.facility) || '(no facility)' : '(no stop record)'; cost.set(fac, round2((cost.get(fac) || 0) + (num(c.amount) || 0))); }
   const out = [];
   for (const [fac, list] of groupBy(stops, (s) => str(s.facility) || '(no facility)')) {
     const dw = list.map((s) => hoursBetween(s.arrived_at, s.departed_at)).filter((h) => h !== null && h >= 0);

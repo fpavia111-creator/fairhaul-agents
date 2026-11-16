@@ -260,7 +260,7 @@ A tool marked `tier: 'pro'` (optionally with a `feature` name) runs only with a 
 A key is `LODESTAR1.<payload>.<Ed25519 signature>` with licensee, plan, agents (`*` or package names), features, issue and expiry dates. It is checked offline against the public keys in `src/license-keys.js` (empty in this release, so nothing can be unlocked yet). There is no environment variable or config file that adds a trusted key.
 
 - Customer: `<pack> license install key.txt` (copies it to `.lodestar/license.key`), `<pack> license status`, or set `LODESTAR_LICENSE` / `LODESTAR_LICENSE_FILE`. `lodestar_info` shows the plan, expiry and which tools are unlocked, never the key.
-- Seller, on their own computer: `npx -p lodestar-core lodestar-license keygen --out ~/lodestar-licence-keys`, paste the printed public key into `LICENSE_PUBLIC_KEYS`, release, then `lodestar-license issue --key ~/lodestar-licence-keys/private.pem --licensee "Customer" --plan pro --days 365 [--agents ladon-of-access] --out customer.key` and `lodestar-license verify customer.key --pubkey ~/lodestar-licence-keys/public.pem`. Withdrawn licence ids go in `LICENSE_REVOKED_IDS` and take effect from the next release.
+- Seller, on their own computer: `npx -p lodestar-core lodestar-license keygen --out ~/lodestar-licence-keys`, paste the printed public key into `LICENSE_PUBLIC_KEYS`, release, then `lodestar-license issue --key ~/lodestar-licence-keys/private.pem --licensee "Customer" --plan pro --days 365 [--agents polaris-of-bills] --out customer.key` and `lodestar-license verify customer.key --pubkey ~/lodestar-licence-keys/public.pem`. Withdrawn licence ids go in `LICENSE_REVOKED_IDS` and take effect from the next release.
 - `ctx.license` gives a handler `{ status, valid, plan, features, has(feature) }`.
 
 This is not copy protection: the packages are MIT-licensed source and anyone can remove the check. It draws a clear line for honest customers.
@@ -271,7 +271,7 @@ The manifest declares which host model a pack's prompts and evals target. An MCP
 
 ## Packs built on this core
 
-All 30 Lodestar domain agents in the monorepo, from `olympus-of-migration` to `solon-of-clauses`. Source: <https://github.com/fpavia111-creator/lodestar-agents>.
+All 30 Lodestar domain agents in the monorepo, from `achernar-of-returns` to `vega-of-detention`. Source: <https://github.com/fpavia111-creator/lodestar-agents>.
 
 ## License
 

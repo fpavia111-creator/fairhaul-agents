@@ -195,6 +195,78 @@
           "address update address-book drafted for 680 with 2 open marker(s) ([TO CONFIRM who maintains the address book], [TO CONFIRM your name])"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "betelgeuse_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "betelgeuse_analyse",
+      "args": {
+        "invoices": "../../outside.csv",
+        "shipments": "fixtures/shipments.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "betelgeuse_analyse",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "shipments": "fixtures/shipments.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.accessorial_total": 890,
+          "result.freight_total": 4750,
+          "result.accessorial_share_pct": 18.7,
+          "result.unordered": 6,
+          "result.unordered_amount": 380,
+          "result.over_amount": 10
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "betelgeuse_analyse",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "invoices"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "betelgeuse_draft_address_update",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "shipments": "fixtures/shipments.csv",
+        "contract": "fixtures/contract.json",
+        "out_dir": "lodestar-out/evals/betelgeuse_draft_address_update"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

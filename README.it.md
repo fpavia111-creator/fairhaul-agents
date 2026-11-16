@@ -31,6 +31,10 @@ Ogni agente ha una `demo` su file fittizi, un `eval` con i propri casi di prova 
 - **Registro di audit** in `.lodestar/`, concatenato tramite hash, firmato se configurate una chiave Ed25519.
 - **Arresto di emergenza:** `<agent> kill` ferma tutti gli strumenti fino a `<agent> unkill`.
 
+## Come vengono testati
+
+Ogni agente ha test propri sulle sue regole, gli stessi test di contratto di tutti gli altri (argomenti, file fuori da `--root`, modalità Revisione, arresto di emergenza, approvazione delle bozze, risultati ripetibili) e da 14 a 22 casi di valutazione su file fittizi. Ogni caso con tabelle viene rieseguito come esportazione tedesca, francese, spagnola, brasiliana, italiana, giapponese, cinese e coreana, e nei file di ogni agente vengono inseriti dati ostili. In totale: 788 test e 520 casi di valutazione, superati su Node 20, 22 e 24. [REVIEW-ver2.md](REVIEW-ver2.md) (in inglese) elenca le modifiche della versione 2 e i bug trovati.
+
 ## Limiti
 
 - Ogni agente lavora solo con i file che gli fornite e non accede a nessun sistema di vettori, TMS, ERP, banche o enti pubblici.

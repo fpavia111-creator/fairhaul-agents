@@ -186,6 +186,89 @@
           "Collect orders we paid: 210"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "elnath_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "elnath_margins",
+      "args": {
+        "orders": "../../outside.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "elnath_margins",
+      "args": {
+        "orders": "fixtures/orders.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.freight_cost": 2215.92,
+          "result.freight_billed": 213,
+          "result.recovery_pct": 9.6,
+          "result.collect_but_we_paid": 210,
+          "result.prepaid_add_not_billed": 88,
+          "result.free_below_threshold": 213.52
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "elnath_margins",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "orders"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "elnath_write_report",
+      "args": {
+        "orders": "fixtures/orders.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000,
+        "alternatives": [
+          2500
+        ],
+        "out_dir": "lodestar-out/evals/elnath_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-erp-update-customer-terms",
+      "tool": "erp_update_customer_terms",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

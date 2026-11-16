@@ -274,6 +274,91 @@
           "0 fact(s) found (memory is empty)"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "polaris_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "polaris_audit",
+      "args": {
+        "invoices": "../../outside.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "polaris_audit",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.invoices": 11,
+          "result.disputable": 1065.8,
+          "result.by_carrier.Example Linehaul.invoices": 7,
+          "result.duplicate": 2,
+          "result.ok": 1,
+          "result.review": 4
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "polaris_audit",
+      "args": {
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "invoices"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "polaris_draft_dispute",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv",
+        "carrier": "EXLT",
+        "out_dir": "lodestar-out/evals/polaris_draft_dispute"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-carrier-portal-submit",
+      "tool": "carrier_portal_submit",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

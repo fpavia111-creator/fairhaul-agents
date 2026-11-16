@@ -197,6 +197,90 @@
           "Estimated duty possibly overpaid 196.5, possibly underpaid 32.4"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "antares_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "antares_check",
+      "args": {
+        "entries": "../../outside.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "antares_check",
+      "args": {
+        "entries": "fixtures/entries.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.findings": 9,
+          "result.duty_overpaid_estimate": 196.5,
+          "result.duty_underpaid_estimate": 32.4,
+          "result.urgent": 1,
+          "result.by_entry.0.entry_number": "ABC-1001001-1",
+          "result.by_entry.0.days_left": 8
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "antares_check",
+      "args": {
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "entries"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "antares_write_report",
+      "args": {
+        "entries": "fixtures/entries.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300,
+        "out_dir": "lodestar-out/evals/antares_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-ap-pay-duty",
+      "tool": "ap_pay_duty",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

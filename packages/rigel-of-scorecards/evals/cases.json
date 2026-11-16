@@ -161,6 +161,83 @@
           "3 ranked: 1"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "rigel_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "rigel_score",
+      "args": {
+        "shipments": "../../outside.csv",
+        "settings": "fixtures/scorecard.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "rigel_score",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "settings": "fixtures/scorecard.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.carriers": 4,
+          "result.ranked": 3,
+          "result.loads": 21,
+          "result.cards.0.carrier": "Ridgeline Freight",
+          "result.cards.0.score": 94.9,
+          "result.cards.2.carrier": "Coastal Line Haul",
+          "result.cards.3.rank": null
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "rigel_score",
+      "args": {
+        "settings": "fixtures/scorecard.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "shipments"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "rigel_write_report",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "settings": "fixtures/scorecard.json",
+        "out_dir": "lodestar-out/evals/rigel_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

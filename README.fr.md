@@ -31,6 +31,10 @@ Chaque agent a une `demo` sur fichiers fictifs, un `eval` sur ses propres cas de
 - **Journal d'audit** sous `.lodestar/`, chaîné par hachage, signé si vous configurez une clé Ed25519.
 - **Arrêt d'urgence :** `<agent> kill` arrête tous les outils jusqu'à `<agent> unkill`.
 
+## Comment ils sont testés
+
+Chaque agent a ses propres tests sur ses règles, les mêmes tests de contrat que tous les autres (arguments, fichiers hors de `--root`, mode Revue, arrêt d'urgence, approbation des brouillons, résultats reproductibles) et 14 à 22 cas d'évaluation sur des fichiers fictifs. Chaque cas avec un tableau est rejoué comme un export allemand, français, espagnol, brésilien, italien, japonais, chinois et coréen, et des données hostiles sont glissées dans les fichiers de chaque agent. Au total : 788 tests et 520 cas d'évaluation, réussis sur Node 20, 22 et 24. [REVIEW-ver2.md](REVIEW-ver2.md) (en anglais) liste les changements de la version 2 et les bogues trouvés.
+
 ## Limites
 
 - Chaque agent travaille uniquement avec les fichiers que vous lui donnez et ne se connecte à aucun système de transporteur, TMS, ERP, banque ou administration.

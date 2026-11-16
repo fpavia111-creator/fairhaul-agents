@@ -169,6 +169,95 @@
           "8 open load(s) at 2026-11-16 10:00: 2 late, 1 at risk, 0 with stale or no tracking, 4 on track, 1 delivered but still open"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "mira_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "mira_assess",
+      "args": {
+        "loads": "../../outside.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "mira_assess",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.open": 8,
+          "result.late": 2,
+          "result.at_risk": 1,
+          "result.blind": 1,
+          "result.on_track": 3,
+          "result.delivered_not_closed": 1
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "mira_assess",
+      "args": {
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "loads"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "mira_write_report",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00",
+        "stale_hours": 24,
+        "out_dir": "lodestar-out/evals/mira_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-tms-update-status",
+      "tool": "tms_update_status",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

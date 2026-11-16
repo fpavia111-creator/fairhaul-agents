@@ -87,6 +87,27 @@
       }
     },
     {
+      "id": "invoice-on-cancelled-tender-held",
+      "tool": "arcturus_reconcile",
+      "args": {
+        "files": [
+          "fixtures/tenders-204.edi",
+          "fixtures/cancel-204.edi",
+          "fixtures/invoices-210.edi"
+        ]
+      },
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.invoices": 3
+        },
+        "contains": [
+          "invoice_on_cancelled_tender",
+          "Invoice INV-7101 is for SH-1001, whose tender was cancelled"
+        ]
+      }
+    },
+    {
       "id": "acceptance-rates",
       "tool": "arcturus_tender_stats",
       "args": {
@@ -139,6 +160,61 @@
         },
         "contains": [
           "6 CSV file(s) and the reconciliation written"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "arcturus_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "arcturus_inspect",
+      "args": {
+        "files": [
+          "../../outside.csv",
+          "fixtures/responses-990.edi",
+          "fixtures/status-214.edi",
+          "fixtures/invoices-210.edi",
+          "fixtures/ack-997.edi"
+        ]
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "arcturus_inspect",
+      "args": {
+        "files": [
+          "fixtures/tenders-204.edi",
+          "fixtures/responses-990.edi",
+          "fixtures/status-214.edi",
+          "fixtures/invoices-210.edi",
+          "fixtures/ack-997.edi"
+        ]
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "arcturus_inspect",
+      "args": {},
+      "expect": {
+        "status": "error",
+        "contains": [
+          "files"
         ]
       }
     }

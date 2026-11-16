@@ -1,23 +1,24 @@
-# MCP quality checklist for Mythos-style agent families
+# MCP quality checklist for Lodestar agents
 
-Written 2026-11-16 after running all 30 Mythos agents (308 tools) through the official
-MCP SDK client. Use it for any new agent family built on `mythos-agent-core`.
+The rules below were first written for the Mythos family and are applied here to the
+30 Lodestar freight agents built on `lodestar-core`.
 
-## What the check found on the 30 Mythos agents
+## What the check found on the 30 Lodestar agents (2026-11-16, ver 2)
 
-| Check | Before | After |
-|---|---|---|
-| Connects, lists and calls over real stdio with the official SDK client | 30 of 30 | 30 of 30 |
-| Tool names valid under the 2025-11-25 spec | all | all |
-| Input schemas compile (JSON Schema 2020-12) | all | all |
-| Tool arguments with no description | **509** | **0** |
-| Tools with an output schema | 0 | 248 (every agent tool) |
-| Result text sent to the model (all tools called with `{}`) | 166k chars | 127k chars (-23%) |
-| JSON-RPC batch (protocol 2025-03-26) | dropped silently | answered |
-| Memory tools: `enum` with no `type` | 4 args | fixed |
+`npm run mcp:check` drives every agent through the official MCP SDK client over real stdio.
 
-Context cost: all 30 agents' tool lists together are about 73k tokens as a model sees
-them (about 2.4k per agent). Fine for one or a few agents; installing all 30 at once
+| Check | Result |
+|---|---|
+| Connects, lists and calls over real stdio with the official SDK client | 30 of 30 |
+| Tool names valid under the 2025-11-25 spec | all 270 |
+| Input schemas compile (JSON Schema 2020-12) | all |
+| Tool arguments with no description | 0 |
+| Tools with an output schema | 210 (every tool except the 60 listed-but-refused ones) |
+| Unknown tool name | answered as a tool error, not a protocol error |
+| Issues | 0 |
+
+Context cost: all 30 agents' tool lists together are about 50k tokens as a model sees
+them (about 1.7k per agent). Fine for one or a few agents; installing all 30 at once
 in a client without tool search would use a large part of a context window.
 
 ## Rules for a new family

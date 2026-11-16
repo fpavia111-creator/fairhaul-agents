@@ -91,13 +91,21 @@ claude mcp add polaris-of-bills -- node /path/to/lodestar-agents/packages/polari
 ```bash
 npm ci
 npm test                       # every package's tests and evals
+npm run intl                   # every spreadsheet eval case in 8 languages
 npm run hostile                # planted hostile inputs in every agent
+npm run mcp:check              # the official MCP SDK client against every agent
+npm run readme:check           # generated README sections are up to date
+npm run bench                  # speed at 1,000 and 10,000 rows
 npm run plugin:check           # plugin files match the packages
 npm run release:check:offline  # pack contents, licences, docs and versions
 node scripts/new-agent.mjs <star>-of-<word> "<description>" kw1,kw2 <module>
 ```
 
 CI runs on Node 20, 22 and 24, on Linux and Windows.
+
+## How they are tested
+
+Each agent has hand-written tests for its own rules, the same contract tests as every other agent (arguments, files outside `--root`, Review mode, the kill switch, draft approval, repeatable results) and 14 to 22 eval cases on fictional files. Every spreadsheet case is run again as a German, French, Spanish, Brazilian, Italian, Japanese, Chinese and Korean export, and hostile data is planted in every agent's files. In total: 788 tests and 520 eval cases, passing on Node 20, 22 and 24. [REVIEW-ver2.md](REVIEW-ver2.md) lists what changed in ver 2 and the bugs the tests found.
 
 ## Limits
 

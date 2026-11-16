@@ -193,6 +193,83 @@
           "schedule 2026-11-18 drafted with 1 open marker(s) ([TO CONFIRM: carriers on this list])"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "hadar_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "hadar_plan",
+      "args": {
+        "requests": "../../outside.csv",
+        "dock": "fixtures/dock.json",
+        "date": "2026-11-18"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "hadar_plan",
+      "args": {
+        "requests": "fixtures/requests.csv",
+        "dock": "fixtures/dock.json",
+        "date": "2026-11-18"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.requests": 10,
+          "result.scheduled": 8,
+          "result.no_slot": 2
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "hadar_plan",
+      "args": {
+        "dock": "fixtures/dock.json",
+        "date": "2026-11-18"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "requests"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "hadar_draft_schedule",
+      "args": {
+        "requests": "fixtures/requests.csv",
+        "dock": "fixtures/dock.json",
+        "date": "2026-11-18",
+        "out_dir": "lodestar-out/evals/hadar_draft_schedule"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

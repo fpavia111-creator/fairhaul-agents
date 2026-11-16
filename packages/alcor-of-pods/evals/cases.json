@@ -174,6 +174,96 @@
           "5 invoice(s) to hold for review (7830)"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "alcor_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "alcor_match",
+      "args": {
+        "loads": "../../outside.csv",
+        "pods": "fixtures/pods.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "alcor_match",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "pods": "fixtures/pods.csv",
+        "as_of": "2026-11-16"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.ok": 3,
+          "result.chase": 2,
+          "result.waiting": 1,
+          "result.claim_review": 2,
+          "result.fix": 2,
+          "result.invoices_to_hold": 5,
+          "result.held_amount": 7830
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "alcor_match",
+      "args": {
+        "pods": "fixtures/pods.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "loads"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "alcor_write_report",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "pods": "fixtures/pods.csv",
+        "as_of": "2026-11-16",
+        "chase_after_days": 0,
+        "out_dir": "lodestar-out/evals/alcor_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-ap-release-payment",
+      "tool": "ap_release_payment",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

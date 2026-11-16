@@ -173,6 +173,82 @@
           "carton change cartons drafted for 39.6 with 3 open marker(s) ([TO CONFIRM warehouse or WMS owner], [TO CONFIRM your name], [TO CONFIRM drop test or trial week])"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "deneb_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "deneb_check",
+      "args": {
+        "packages": "../../outside.csv",
+        "cartons": "fixtures/cartons.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "deneb_check",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.packages": 9,
+          "result.smaller_carton": 4,
+          "result.billable_lbs_saved": 36,
+          "result.est_saving": 39.6,
+          "result.no_fit": 2,
+          "result.oversize_risk": 1
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "deneb_check",
+      "args": {
+        "cartons": "fixtures/cartons.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "packages"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "deneb_draft_carton_change",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json",
+        "out_dir": "lodestar-out/evals/deneb_draft_carton_change"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-purchase-order-create",
+      "tool": "purchase_order_create",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

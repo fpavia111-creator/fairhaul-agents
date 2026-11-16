@@ -31,6 +31,10 @@ Cada agente tem uma `demo` com arquivos fictícios, um `eval` com seus próprios
 - **Log de auditoria** em `.lodestar/`, encadeado por hash, assinado se você configurar uma chave Ed25519.
 - **Parada de emergência:** `<agent> kill` para todas as ferramentas até `<agent> unkill`.
 
+## Como eles são testados
+
+Cada agente tem testes próprios das suas regras, os mesmos testes de contrato de todos os outros (argumentos, arquivos fora de `--root`, modo Revisão, parada de emergência, aprovação de rascunhos, resultados repetíveis) e de 14 a 22 casos de avaliação em arquivos fictícios. Cada caso com planilhas roda de novo como exportação alemã, francesa, espanhola, brasileira, italiana, japonesa, chinesa e coreana, e dados hostis são inseridos nos arquivos de cada agente. No total: 788 testes e 520 casos de avaliação, aprovados no Node 20, 22 e 24. [REVIEW-ver2.md](REVIEW-ver2.md) (em inglês) lista as mudanças da versão 2 e os bugs encontrados.
+
 ## Limites
 
 - Cada agente trabalha apenas com os arquivos que você fornece e não faz login em nenhum sistema de transportadora, TMS, ERP, banco ou órgão público.

@@ -171,6 +171,73 @@
           "2 problem(s) to look at"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "castor_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "castor_allocate",
+      "args": {
+        "costs": "../../outside.csv",
+        "order_lines": "fixtures/order-lines.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "castor_allocate",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "order_lines": "fixtures/order-lines.csv"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.billed": 5225.5,
+          "result.allocated": 4325.5,
+          "result.unallocated": 900,
+          "result.lines": 9
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "castor_allocate",
+      "args": {
+        "order_lines": "fixtures/order-lines.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "costs"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "castor_write_report",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "order_lines": "fixtures/order-lines.csv",
+        "basis": "pallets",
+        "out_dir": "lodestar-out/evals/castor_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
     }
   ]
 }

@@ -168,6 +168,88 @@
           "Scenario cost 458840 against 477000 at incumbent rates (savings 18160)"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "altair_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "altair_award",
+      "args": {
+        "lanes": "../../outside.csv",
+        "bids": "fixtures/bids.csv",
+        "rules": "fixtures/rules.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "altair_award",
+      "args": {
+        "lanes": "fixtures/lanes.csv",
+        "bids": "fixtures/bids.csv",
+        "rules": "fixtures/rules.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.awarded": 5,
+          "result.no_bids": 1,
+          "result.annual_cost": 458840,
+          "result.baseline_cost": 477000,
+          "result.savings": 18160,
+          "result.incumbents_kept": 2,
+          "result.outlier_bids": 1,
+          "result.carriers.0.share_pct": 40
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "altair_award",
+      "args": {
+        "bids": "fixtures/bids.csv",
+        "rules": "fixtures/rules.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "lanes"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "altair_write_report",
+      "args": {
+        "lanes": "fixtures/lanes.csv",
+        "bids": "fixtures/bids.csv",
+        "rules": "fixtures/rules.json",
+        "out_dir": "lodestar-out/evals/altair_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }

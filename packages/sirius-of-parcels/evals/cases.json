@@ -234,6 +234,82 @@
           "refund request UPS drafted for 85.93 with 3 open marker(s) ([TO CONFIRM UPS billing adjustments contact or portal], [TO CONFIRM your name and company], [TO CONFIRM shipper account number])"
         ]
       }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "sirius_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "sirius_audit",
+      "args": {
+        "invoices": "../../outside.csv",
+        "terms": "fixtures/terms.json",
+        "voids": "fixtures/voids.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "sirius_audit",
+      "args": {
+        "invoices": "fixtures/parcel-invoices.csv",
+        "terms": "fixtures/terms.json",
+        "voids": "fixtures/voids.csv",
+        "as_of": "2026-11-16"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.packages": 11,
+          "result.refundable_open": 85.93,
+          "result.refundable_lost": 45,
+          "result.claim": 5,
+          "result.window_closed": 1
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "sirius_audit",
+      "args": {
+        "terms": "fixtures/terms.json",
+        "voids": "fixtures/voids.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "invoices"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "sirius_draft_refund_request",
+      "args": {
+        "invoices": "fixtures/parcel-invoices.csv",
+        "terms": "fixtures/terms.json",
+        "voids": "fixtures/voids.csv",
+        "as_of": "2026-11-16",
+        "carrier": "UPS",
+        "out_dir": "lodestar-out/evals/sirius_draft_refund_request"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
     }
   ]
 }
