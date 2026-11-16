@@ -2,6 +2,7 @@ import { defineManifest, MODEL_PIN, FREIGHT_CONTRACT_SCHEMA, INVOICE_LINE_FIELDS
 import { readFileSync } from 'node:fs';
 import { relative } from 'node:path';
 import { auditInvoices, disputeText } from './audit.js';
+import { MEMORY, MEMORY_KINDS, withLearned } from './memory.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const OUT = 'lodestar-out/polaris';
@@ -13,12 +14,15 @@ const files = {
   tolerance: { type: 'number', minimum: 0, maximum: 1000, description: 'Difference ignored per check, in currency units (default: the contract tolerance, else 1.00)' },
 };
 const run = (a, ctx) => {
-  const contract = a.contract ? ctx.readJson(a.contract, 'freight_contract') : {};
+  const learned = withLearned(a.contract ? ctx.readJson(a.contract, 'freight_contract') : {}, ctx);
+  const contract = learned.contract;
   const inv = readInvoiceLines(ctx, a.invoices);
   const invoices = groupInvoices(inv.rows, { chargeAliases: contract.charge_aliases });
   const shipments = a.shipments ? ctx.records(a.shipments, 'shipments') : [];
   const paid = a.paid ? readInvoiceLines(ctx, a.paid, 'paid').rows : [];
-  return { contract, x12: inv.x12, r: auditInvoices(invoices, { contract, shipments, paid, tolerance: a.tolerance }) };
+  const r = auditInvoices(invoices, { contract, shipments, paid, tolerance: a.tolerance });
+  if (learned.used.length || learned.skipped.length) Object.defineProperty(r, 'learned', { value: { used: learned.used, skipped: learned.skipped }, enumerable: false });
+  return { contract, x12: inv.x12, r };
 };
 const sumLine = (r) => `${r.invoices} invoice(s), ${r.billed} billed: ${r.dispute} to dispute, ${r.duplicate} duplicate(s), ${r.review} need review, ${r.ok} clean. Disputable ${r.disputable} (${r.disputable_pct}% of billed).`;
 
@@ -48,6 +52,7 @@ export const manifest = defineManifest({
   model: MODEL_PIN,
   caps: { maxSteps: 60, maxSpendUsd: 0 },
   configSchemas: { freight_contract: FREIGHT_CONTRACT_SCHEMA },
+  memory: { prefix: 'polaris', kinds: MEMORY_KINDS },
   sources: {
     invoices: { label: 'Carrier invoices or freight bills', args: ['invoices'], fields: INVOICE_LINE_FIELDS, profiles: INVOICE_PROFILES },
     paid: { label: 'Paid invoice history', args: ['paid'], fields: INVOICE_LINE_FIELDS, profiles: INVOICE_PROFILES },
@@ -59,6 +64,8 @@ export const manifest = defineManifest({
     description: 'Walks the host model through a freight bill audit with Polaris: audit, explain, report, dispute drafts, and pay approvals that wait for a person.',
     arguments: [{ name: 'invoices', description: 'Carrier invoice file under --root', required: true }, { name: 'contract', description: 'Freight contract JSON', required: true }, { name: 'shipments', description: 'Shipment/BOL export (optional)', required: false }],
     text: `You are helping a logistics or AP lead audit carrier freight bills with polaris-of-bills. Invoices: {{invoices}}. Contract: {{contract}}. Shipments: {{shipments}}.
+
+0. Call polaris_recall to see what Polaris has learned about this shipper's carriers. Accepted facts (charge wording, carrier names) apply automatically and are listed under "learned_facts"; waiting facts do not apply. If the person tells you something Polaris should remember ("Ridgeline bills detention as WAIT TIME"), call polaris_learn and say it waits for a named person to accept it (polaris_accept_learning always asks). Rates, fuel prices, allowances and tolerances are never learned.
 
 Rules: Polaris never pays and never sends. ap_pay_invoice, email_send and carrier_portal_submit are blocked; do not call them. Findings compare the bills with the person's own contract file; they are not a tariff ruling.
 
@@ -72,7 +79,7 @@ Rules: Polaris never pays and never sends. ap_pay_invoice, email_send and carrie
     { name: 'polaris_audit', kind: 'read', title: 'Audit freight bills',
       description: 'Check every invoice against the contract and flag duplicates, paid-before bills, linehaul over contract, fuel over table, accessorials not allowed, unpriced or not ordered, math errors and weights over the BOL. Returns the disputable amount per invoice.',
       inputSchema: { type: 'object', additionalProperties: false, required: ['invoices', 'contract'], properties: files },
-      handler: async (a, ctx) => { const { r, x12 } = run(a, ctx); return { summary: sumLine(r), ...r, ...(x12 ? { x12 } : {}) }; } },
+      handler: async (a, ctx) => { const { r, x12 } = run(a, ctx); return { summary: sumLine(r) + (r.learned && r.learned.used.length ? ` ${r.learned.used.length} learned fact(s) used.` : ''), ...r, ...(x12 ? { x12 } : {}), ...(r.learned ? { learned_facts: r.learned } : {}) }; } },
     { name: 'polaris_explain', kind: 'read', title: 'Explain one invoice',
       description: 'Show one invoice\'s charge lines, the contract amounts they were checked against, and every finding with its reason.',
       inputSchema: { type: 'object', additionalProperties: false, required: ['invoices', 'contract', 'invoice_number'], properties: { ...files, invoice_number: { type: 'string' } } },
@@ -111,6 +118,7 @@ Rules: Polaris never pays and never sends. ap_pay_invoice, email_send and carrie
         const f = appendRow(ctx.outDir(a.out_dir || OUT), 'pay-approvals.csv', { approved_at: new Date().toISOString(), invoice_number: i.invoice_number, carrier: i.carrier, billed: i.total, approved_amount: round2(a.amount), withheld: round2(i.total - a.amount), note: a.note || '', status: 'approved - AP pays it' }, ['approved_at', 'invoice_number', 'carrier', 'billed', 'approved_amount', 'withheld', 'note', 'status']);
         return { summary: `Pay approval recorded for ${i.invoice_number}: ${round2(a.amount)} of ${i.total}. No money moved.`, file: relative(ctx.root, f).split('\\').join('/') };
       } },
+    ...MEMORY.tools,
     ...refused.tools,
   ],
   policy: { rules: [
@@ -119,6 +127,7 @@ Rules: Polaris never pays and never sends. ap_pay_invoice, email_send and carrie
     { tool: 'polaris_write_report', decision: 'allow' },
     ...pair.rules,
     { tool: 'polaris_request_pay', decision: 'ask', reason: 'move_money: one named human click, even in Auto.' },
+    ...MEMORY.rules,
     ...refused.rules,
     { tool: '*', decision: 'block', reason: 'Not on the Polaris allowlist.' },
   ] },

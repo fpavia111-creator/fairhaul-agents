@@ -1,6 +1,7 @@
 import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { PAYMENT_FIELDS, PAYMENT_PROFILES, findDuplicates, recoveryText } from './duplicates.js';
+import { MEMORY, MEMORY_KINDS, vendorGroups } from './memory.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const OUT = 'lodestar-out/algol';
@@ -9,7 +10,7 @@ const files = {
   date_window_days: { type: 'integer', minimum: 0, maximum: 30, description: 'Same carrier and amount with invoice dates this close counts as a low-confidence look-alike (default 3)' },
   as_of: { type: 'string', format: 'date', description: 'Date to count ages from, YYYY-MM-DD (default today)' },
 };
-const run = (a, ctx) => findDuplicates(ctx.records(a.payments, 'payments'), { dateWindowDays: a.date_window_days ?? 3, asOf: a.as_of });
+const run = (a, ctx) => findDuplicates(ctx.records(a.payments, 'payments'), { dateWindowDays: a.date_window_days ?? 3, asOf: a.as_of, sameVendors: vendorGroups(ctx) });
 const line = (r) => `${r.payments} payment(s), ${r.paid_total} paid: ${r.groups} possible duplicate group(s). To recover: ${r.to_recover_high} high confidence, ${r.to_recover_medium} medium, ${r.to_recover_low} low.${r.already_credited ? ` ${r.already_credited} already credited.` : ''}`;
 const conf = { type: 'array', items: { type: 'string', enum: ['high', 'medium', 'low'] }, description: 'Which confidence levels to include in the request (default high only)' };
 
@@ -28,6 +29,7 @@ const refused = refusedTools([
 
 export const manifest = defineManifest({
   name: 'algol-of-duplicates', version: pkg.version,
+  memory: { prefix: 'algol', kinds: MEMORY_KINDS },
   description: 'Searches your freight payment history for invoices paid twice: the same invoice in another number format, the same invoice under two vendor records, the same PRO billed twice, and same-amount look-alikes. Nets off credits already received, grades each by confidence and drafts refund requests. Moving money and changing vendor records are a person\'s job.',
   model: MODEL_PIN, caps: { maxSteps: 60, maxSpendUsd: 0 },
   sources: { payments: { label: 'AP payment history', args: ['payments'], fields: PAYMENT_FIELDS, profiles: PAYMENT_PROFILES } },
@@ -36,6 +38,7 @@ export const manifest = defineManifest({
 
 Rules: Algol never moves money or changes vendor records. Low and medium confidence groups need the bills pulled before anyone asks for money back; say so.
 
+0. Call algol_recall to see what Algol has learned (vendor records that are one carrier). Accepted facts apply automatically and are listed under memory_applied; waiting facts do not. If the person tells you something to remember ("V880 is Bluewater, who factors Ridgeline"), call algol_learn and say it waits for a named person to accept it (algol_accept_learning always asks). Nothing learned can mark a payment as fine.
 1. Call algol_search. Give the high-confidence amount first, then medium and low, then any duplicate vendor records to merge.
 2. Call algol_write_report.
 3. Only when the person asks, call algol_draft_recovery for one vendor, then algol_request_send after they review it.` }],
@@ -49,10 +52,12 @@ Rules: Algol never moves money or changes vendor records. Low and medium confide
     } },
     ...pair.tools,
     ...refused.tools,
+    ...MEMORY.tools,
   ],
   policy: { rules: [
     { tool: 'algol_search', decision: 'allow' }, { tool: 'algol_write_report', decision: 'allow' },
     ...pair.rules, ...refused.rules,
+    ...MEMORY.rules,
     { tool: '*', decision: 'block', reason: 'Not on the Algol allowlist.' },
   ] },
 });

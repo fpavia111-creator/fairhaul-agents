@@ -22,7 +22,7 @@ const orderedCodes = (s, aliases) => new Set(str(s && s.accessorials_ordered).sp
  *   duplicate_invoice, duplicate_pro, already_paid, lines_do_not_add_up,
  *   no_contract, contract_expired, no_lane, rate_needs_data,
  *   linehaul_over, fuel_over, fuel_not_checked, accessorial_not_allowed, accessorial_over,
- *   accessorial_unpriced, accessorial_not_ordered, weight_over_bol, quote_exceeded
+ *   accessorial_unpriced, accessorial_not_ordered, accessorial_needs_data, weight_over_bol, quote_exceeded
  */
 export function auditInvoices(invoices, { contract = {}, shipments = [], paid = [], tolerance } = {}) {
   const tol = num(tolerance) ?? num(contract.tolerance) ?? 1;
@@ -83,6 +83,7 @@ export function auditInvoices(invoices, { contract = {}, shipments = [], paid = 
           if (rule.not_allowed) { add('accessorial_not_allowed', billed, `${label} billed ${billed}; the contract says this charge is not allowed.`); continue; }
           if (ordered && rule.requires_proof !== false && !ordered.has(code) && ['liftgate', 'residential', 'inside', 'appointment', 'limited_access', 'hazmat', 'sort_segregate'].includes(code)) { add('accessorial_not_ordered', billed, `${label} billed ${billed}, but the shipment record does not list it as ordered.`); continue; }
           if (allowed !== null && billed - allowed > tol) add('accessorial_over', billed - allowed, `${label} billed ${billed}, contract allows ${allowed}.`);
+          else if (allowed === null && rule.per_hour) add('accessorial_needs_data', null, `${label} billed ${billed}; the contract prices it by the hour, but no arrival and departure times were found for this shipment. Ask the carrier for the signed dock times.`);
         }
       }
       if (ship) {

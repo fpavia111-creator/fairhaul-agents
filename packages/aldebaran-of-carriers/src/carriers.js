@@ -31,11 +31,11 @@ export const LOAD_FIELDS = Object.freeze({
 const FREE_MAIL = /@(gmail|yahoo|hotmail|outlook|aol|icloud|proton(mail)?|gmx|mail|yandex)\./i;
 const digits = (v) => str(v).replace(/\D/g, '').replace(/^1(?=\d{10}$)/, '');
 const norm = (v) => str(v).toLowerCase().replace(/[^a-z0-9]/g, '');
-export const WEIGHTS = { shared_bank: 5, shared_phone: 3, shared_email: 3, duplicate_mc: 4, contact_differs_on_load: 4, unsatisfactory_rating: 5, insurance_expired: 4, bank_changed_recently: 3, new_authority: 2, insurance_expiring: 1, remit_to_other_name: 1, free_email: 1, shared_address: 1, conditional_rating: 1, missing_mc_dot: 2 };
+export const WEIGHTS = { on_watch_list: 5, shared_bank: 5, shared_phone: 3, shared_email: 3, duplicate_mc: 4, contact_differs_on_load: 4, unsatisfactory_rating: 5, insurance_expired: 4, bank_changed_recently: 3, new_authority: 2, insurance_expiring: 1, remit_to_other_name: 1, free_email: 1, shared_address: 1, conditional_rating: 1, missing_mc_dot: 2 };
 const LEVEL = (s) => (s >= 5 ? 'high' : s >= 2 ? 'medium' : s > 0 ? 'low' : 'none');
 
 /** Score each carrier on warning signs; flag booked loads on carriers that score high or medium. */
-export function vetCarriers(carriers, loads = [], { asOf, newAuthorityDays = 180, expiringDays = 30, bankChangeDays = 30 } = {}) {
+export function vetCarriers(carriers, loads = [], { asOf, newAuthorityDays = 180, expiringDays = 30, bankChangeDays = 30, watch = [] } = {}) {
   const today = isoDate(asOf) || new Date().toISOString().slice(0, 10);
   const signals = new Map(carriers.map((c) => [str(c.carrier_id), []]));
   const add = (c, code, detail) => signals.get(str(c.carrier_id)).push({ code, weight: WEIGHTS[code], detail });
@@ -51,6 +51,10 @@ export function vetCarriers(carriers, loads = [], { asOf, newAuthorityDays = 180
   shared('email', (v) => str(v).toLowerCase(), 'shared_email', 'Email');
   shared('address', norm, 'shared_address', 'Address');
   shared('mc', (v) => digits(v), 'duplicate_mc', 'MC');
+  // Watch list (accepted domain memory): a detail seen before in a fraud attempt.
+  const watched = (type, v) => { const s = str(v); if (!s) return null; return watch.find((w) => w.type === type && (type === 'phone' || type === 'mc' || type === 'dot' ? digits(w.value) && digits(w.value) === digits(s) : type === 'bank_last4' ? digits(s).slice(-4) === digits(w.value) : type === 'email' ? w.value.trim().toLowerCase() === s.toLowerCase() : type === 'email_domain' ? s.toLowerCase().endsWith('@' + w.value.trim().toLowerCase().replace(/^@/, '')) : norm(w.value) === norm(s))) || null; };
+  const watchHit = (c) => [['phone', c.phone], ['email', c.email], ['email_domain', c.email], ['mc', c.mc], ['dot', c.dot], ['bank_last4', c.bank_last4], ['address', c.address]].map(([t, v]) => { const w = watched(t, v); return w && { w, t }; }).filter(Boolean);
+  for (const c of carriers) for (const { w, t } of watchHit(c)) if (signals.has(str(c.carrier_id))) add(c, 'on_watch_list', `${t.replace('_', ' ')} on your watch list (${w.id || 'learned'}): ${w.reason}`);
   for (const c of active) {
     if (!digits(c.mc) && !digits(c.dot)) add(c, 'missing_mc_dot', 'No MC or DOT number on file.');
     const auth = isoDate(c.authority_date); if (auth && daysBetween(auth, today) < newAuthorityDays) add(c, 'new_authority', `Authority granted ${auth}, ${daysBetween(auth, today)} days ago.`);
@@ -71,6 +75,7 @@ export function vetCarriers(carriers, loads = [], { asOf, newAuthorityDays = 180
     const reasons = [];
     if (str(l.dispatch_phone) && digits(c.phone) && digits(l.dispatch_phone) !== digits(c.phone)) reasons.push(`dispatch phone ${l.dispatch_phone} differs from the master ${c.phone}`);
     if (str(l.dispatch_email) && str(c.email) && str(l.dispatch_email).toLowerCase() !== str(c.email).toLowerCase()) reasons.push(`dispatch email ${l.dispatch_email} differs from the master ${c.email}`);
+    for (const [t, v] of [['phone', l.dispatch_phone], ['email', l.dispatch_email], ['email_domain', l.dispatch_email]]) { const w = watched(t, v); if (w) reasons.push(`dispatch ${t.replace('_', ' ')} ${str(v)} is on your watch list: ${w.reason}`); }
     if (reasons.length && signals.has(str(c.carrier_id))) add(c, 'contact_differs_on_load', `Load ${l.load_id}: ${reasons.join('; ')}.`);
     const ins = isoDate(c.insurance_expiry); const pu = isoDate(l.pickup_date);
     if (ins && pu && ins < pu) reasons.push(`insurance expires ${ins}, before pickup ${pu}`);

@@ -1,6 +1,7 @@
 import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, isoDate } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { CARRIER_FIELDS, LOAD_FIELDS, vetCarriers, verificationText } from './carriers.js';
+import { MEMORY, MEMORY_KINDS, watchList } from './memory.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const OUT = 'lodestar-out/aldebaran';
@@ -10,7 +11,7 @@ const files = {
   as_of: { type: 'string', format: 'date', description: 'Date to judge from (default today)' },
   new_authority_days: { type: 'integer', minimum: 1, description: 'Authority younger than this many days is a signal (default 180)' },
 };
-const run = (a, ctx) => { if (a.as_of && !isoDate(a.as_of)) throw new Error('as_of must be a date, YYYY-MM-DD'); return vetCarriers(ctx.records(a.carriers, 'carriers'), a.loads ? ctx.records(a.loads, 'loads') : [], { asOf: a.as_of, newAuthorityDays: a.new_authority_days || 180 }); };
+const run = (a, ctx) => { if (a.as_of && !isoDate(a.as_of)) throw new Error('as_of must be a date, YYYY-MM-DD'); return vetCarriers(ctx.records(a.carriers, 'carriers'), a.loads ? ctx.records(a.loads, 'loads') : [], { asOf: a.as_of, newAuthorityDays: a.new_authority_days || 180, watch: watchList(ctx) }); };
 const line = (r) => `${r.carriers} carrier(s) as of ${r.as_of}: ${r.high} high, ${r.medium} medium, ${r.low} low on warning signs.${r.loads ? ` Of ${r.loads} booked load(s), ${r.loads_to_hold} to hold until verified and ${r.loads_to_verify} to verify before pickup.` : ''}`;
 
 const pair = draftPair({
@@ -28,6 +29,7 @@ const refused = refusedTools([
 
 export const manifest = defineManifest({
   name: 'aldebaran-of-carriers', version: pkg.version,
+  memory: { prefix: 'aldebaran', kinds: MEMORY_KINDS },
   description: 'Checks your carrier master and booked loads for warning signs of fraud and double brokering: bank accounts, phones, emails or MC numbers shared across carriers, new authority, lapsed insurance, recent payment detail changes, free-mail contacts, and dispatch contacts on a load that differ from the master. It scores each carrier, lists loads to hold or verify, and drafts a verification request. A person verifies and decides.',
   model: MODEL_PIN, caps: { maxSteps: 60, maxSpendUsd: 0 },
   sources: { carriers: { label: 'Carrier master', args: ['carriers'], fields: CARRIER_FIELDS }, loads: { label: 'Booked loads', args: ['loads'], fields: LOAD_FIELDS } },
@@ -36,6 +38,7 @@ export const manifest = defineManifest({
 
 Rules: Aldebaran never blocks a carrier, changes payment details or emails anyone. A warning sign is not proof of fraud; never call a carrier fraudulent. Verification uses contact details already on file, never ones from a change request.
 
+0. Call aldebaran_recall to see what Aldebaran has learned (a watch-listed phone, email, email domain, MC, DOT, bank account ending or address). Accepted facts apply automatically and are listed under memory_applied; waiting facts do not. If the person tells you something to remember ("that 312 number called us last month pretending to be Ridgeline"), call aldebaran_learn and say it waits for a named person to accept it (aldebaran_accept_learning always asks). Nothing learned can clear a warning sign.
 1. Call aldebaran_vet. Lead with loads to hold before pickup, then high-scoring carriers and why.
 2. Call aldebaran_write_report.
 3. Only when the person asks, call aldebaran_draft_verification_request for one carrier, then aldebaran_request_send after they review it.` }],
@@ -48,10 +51,12 @@ Rules: Aldebaran never blocks a carrier, changes payment details or emails anyon
     } },
     ...pair.tools,
     ...refused.tools,
+    ...MEMORY.tools,
   ],
   policy: { rules: [
     { tool: 'aldebaran_vet', decision: 'allow' }, { tool: 'aldebaran_write_report', decision: 'allow' },
     ...pair.rules, ...refused.rules,
+    ...MEMORY.rules,
     { tool: '*', decision: 'block', reason: 'Not on the Aldebaran allowlist.' },
   ] },
 });
