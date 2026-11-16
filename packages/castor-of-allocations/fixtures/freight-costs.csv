@@ -1,0 +1,6 @@
+shipment_id,invoice_number,carrier,date,cost
+S-801,RF-INV-9001,Ridgeline Freight,2026-10-03,1200.00
+S-802,PX-INV-4410,Prairie Express,2026-10-07,640.00
+S-803,CL-INV-7720,Coastal Line Haul,2026-10-10,2100.00
+S-804,RF-INV-9017,Ridgeline Freight,2026-10-14,385.50
+S-805,SC-INV-1188,Summit Carriers,2026-10-18,900.00

@@ -1,0 +1,22 @@
+{
+  "name": "achernar-of-returns",
+  "version": "0.1.0",
+  "description": "Follows every return from authorisation to credit: return labels never used, returns received but not credited, carriers charging return freight twice, and which customers, SKUs and reasons cost the most freight to bring back.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/achernar-of-returns#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "returns",
+    "reverse-logistics",
+    "rma",
+    "credits"
+  ]
+}

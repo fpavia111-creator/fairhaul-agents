@@ -1,0 +1,58 @@
+{
+  "name": "altair-of-bids",
+  "version": "0.1.0",
+  "description": "Altair of Bids: scores carrier bids from a freight RFP lane by lane against your incumbent rates and volumes, builds award scenarios with your rules (share caps, incumbent preference, backup carriers, capacity), shows the savings and the lanes nobody covered, and drafts award letters. Never loads rates or sends awards.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "altair-of-bids": "bin/altair-of-bids.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/altair-of-bids.js demo",
+    "eval": "node bin/altair-of-bids.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/altair-of-bids"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/altair-of-bids#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "freight-rfp",
+    "bid-analysis",
+    "procurement",
+    "lane-award",
+    "carrier-bids"
+  ]
+}

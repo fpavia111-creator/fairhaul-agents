@@ -1,0 +1,96 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { carrierKey, sameCarrier, zoneOf, placeMatches, chargeCode, dimWeight, densityPcf, classForDensity, contractFor, laneFor, laneLinehaul, contractFuel, dieselFor, accessorialAllowed, daysBetween, hoursBetween, readX12, parseX12, invoicesFrom210, n2, validate, FREIGHT_CONTRACT_SCHEMA } from '../src/index.js';
+
+test('carrier keys match across spellings', () => {
+  assert.equal(carrierKey('XPO Logistics, Inc.'), 'xpo');
+  assert.ok(sameCarrier('Old Dominion Freight Line', 'old dominion'));
+  assert.ok(sameCarrier('ODFL', 'Old Dominion', { ODFL: 'Old Dominion' }));
+  assert.ok(!sameCarrier('', ''));
+});
+
+test('places and lanes', () => {
+  assert.equal(zoneOf('60607-1234'), '606');
+  assert.equal(zoneOf('M5V 2T6'), 'M5V');
+  assert.ok(placeMatches('IL', { state: 'il' }));
+  assert.ok(placeMatches('600-629', { postal: '60607' }));
+  assert.ok(!placeMatches('600-629', { postal: '75201' }));
+  assert.ok(placeMatches('Dallas, TX', { city: 'Dallas', state: 'TX' }));
+  assert.ok(placeMatches('*', {}));
+});
+
+test('charge descriptions map to codes', () => {
+  assert.equal(chargeCode('Lift Gate Delivery'), 'liftgate');
+  assert.equal(chargeCode('FSC'), 'fuel');
+  assert.equal(chargeCode('Residential Surcharge'), 'residential');
+  assert.equal(chargeCode('Address Correction Ground'), 'address_correction');
+  assert.equal(chargeCode('Something odd'), 'other');
+  assert.equal(chargeCode('Blue sticker fee', { 'blue sticker': 'appointment' }), 'appointment');
+});
+
+test('weights and density', () => {
+  assert.equal(dimWeight(12, 12, 12), 13);
+  assert.equal(dimWeight(12, 12, 12, 166), 11);
+  assert.equal(dimWeight(0, 1, 1), null);
+  assert.equal(densityPcf(500, 48, 40, 48), 9.38);
+  assert.equal(classForDensity(9.38), 100);
+  assert.equal(classForDensity(0.5), 400);
+  assert.equal(classForDensity(60), 50);
+});
+
+test('dates', () => {
+  assert.equal(daysBetween('2026-01-01', '2026-02-01'), 31);
+  assert.equal(hoursBetween('2026-01-01T08:00:00', '2026-01-01T10:30:00'), 2.5);
+  assert.equal(daysBetween('', '2026-01-01'), null);
+});
+
+const contract = {
+  fuel_index: [{ week_of: '2026-10-26', price: 3.6 }, { week_of: '2026-11-02', price: 3.82 }],
+  carriers: [{ carrier: 'Example Linehaul', scac: 'EXLT', effective: '2026-01-01', expires: '2026-12-31', discount_pct: 0,
+    lanes: [{ origin: 'IL', destination: 'TX', basis: 'per_cwt', rate: 28, minimum: 150 }, { origin: '606', destination: '752', basis: 'flat', rate: 360 }],
+    fuel: { basis: 'pct_of_linehaul', table: [{ min: 3.5, max: 3.75, value: 15 }, { min: 3.75, max: 4, value: 16 }] },
+    accessorials: { liftgate: { amount: 25 }, detention: { per_hour: 50, free_hours: 2, max: 400 }, residential: { not_allowed: true } } }],
+};
+
+test('contract schema accepts the sample contract', () => { assert.ok(validate(FREIGHT_CONTRACT_SCHEMA, contract).ok); });
+
+test('rating against a contract', () => {
+  const { block } = contractFor(contract, 'EXLT', '2026-11-01');
+  assert.ok(block);
+  assert.equal(contractFor(contract, 'EXLT', '2027-01-05').expired.scac, 'EXLT');
+  const ship = { origin: { state: 'IL', postal: '60607' }, destination: { state: 'TX', postal: '75201' }, weight: 1200 };
+  const lane = laneFor(block, ship);
+  assert.equal(lane.basis, 'flat', 'the more specific ZIP3 lane wins');
+  assert.equal(laneLinehaul(lane, ship, block), 360);
+  const lane2 = laneFor(block, { ...ship, destination: { state: 'TX', postal: '78701' } });
+  assert.equal(laneLinehaul(lane2, { weight: 500 }, block), 150, 'minimum applies');
+  assert.equal(dieselFor(contract.fuel_index, '2026-11-01'), 3.6);
+  assert.equal(contractFuel(block, 3.6, 360, null), 54);
+  assert.equal(accessorialAllowed(block, 'liftgate').allowed, 25);
+  assert.equal(accessorialAllowed(block, 'detention', { hours: 5 }).allowed, 150);
+  assert.equal(accessorialAllowed(block, 'detention', { hours: 20 }).allowed, 400);
+  assert.equal(accessorialAllowed(block, 'residential').allowed, 0);
+  assert.equal(accessorialAllowed(block, 'hazmat').rule, null);
+});
+
+test('X12 210 reads with envelope checks', () => {
+  const text = readFileSync(new URL('./fixtures/sample-210.edi', import.meta.url), 'utf8');
+  const r = readX12(text);
+  assert.deepEqual(r.problems, []);
+  assert.equal(r.records.length, 2);
+  const inv = r.records[0];
+  assert.equal(inv.invoice_number, 'INV-7001'); assert.equal(inv.amount, 454.8); assert.equal(inv.scac, 'EXLT');
+  assert.equal(inv.origin.postal, '60607'); assert.equal(inv.destination.state, 'TX');
+  assert.deepEqual(inv.charges.map((c) => [c.code, c.amount]), [['400', 360], ['FUE', 64.8], ['LFT', 30]]);
+  const flat = invoicesFrom210(r.records);
+  assert.equal(flat[1].pro, 'PRO-55502'); assert.equal(flat[1].amount, 150);
+  assert.equal(n2('12345'), 123.45); assert.equal(n2('12.5'), 12.5);
+});
+
+test('X12 envelope problems are reported, not thrown', () => {
+  const text = readFileSync(new URL('./fixtures/sample-210.edi', import.meta.url), 'utf8').replace('SE*13*0001', 'SE*12*0001').replace('GE*2*101', 'GE*3*101');
+  const codes = parseX12(text).problems.map((p) => p.code);
+  assert.ok(codes.includes('se_count')); assert.ok(codes.includes('ge_count'));
+  assert.throws(() => parseX12('hello'), /not an X12 file/);
+});

@@ -1,0 +1,22 @@
+{
+  "name": "polaris-of-bills",
+  "version": "0.1.0",
+  "description": "Audits truckload and LTL freight bills (CSV, Excel or X12 210) against your own contract rates, fuel table and accessorial terms, finds duplicates and math errors, and drafts carrier disputes. Never pays and never sends.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/polaris-of-bills#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "ltl",
+    "truckload",
+    "freight-bill-audit",
+    "x12-210"
+  ]
+}

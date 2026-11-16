@@ -1,0 +1,58 @@
+{
+  "name": "aldebaran-of-carriers",
+  "version": "0.1.0",
+  "description": "Checks your carrier master and booked loads for warning signs of fraud and double brokering: shared phones, emails or bank accounts, new authority, lapsed insurance, recent remit-to changes. It flags; a person verifies and decides.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "aldebaran-of-carriers": "bin/aldebaran-of-carriers.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/aldebaran-of-carriers.js demo",
+    "eval": "node bin/aldebaran-of-carriers.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/aldebaran-of-carriers"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/aldebaran-of-carriers#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "carrier-vetting",
+    "fraud",
+    "double-brokering",
+    "onboarding",
+    "insurance"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "name": "adhara-of-ocean",
+  "version": "0.1.0",
+  "description": "Adhara of Ocean: audits ocean freight invoices line by line against your service contract: base rate per container by port pair, BAF, peak season and other surcharges with their validity dates, charges the contract does not allow, duplicates and container counts, and drafts disputes to the line or forwarder. Never pays or sends.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "adhara-of-ocean": "bin/adhara-of-ocean.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/adhara-of-ocean.js demo",
+    "eval": "node bin/adhara-of-ocean.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/adhara-of-ocean"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/adhara-of-ocean#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "ocean-freight",
+    "baf",
+    "service-contract",
+    "forwarder"
+  ]
+}

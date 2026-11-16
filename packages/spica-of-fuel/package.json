@@ -1,0 +1,57 @@
+{
+  "name": "spica-of-fuel",
+  "version": "0.1.0",
+  "description": "Spica of Fuel: checks every fuel surcharge against your carriers' fuel tables and the diesel index for the week each load moved, spots carriers billing on the wrong week, compares fuel tables side by side and shows what a diesel move would cost you. Never pays or sends.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "spica-of-fuel": "bin/spica-of-fuel.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/spica-of-fuel.js demo",
+    "eval": "node bin/spica-of-fuel.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/spica-of-fuel"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/spica-of-fuel#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "fuel-surcharge",
+    "fuel",
+    "diesel",
+    "fsc"
+  ]
+}

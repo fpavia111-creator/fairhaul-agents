@@ -1,0 +1,23 @@
+{
+  "name": "altair-of-bids",
+  "version": "0.1.0",
+  "description": "Scores carrier bids from a freight RFP lane by lane against your incumbent rates and volumes, builds award scenarios with your rules (share caps, incumbent preference, backup carriers, capacity), shows the savings and the lanes nobody covered, and drafts award letters. Never loads rates or sends awards.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/altair-of-bids#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "freight-rfp",
+    "bid-analysis",
+    "procurement",
+    "lane-award",
+    "carrier-bids"
+  ]
+}

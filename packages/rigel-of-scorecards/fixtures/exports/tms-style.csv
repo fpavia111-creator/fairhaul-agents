@@ -1,0 +1,3 @@
+Load Number,Carrier Name,Tender Response,Scheduled Pickup,Actual Pickup,Scheduled Delivery,Actual Delivery,Rate Con Amount,Invoice Amount,Tracking Events,Loaded Miles
+R-101,Ridgeline Freight,A,08/04/2026 08:00,08/04/2026 08:20,08/06/2026 14:00,08/06/2026 13:10,"$1,450.00","$1,450.00",6,612
+C-204,Coastal Line Haul,A,10/13/2026,10/14/2026,10/15/2026,10/17/2026,"$2,100.00","$2,100.00",0,980

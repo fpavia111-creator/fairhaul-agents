@@ -1,0 +1,9 @@
+{
+  "source": "EXAMPLE VALUES FOR THE DEMO ONLY. Replace with the factors your sustainability team has chosen, and name that source here.",
+  "unit": "g_co2e_per_tonne_km",
+  "modes": { "ftl": 80, "ltl": 120, "parcel": 300, "intermodal": 30, "rail": 25, "ocean": 15, "air": 900 },
+  "aliases": { "truckload": "ftl", "tl": "ftl", "less than truckload": "ltl", "small parcel": "parcel" },
+  "default_weight_unit": "lb",
+  "default_distance_unit": "mi",
+  "shift": { "from": ["ftl"], "to": "intermodal", "min_km": 1200, "extra_km_pct": 15 }
+}

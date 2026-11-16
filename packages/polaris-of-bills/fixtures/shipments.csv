@@ -1,0 +1,6 @@
+shipment_id,pro,carrier,ship_date,weight,quoted_amount,accessorials_ordered,arrived_at,departed_at
+S-501,PRO-55501,EXLT,2026-11-01,1200,,liftgate,,
+S-502,PRO-55502,EXLT,2026-11-01,500,,,,
+S-503,PRO-55503,EXLT,2026-11-01,900,,,,
+S-507,PRO-55507,EXLT,2026-11-01,1200,,,,
+L-9001,L-9001,SMPF,2026-11-03,40000,2000,lumper,2026-11-04T08:00:00,2026-11-04T12:30:00

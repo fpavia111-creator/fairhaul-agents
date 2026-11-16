@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "mira-of-tracking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mira-of-tracking@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

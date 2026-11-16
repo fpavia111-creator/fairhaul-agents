@@ -1,0 +1,17 @@
+{
+  "suite": "aldebaran-of-carriers",
+  "root": "..",
+  "data_note": "Fictional carriers and loads in ../fixtures, as of 2026-11-16. No model is called.",
+  "cases": [
+    {"id": "totals", "tool": "aldebaran_vet", "args": {"carriers": "fixtures/carriers.csv", "loads": "fixtures/loads.csv", "as_of": "2026-11-16"}, "expect": {"equals": {"result.high": 3, "result.medium": 1, "result.low": 1, "result.clean": 1, "result.loads_to_hold": 4, "result.loads_to_verify": 1}}},
+    {"id": "shared-bank-and-phone", "tool": "aldebaran_vet", "args": {"carriers": "fixtures/carriers.csv", "as_of": "2026-11-16"}, "expect": {"equals": {"result.rows.0.carrier_id": "NORT", "result.rows.0.level": "high"}, "contains": ["shared_bank", "shared_phone", "Bank account ending 7781"]}},
+    {"id": "load-contact-differs", "tool": "aldebaran_vet", "args": {"carriers": "fixtures/carriers.csv", "loads": "fixtures/loads.csv", "as_of": "2026-11-16"}, "expect": {"contains": ["contact_differs_on_load", "dispatch phone (913) 555-0123 differs"]}},
+    {"id": "unknown-carrier-held", "tool": "aldebaran_vet", "args": {"carriers": "fixtures/carriers.csv", "loads": "fixtures/loads.csv", "as_of": "2026-11-16"}, "expect": {"contains": ["carrier not in the master; vet before pickup"]}},
+    {"id": "inactive-not-scored", "tool": "aldebaran_vet", "args": {"carriers": "fixtures/carriers.csv", "as_of": "2026-11-16"}, "expect": {"not_contains": ["Gulfport Transport (GULF)"]}},
+    {"id": "clean-carrier-no-draft", "tool": "aldebaran_draft_verification_request", "mode": "auto", "auto_actions": ["aldebaran_draft_verification_request"], "args": {"carriers": "fixtures/carriers.csv", "carrier_id": "RIDG", "as_of": "2026-11-16"}, "expect": {"status": "error"}},
+    {"id": "draft", "tool": "aldebaran_draft_verification_request", "mode": "auto", "auto_actions": ["aldebaran_draft_verification_request"], "args": {"carriers": "fixtures/carriers.csv", "carrier_id": "PRAI", "loads": "fixtures/loads.csv", "as_of": "2026-11-16"}, "expect": {"contains": ["verification_request", "Nothing was sent"]}},
+    {"id": "send-stays-a-click-in-auto", "tool": "aldebaran_request_send", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
+    {"id": "never-changes-bank", "tool": "ap_change_remit_to", "mode": "auto", "args": {}, "expect": {"status": "blocked"}},
+    {"id": "never-blocks", "tool": "tms_block_carrier", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+  ]
+}

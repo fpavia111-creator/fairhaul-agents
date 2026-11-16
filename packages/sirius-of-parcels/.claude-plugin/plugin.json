@@ -1,0 +1,24 @@
+{
+  "name": "sirius-of-parcels",
+  "version": "0.1.0",
+  "description": "Audits UPS, FedEx, DHL and USPS invoice data for late deliveries, duplicate tracking numbers, voided labels billed, residential charges on business addresses, repeat address corrections and dimensional-weight overbilling, with claim-by dates and refund request drafts. Never files claims itself.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/sirius-of-parcels#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "parcel-audit",
+    "ups",
+    "fedex",
+    "dhl",
+    "late-delivery-refund",
+    "dim-weight"
+  ]
+}

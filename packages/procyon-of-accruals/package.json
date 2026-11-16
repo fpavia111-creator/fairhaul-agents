@@ -1,0 +1,57 @@
+{
+  "name": "procyon-of-accruals",
+  "version": "0.1.0",
+  "description": "Procyon of Accruals: builds the month-end freight accrual from your shipments and carrier invoices: shipped but not billed, estimated from the quote, your contract or lane history, by cost center, with a draft journal entry and an accuracy check on last month. Never posts to your ledger.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "procyon-of-accruals": "bin/procyon-of-accruals.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/procyon-of-accruals.js demo",
+    "eval": "node bin/procyon-of-accruals.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/procyon-of-accruals"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/procyon-of-accruals#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "accruals",
+    "month-end",
+    "close",
+    "freight-accrual"
+  ]
+}

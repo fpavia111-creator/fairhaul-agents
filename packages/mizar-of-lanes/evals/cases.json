@@ -1,0 +1,13 @@
+{
+  "suite": "mizar-of-lanes",
+  "root": "..",
+  "data_note": "Fictional shipments in ../fixtures. No model is called.",
+  "cases": [
+    {"id": "totals", "tool": "mizar_analyse", "args": {"shipments": "fixtures/shipments.csv"}, "expect": {"equals": {"result.shipments": 12, "result.spend": 15990, "result.lanes_count": 3, "result.consolidation_groups": 1, "result.consolidation_saving": 526.25, "result.heavy_ltl": 1, "result.heavy_ltl_saving": 511}}},
+    {"id": "top-lane", "tool": "mizar_analyse", "args": {"shipments": "fixtures/shipments.csv"}, "expect": {"equals": {"result.lanes.0.lane": "IL 606 → TX 752", "result.lanes.0.share_pct": 44, "result.lanes.0.cost_per_cwt": 24.53}}},
+    {"id": "lower-tl-rate", "tool": "mizar_analyse", "args": {"shipments": "fixtures/shipments.csv", "tl_rate_per_mile": 2.5}, "expect": {"equals": {"result.consolidation_groups": 2}}},
+    {"id": "state-lanes", "tool": "mizar_analyse", "args": {"shipments": "fixtures/shipments.csv", "window_days": 0}, "expect": {"contains": ["IL 606 → GA 303"]}},
+    {"id": "send-stays-a-click-in-auto", "tool": "mizar_request_send", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
+    {"id": "never-holds-orders", "tool": "erp_hold_orders", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+  ]
+}

@@ -1,0 +1,8 @@
+shipment_id,carrier,ship_date,mode,origin_state,origin_postal,dest_state,dest_postal,weight,accessorials,paid
+H-01,Ridgeline Freight,2026-10-01,ltl,IL,60607,TX,75201,1200,,398.0
+H-02,Ridgeline Freight,2026-10-08,ltl,IL,60607,TX,75201,900,Liftgate,317.32
+H-03,Ridgeline Freight,2026-10-15,ltl,IL,60607,TX,78701,2000,,649.6
+H-04,Prairie Express,2026-10-06,ltl,IL,60607,GA,30303,1500,,484.27
+H-05,Coastal Line Haul,2026-10-13,ltl,IL,60607,GA,30303,800,Residential,307.12
+H-06,Prairie Express,2026-10-20,ltl,IL,60607,GA,30303,1000,,326.7
+H-07,Ridgeline Freight,2026-10-27,ltl,IL,60607,OH,43215,700,,260.0

@@ -1,0 +1,5 @@
+{
+  "note": "Fictional distribution center. Doors 1-3 dry, door 4 takes reefer and dry.",
+  "doors": [{ "name": "D1", "types": ["dry"] }, { "name": "D2", "types": ["dry"] }, { "name": "D3", "types": ["dry"] }, { "name": "D4", "types": ["reefer", "dry"] }],
+  "open": "06:00", "close": "14:00", "crews": 3, "setup_minutes": 15, "minutes_per_pallet": 2, "minutes_per_floor_pallet": 6, "slot_minutes": 15, "grace_minutes": 15
+}

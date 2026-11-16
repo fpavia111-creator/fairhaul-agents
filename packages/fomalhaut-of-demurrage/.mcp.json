@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fomalhaut-of-demurrage": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fomalhaut-of-demurrage@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

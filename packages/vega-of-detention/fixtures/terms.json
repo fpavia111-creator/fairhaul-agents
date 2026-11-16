@@ -1,0 +1,15 @@
+{
+  "note": "Fictional detention terms.",
+  "free_hours": 2,
+  "rate_per_hour": 50,
+  "grace_minutes": 15,
+  "bill_increment_minutes": 15,
+  "max_per_stop": 400,
+  "layover_amount": 250,
+  "layover_min_hours": 16,
+  "carriers": {
+    "Sample Freightways": {
+      "rate_per_hour": 60
+    }
+  }
+}

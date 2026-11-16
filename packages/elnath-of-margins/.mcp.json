@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "elnath-of-margins": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "elnath-of-margins@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

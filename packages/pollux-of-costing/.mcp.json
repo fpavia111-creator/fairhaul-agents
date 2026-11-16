@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "pollux-of-costing": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "pollux-of-costing@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

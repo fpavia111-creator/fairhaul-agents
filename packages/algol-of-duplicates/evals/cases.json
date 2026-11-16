@@ -1,0 +1,14 @@
+{
+  "suite": "algol-of-duplicates",
+  "root": "..",
+  "data_note": "Fictional AP payments in ../fixtures, as of 2026-11-16. No model is called.",
+  "cases": [
+    {"id": "totals", "tool": "algol_search", "args": {"payments": "fixtures/payments.csv", "as_of": "2026-11-16"}, "expect": {"equals": {"result.groups": 6, "result.to_recover_high": 4950, "result.to_recover_medium": 185, "result.to_recover_low": 1200, "result.already_credited": 1}}},
+    {"id": "every-rule", "tool": "algol_search", "args": {"payments": "fixtures/payments.csv", "as_of": "2026-11-16"}, "expect": {"contains": ["invoice_number_variant", "two_vendor_records", "same_pro", "same_amount_and_date", "already_credited", "balance-due"]}},
+    {"id": "different-pros-are-not-duplicates", "tool": "algol_search", "args": {"payments": "fixtures/payments.csv", "as_of": "2026-11-16"}, "expect": {"not_contains": ["SC-1001"]}},
+    {"id": "wider-window", "tool": "algol_search", "args": {"payments": "fixtures/payments.csv", "as_of": "2026-11-16", "date_window_days": 0}, "expect": {"equals": {"result.to_recover_low": 0}}},
+    {"id": "only-credited-no-draft", "tool": "algol_draft_recovery", "mode": "auto", "auto_actions": ["algol_draft_recovery"], "args": {"payments": "fixtures/payments.csv", "vendor": "Summit Carriers"}, "expect": {"status": "error"}},
+    {"id": "send-stays-a-click-in-auto", "tool": "algol_request_send", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
+    {"id": "never-moves-money", "tool": "ap_void_payment", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+  ]
+}

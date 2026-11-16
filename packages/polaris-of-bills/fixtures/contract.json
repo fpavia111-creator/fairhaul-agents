@@ -1,0 +1,134 @@
+{
+  "note": "Fictional contract for the Polaris demo. Carriers, rates and places are made up.",
+  "currency": "USD",
+  "tolerance": 1,
+  "fuel_index": [
+    {
+      "week_of": "2026-10-26",
+      "price": 3.6
+    },
+    {
+      "week_of": "2026-11-02",
+      "price": 3.82
+    }
+  ],
+  "charge_aliases": {
+    "blue sticker fee": "appointment"
+  },
+  "carriers": [
+    {
+      "carrier": "Example Linehaul",
+      "scac": "EXLT",
+      "aliases": [
+        "Example Linehaul LLC"
+      ],
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "origin": "IL",
+          "destination": "TX",
+          "mode": "ltl",
+          "basis": "per_cwt",
+          "rate": 28,
+          "minimum": 150
+        },
+        {
+          "origin": "606",
+          "destination": "752",
+          "mode": "ltl",
+          "basis": "flat",
+          "rate": 360
+        }
+      ],
+      "fuel": {
+        "basis": "pct_of_linehaul",
+        "table": [
+          {
+            "min": 3.5,
+            "max": 3.75,
+            "value": 15
+          },
+          {
+            "min": 3.75,
+            "max": 4.0,
+            "value": 16
+          }
+        ]
+      },
+      "accessorials": {
+        "liftgate": {
+          "amount": 25
+        },
+        "residential": {
+          "not_allowed": true
+        },
+        "appointment": {
+          "amount": 15
+        },
+        "detention": {
+          "per_hour": 50,
+          "free_hours": 2,
+          "max": 400
+        }
+      }
+    },
+    {
+      "carrier": "Sample Freightways",
+      "scac": "SMPF",
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "origin": "OH",
+          "destination": "GA",
+          "mode": "ftl",
+          "basis": "per_mile",
+          "rate": 2.4,
+          "minimum": 500
+        }
+      ],
+      "fuel": {
+        "basis": "per_mile",
+        "table": [
+          {
+            "min": 3.5,
+            "max": 3.75,
+            "value": 0.5
+          },
+          {
+            "min": 3.75,
+            "max": 4.0,
+            "value": 0.55
+          }
+        ]
+      },
+      "accessorials": {
+        "detention": {
+          "per_hour": 60,
+          "free_hours": 2,
+          "max": 600
+        },
+        "lumper": {
+          "amount": 150,
+          "max": 150,
+          "requires_proof": true
+        }
+      }
+    },
+    {
+      "carrier": "Test Carrier Co",
+      "scac": "TSTC",
+      "effective": "2025-01-01",
+      "expires": "2025-12-31",
+      "lanes": [
+        {
+          "origin": "*",
+          "destination": "*",
+          "basis": "flat",
+          "rate": 300
+        }
+      ]
+    }
+  ]
+}

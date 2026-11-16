@@ -1,0 +1,6 @@
+load_id,origin,destination,equipment,pickup_date,deliver_by,miles,accessorials,lane_history_avg
+Q-701,Chicago IL,Dallas TX,Dry van 53,2026-11-18,2026-11-20,925,,2150
+Q-702,Atlanta GA,Miami FL,Reefer 53,2026-11-19,2026-11-20,662,,1900
+Q-703,Denver CO,Phoenix AZ,Flatbed 48,2026-11-18,2026-11-21,821,Tarping,2050
+Q-704,Memphis TN,Columbus OH,Dry van 53,2026-11-20,2026-11-21,582,Liftgate,1300
+Q-705,Seattle WA,Portland OR,Dry van 53,2026-11-19,2026-11-19,174,,

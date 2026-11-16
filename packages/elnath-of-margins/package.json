@@ -1,0 +1,58 @@
+{
+  "name": "elnath-of-margins",
+  "version": "0.1.0",
+  "description": "Compares the freight you charged each customer with what the freight actually cost: recovery by customer and freight terms, orders shipped free that should not have been, collect orders you paid for, and how a different free-shipping threshold would have changed the result.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "elnath-of-margins": "bin/elnath-of-margins.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/elnath-of-margins.js demo",
+    "eval": "node bin/elnath-of-margins.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/elnath-of-margins"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/elnath-of-margins#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "freight-recovery",
+    "margin",
+    "pricing",
+    "free-shipping",
+    "customers"
+  ]
+}

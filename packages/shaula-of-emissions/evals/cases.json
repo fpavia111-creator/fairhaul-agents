@@ -1,0 +1,16 @@
+{
+  "suite": "shaula-of-emissions",
+  "root": "..",
+  "data_note": "Fictional shipments and example factors (not from any framework) in ../fixtures. No model is called.",
+  "cases": [
+    {"id": "totals", "tool": "shaula_estimate", "args": {"shipments": "fixtures/shipments.csv", "factors": "fixtures/factors.json"}, "expect": {"equals": {"result.estimated": 7, "result.not_estimated": 2, "result.kg_co2e": 10292.1, "result.measured_distance_pct": 22, "result.by_mode.0.mode": "ftl"}}},
+    {"id": "units-converted", "tool": "shaula_estimate", "args": {"shipments": "fixtures/shipments.csv", "factors": "fixtures/factors.json"}, "expect": {"contains": ["\"shipment_id\":\"S-806\",\"mode\":\"ocean\"", "\"tonnes\":9.8,\"km\":10400"]}},
+    {"id": "gaps-named", "tool": "shaula_estimate", "args": {"shipments": "fixtures/shipments.csv", "factors": "fixtures/factors.json"}, "expect": {"contains": ["no distance", "no factor for mode \\\"Courier\\\""]}},
+    {"id": "mode-shift", "tool": "shaula_estimate", "args": {"shipments": "fixtures/shipments.csv", "factors": "fixtures/factors.json"}, "expect": {"equals": {"result.shift.shipments": 3, "result.shift.kg_saved": 4759.95}}},
+    {"id": "source-on-summary", "tool": "shaula_estimate", "args": {"shipments": "fixtures/shipments.csv", "factors": "fixtures/factors.json"}, "expect": {"contains": ["EXAMPLE VALUES FOR THE DEMO ONLY"]}},
+    {"id": "factors-must-name-source", "tool": "shaula_estimate", "args": {"shipments": "fixtures/shipments.csv", "factors": "fixtures/README.md"}, "expect": {"status": "error"}},
+    {"id": "statement", "tool": "shaula_draft_emissions_statement", "mode": "auto", "auto_actions": ["shaula_draft_emissions_statement"], "args": {"shipments": "fixtures/shipments.csv", "factors": "fixtures/factors.json", "customer": "Front Range Supply"}, "expect": {"contains": ["emissions_statement", "Nothing was sent"]}},
+    {"id": "send-stays-a-click-in-auto", "tool": "shaula_request_send", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
+    {"id": "never-submits", "tool": "esg_portal_submit", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "suite": "arcturus-of-edi",
+  "root": "..",
+  "data_note": "Fictional X12 004010 files in ../fixtures. No model is called.",
+  "cases": [
+    {"id": "clean-files-read", "tool": "arcturus_inspect", "args": {"files": ["fixtures/tenders-204.edi", "fixtures/responses-990.edi", "fixtures/status-214.edi", "fixtures/invoices-210.edi", "fixtures/ack-997.edi"]}, "expect": {"contains": ["13 transaction(s) read; 0 file(s) with problems"]}},
+    {"id": "broken-counts-found", "tool": "arcturus_inspect", "args": {"files": ["fixtures/broken-210.edi"]}, "expect": {"contains": ["se_count", "ge_count"]}},
+    {"id": "not-edi-said-plainly", "tool": "arcturus_inspect", "args": {"files": ["fixtures/not-edi.txt"]}, "expect": {"contains": ["not an X12 file"]}},
+    {"id": "reconcile-findings", "tool": "arcturus_reconcile", "args": {"files": ["fixtures/tenders-204.edi", "fixtures/responses-990.edi", "fixtures/status-214.edi", "fixtures/invoices-210.edi", "fixtures/ack-997.edi"]}, "expect": {"equals": {"result.by_finding.invoice_over_tender": 2, "result.by_finding.invoice_without_tender": 1, "result.by_finding.invoiced_without_delivery_status": 1, "result.by_finding.rejected_by_partner": 1}}},
+    {"id": "declined-everywhere", "tool": "arcturus_reconcile", "args": {"files": ["fixtures/tenders-204.edi", "fixtures/invoices-210.edi"]}, "expect": {"contains": ["tender_no_response"]}},
+    {"id": "acceptance-rates", "tool": "arcturus_tender_stats", "args": {"files": ["fixtures/responses-990.edi"]}, "expect": {"equals": {"result.carriers.0.scac": "EXLT", "result.carriers.0.acceptance_pct": 67}}},
+    {"id": "never-transmits", "tool": "edi_transmit", "mode": "auto", "args": {}, "expect": {"status": "blocked"}},
+    {"id": "never-uploads", "tool": "van_upload", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+  ]
+}

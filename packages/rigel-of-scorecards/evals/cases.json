@@ -1,0 +1,14 @@
+{
+  "suite": "rigel-of-scorecards",
+  "root": "..",
+  "data_note": "Fictional loads in ../fixtures, July to November 2026. No model is called.",
+  "cases": [
+    {"id": "ranking", "tool": "rigel_score", "args": {"shipments": "fixtures/shipments.csv", "settings": "fixtures/scorecard.json"}, "expect": {"equals": {"result.carriers": 4, "result.ranked": 3, "result.loads": 21, "result.cards.0.carrier": "Ridgeline Freight", "result.cards.0.score": 94.9, "result.cards.2.carrier": "Coastal Line Haul", "result.cards.3.rank": null}}},
+    {"id": "measures", "tool": "rigel_score", "args": {"shipments": "fixtures/shipments.csv"}, "expect": {"equals": {"result.cards.1.acceptance_pct": 62.5, "result.cards.1.billing_accuracy_pct": 60, "result.cards.1.overbilled": 235, "result.cards.2.otd_pct": 50, "result.cards.2.claim_amount": 860, "result.cards.2.otd_change": -33.4}}},
+    {"id": "grace-minutes", "tool": "rigel_score", "args": {"shipments": "fixtures/shipments.csv"}, "expect": {"equals": {"result.cards.0.otp_pct": 100}}},
+    {"id": "export-columns", "tool": "rigel_score", "args": {"shipments": "fixtures/exports/tms-style.csv"}, "expect": {"equals": {"result.carriers": 2, "result.ranked": 0}, "contains": ["2.37"]}},
+    {"id": "unknown-carrier-draft", "tool": "rigel_draft_review", "mode": "auto", "auto_actions": ["rigel_draft_review"], "args": {"shipments": "fixtures/shipments.csv", "carrier": "Nobody Trucking"}, "expect": {"status": "error"}},
+    {"id": "send-stays-a-click-in-auto", "tool": "rigel_request_send", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
+    {"id": "never-changes-routing", "tool": "tms_update_routing_guide", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+  ]
+}

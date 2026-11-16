@@ -1,0 +1,17 @@
+{
+  "suite": "polaris-of-bills",
+  "root": "..",
+  "data_note": "Fictional carriers, contract and invoices in ../fixtures. Deterministic checks; no model is called.",
+  "cases": [
+    {"id": "audit-totals", "tool": "polaris_audit", "args": {"invoices": "fixtures/invoices.csv", "contract": "fixtures/contract.json", "shipments": "fixtures/shipments.csv", "paid": "fixtures/paid.csv"}, "expect": {"status": "executed", "equals": {"result.invoices": 11, "result.disputable": 1065.8, "result.by_carrier.Example Linehaul.invoices": 7, "result.duplicate": 2, "result.ok": 1, "result.review": 4}}},
+    {"id": "every-planted-issue-found", "tool": "polaris_audit", "args": {"invoices": "fixtures/invoices.csv", "contract": "fixtures/contract.json", "shipments": "fixtures/shipments.csv", "paid": "fixtures/paid.csv"}, "expect": {"contains": ["fuel_over", "accessorial_over", "accessorial_not_allowed", "duplicate_pro", "already_paid", "lines_do_not_add_up", "weight_over_bol", "linehaul_over", "rate_needs_data", "contract_expired", "no_contract", "quote_exceeded"]}},
+    {"id": "detention-from-dock-times", "tool": "polaris_explain", "args": {"invoices": "fixtures/invoices.csv", "contract": "fixtures/contract.json", "shipments": "fixtures/shipments.csv", "invoice_number": "INV-8101"}, "expect": {"contains": ["Detention / waiting time billed 200, contract allows 150", "Lumper / unloading billed 175, contract allows 150"], "equals": {"result.invoice.disputable": 131}}},
+    {"id": "x12-210-reads", "tool": "polaris_audit", "args": {"invoices": "fixtures/invoices-210.edi", "contract": "fixtures/contract.json"}, "expect": {"equals": {"result.invoices": 2, "result.disputable": 12.2}}},
+    {"id": "tms-export-columns", "tool": "polaris_audit", "args": {"invoices": "fixtures/exports/tms-freight-bills.csv", "contract": "fixtures/contract.json"}, "expect": {"equals": {"result.invoices": 3, "result.disputable": 100.8}}},
+    {"id": "bad-contract-refused", "tool": "polaris_audit", "args": {"invoices": "fixtures/invoices.csv", "contract": "fixtures/contract-typo.json"}, "expect": {"status": "error", "contains": ["/carriers/0/lanes/0/basis"]}},
+    {"id": "send-stays-one-click-in-auto", "tool": "polaris_request_send", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval", "decision": "ask"}},
+    {"id": "pay-stays-one-click-in-auto", "tool": "polaris_request_pay", "mode": "auto", "args": {"invoices": "fixtures/invoices.csv", "contract": "fixtures/contract.json", "invoice_number": "INV-7001", "amount": 439}, "expect": {"status": "needs_approval", "decision": "ask"}},
+    {"id": "never-pays", "tool": "ap_pay_invoice", "mode": "auto", "args": {}, "expect": {"status": "blocked"}},
+    {"id": "never-emails", "tool": "email_send", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "antares-of-entries": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "antares-of-entries@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

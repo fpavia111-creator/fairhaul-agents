@@ -1,0 +1,5 @@
+Invoice Number,Invoice Date,Express or Ground Tracking ID,Service Type,Shipment Date,Rated Weight Amount,Tracking ID Charge Description,Tracking ID Charge Amount
+FDX-1020,2026-10-20,748900000001,FedEx Priority Overnight,2026-10-14,1,Transportation,38.9
+FDX-1020,2026-10-20,748900000001,FedEx Priority Overnight,2026-10-14,1,Fuel Surcharge,6.1
+FDX-1110,2026-11-10,748900000002,FedEx Ground,2026-11-03,6,Transportation,13.1
+FDX-1110,2026-11-10,748900000003,FedEx 2Day,2026-10-30,2,Transportation,21.4

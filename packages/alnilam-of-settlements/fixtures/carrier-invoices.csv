@@ -1,0 +1,9 @@
+load_id,carrier,invoice_number,amount,received
+L-5101,Ridgeline Freight,RF-1201,2150.00,2026-10-21
+L-5102,Prairie Express,PX-3301,1855.00,2026-10-23
+L-5103,Coastal Line Haul,CL-8801,2400.00,2026-11-04
+L-5104,Summit Carriers,SC-2210,1325.00,2026-11-06
+L-5105,Prairie Express,PX-3340,1890.00,2026-11-07
+L-5107,North Star Hauling,NS-0091,2750.00,2026-11-13
+L-5108,Coastal Line Haul,CL-8650,1750.00,2026-10-02
+L-5199,Ridgeline Freight,RF-1288,640.00,2026-11-09

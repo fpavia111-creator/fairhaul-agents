@@ -1,0 +1,59 @@
+{
+  "name": "sirius-of-parcels",
+  "version": "0.1.0",
+  "description": "Sirius of Parcels: audits UPS, FedEx, DHL and USPS invoice data for late deliveries, duplicate tracking numbers, voided labels billed, residential charges on business addresses, repeat address corrections and dimensional-weight overbilling, with claim-by dates and refund request drafts. Never files claims itself.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "sirius-of-parcels": "bin/sirius-of-parcels.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/sirius-of-parcels.js demo",
+    "eval": "node bin/sirius-of-parcels.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/sirius-of-parcels"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/sirius-of-parcels#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "parcel-audit",
+    "ups",
+    "fedex",
+    "dhl",
+    "late-delivery-refund",
+    "dim-weight"
+  ]
+}

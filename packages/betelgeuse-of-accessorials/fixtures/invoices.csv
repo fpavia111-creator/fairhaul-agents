@@ -1,0 +1,22 @@
+invoice_number,carrier,pro,ship_date,amount,dest_city,dest_state,dest_postal,charge_description,charge_amount
+INV-8001,Ridgeline Freight,PRO-B01,2026-10-05,520,Austin,TX,78701,Linehaul,400
+INV-8001,Ridgeline Freight,PRO-B01,2026-10-05,520,Austin,TX,78701,Liftgate Delivery,25
+INV-8001,Ridgeline Freight,PRO-B01,2026-10-05,520,Austin,TX,78701,Residential Delivery,95
+INV-8002,Ridgeline Freight,PRO-B02,2026-10-06,540,Austin,TX,78701,Linehaul,410
+INV-8002,Ridgeline Freight,PRO-B02,2026-10-06,540,Austin,TX,78701,Liftgate Delivery,35
+INV-8002,Ridgeline Freight,PRO-B02,2026-10-06,540,Austin,TX,78701,Residential Delivery,95
+INV-8003,Prairie Express,PRO-B03,2026-10-07,530,Austin,TX,78701,Linehaul,380
+INV-8003,Prairie Express,PRO-B03,2026-10-07,530,Austin,TX,78701,Residential Delivery,110
+INV-8003,Prairie Express,PRO-B03,2026-10-07,530,Austin,TX,78701,Liftgate,40
+INV-8004,Ridgeline Freight,PRO-B04,2026-10-08,315,Dallas,TX,75201,Linehaul,300
+INV-8004,Ridgeline Freight,PRO-B04,2026-10-08,315,Dallas,TX,75201,Appointment Fee,15
+INV-8005,Ridgeline Freight,PRO-B05,2026-10-09,315,Dallas,TX,75201,Linehaul,300
+INV-8005,Ridgeline Freight,PRO-B05,2026-10-09,315,Dallas,TX,75201,Appointment Fee,15
+INV-8006,Prairie Express,PRO-B06,2026-10-10,500,Houston,TX,77002,Linehaul,350
+INV-8006,Prairie Express,PRO-B06,2026-10-10,500,Houston,TX,77002,Redelivery,150
+INV-8007,Ridgeline Freight,PRO-B07,2026-10-11,700,Tulsa,OK,74103,Linehaul,600
+INV-8007,Ridgeline Freight,PRO-B07,2026-10-11,700,Tulsa,OK,74103,Detention,100
+INV-8008,Ridgeline Freight,PRO-B08,2026-10-12,770,Tulsa,OK,74103,Linehaul,620
+INV-8008,Ridgeline Freight,PRO-B08,2026-10-12,770,Tulsa,OK,74103,Detention,150
+INV-8009,Ridgeline Freight,PRO-B09,2026-10-13,560,Denver,CO,80202,Linehaul,500
+INV-8009,Ridgeline Freight,PRO-B09,2026-10-13,560,Denver,CO,80202,Inside Delivery,60

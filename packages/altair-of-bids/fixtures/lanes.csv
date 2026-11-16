@@ -1,0 +1,7 @@
+lane_id,origin,destination,annual_loads,incumbent,incumbent_rate,equipment
+L01,Chicago IL,Dallas TX,120,Ridgeline Freight,1500,Dry van 53
+L02,Chicago IL,Atlanta GA,80,Coastal Line Haul,1350,Dry van 53
+L03,Dallas TX,Denver CO,60,Prairie Express,1400,Dry van 53
+L04,Atlanta GA,Miami FL,50,Coastal Line Haul,1100,Dry van 53
+L05,Denver CO,Phoenix AZ,40,Summit Carriers,1250,Dry van 53
+L06,Memphis TN,Columbus OH,30,,,Dry van 53

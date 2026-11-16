@@ -1,0 +1,14 @@
+{
+  "suite": "adhara-of-ocean",
+  "root": "..",
+  "data_note": "Fictional ocean invoices and contracts in ../fixtures. No model is called.",
+  "cases": [
+    {"id": "totals", "tool": "adhara_audit", "args": {"invoices": "fixtures/ocean-invoices.csv", "contract": "fixtures/contract.json"}, "expect": {"equals": {"result.bills": 6, "result.billed": 28566, "result.disputable": 3355, "result.with_findings": 5}}},
+    {"id": "every-finding", "tool": "adhara_audit", "args": {"invoices": "fixtures/ocean-invoices.csv", "contract": "fixtures/contract.json"}, "expect": {"contains": ["rate_over", "surcharge_out_of_window", "surcharge_included", "duplicate_charge", "surcharge_not_in_contract", "container_count", "contract_expired", "currency_mismatch"]}},
+    {"id": "alias-matches", "tool": "adhara_audit", "args": {"invoices": "fixtures/ocean-invoices.csv", "contract": "fixtures/contract.json"}, "expect": {"equals": {"result.items.0.findings.length": 0}}},
+    {"id": "extra-container", "tool": "adhara_audit", "args": {"invoices": "fixtures/ocean-invoices.csv", "contract": "fixtures/contract.json"}, "expect": {"equals": {"result.items.3.disputable": 2100}}},
+    {"id": "nothing-to-dispute", "tool": "adhara_draft_dispute", "mode": "auto", "auto_actions": ["adhara_draft_dispute"], "args": {"invoices": "fixtures/ocean-invoices.csv", "contract": "fixtures/contract.json", "carrier": "Northsea Container Line"}, "expect": {"status": "error"}},
+    {"id": "send-stays-a-click-in-auto", "tool": "adhara_request_send", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
+    {"id": "never-pays", "tool": "ap_pay_invoice", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+  ]
+}

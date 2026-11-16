@@ -1,0 +1,62 @@
+{
+  "note": "Fictional contract for the Betelgeuse demo.",
+  "currency": "USD",
+  "tolerance": 1,
+  "carriers": [
+    {
+      "carrier": "Ridgeline Freight",
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "origin": "*",
+          "destination": "*",
+          "basis": "flat",
+          "rate": 400
+        }
+      ],
+      "accessorials": {
+        "liftgate": {
+          "amount": 25
+        },
+        "residential": {
+          "amount": 95
+        },
+        "appointment": {
+          "amount": 15
+        },
+        "inside": {
+          "amount": 60
+        },
+        "detention": {
+          "per_hour": 75,
+          "free_hours": 2
+        }
+      }
+    },
+    {
+      "carrier": "Prairie Express",
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "origin": "*",
+          "destination": "*",
+          "basis": "flat",
+          "rate": 380
+        }
+      ],
+      "accessorials": {
+        "liftgate": {
+          "amount": 40
+        },
+        "residential": {
+          "amount": 110
+        },
+        "redelivery": {
+          "amount": 150
+        }
+      }
+    }
+  ]
+}

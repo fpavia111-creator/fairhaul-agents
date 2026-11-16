@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "altair-of-bids": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "altair-of-bids@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

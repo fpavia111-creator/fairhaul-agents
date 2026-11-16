@@ -1,0 +1,22 @@
+{
+  "name": "alcor-of-pods",
+  "version": "0.1.0",
+  "description": "Matches every delivered or invoiced shipment to its proof of delivery, flags missing, unsigned, short or exception-noted PODs and delivery dates that disagree with the invoice, holds the matching invoices for review, and drafts POD requests to carriers. Never releases or holds a payment itself.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/alcor-of-pods#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "proof-of-delivery",
+    "pod",
+    "delivery-receipt",
+    "invoice-hold"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "note": "Fictional carton catalog and settings for the Deneb demo.",
+  "cartons": [
+    { "name": "S1", "l": 10, "w": 8, "h": 4, "cost": 0.45 },
+    { "name": "S2", "l": 12, "w": 10, "h": 6, "cost": 0.62 },
+    { "name": "M1", "l": 16, "w": 12, "h": 8, "cost": 0.95 },
+    { "name": "M2", "l": 18, "w": 14, "h": 12, "cost": 1.3 },
+    { "name": "L1", "l": 24, "w": 18, "h": 16, "cost": 2.1 }
+  ],
+  "divisor": 139,
+  "padding_in": 1,
+  "rate_per_lb": 1.1,
+  "oversize_length_plus_girth": 130,
+  "oversize_longest_side": 48
+}

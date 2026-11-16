@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "adhara-of-ocean": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "adhara-of-ocean@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

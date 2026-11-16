@@ -1,0 +1,10 @@
+shipment_id,pro,carrier,ship_date,status,quoted_amount,weight,miles,origin_city,origin_state,origin_postal,dest_city,dest_state,dest_postal,cost_center,gl_account
+S-1,PRO-1,EXLT,2026-10-20,delivered,,1200,,Chicago,IL,60607,Dallas,TX,75201,Retail,6100
+S-2,PRO-2,EXLT,2026-10-28,delivered,410,900,,Chicago,IL,60607,Dallas,TX,75201,Retail,6100
+S-3,PRO-3,EXLT,2026-10-29,delivered,,500,,Chicago,IL,60607,Austin,TX,78701,Wholesale,6100
+S-4,L-4,SMPF,2026-10-30,delivered,,40000,560,Columbus,OH,43215,Atlanta,GA,30303,Wholesale,6110
+S-5,PRO-5,EXLT,2026-10-31,in transit,,800,,Chicago,IL,60607,Dallas,TX,75201,Retail,6100
+S-6,N-6,Nova Carriers,2026-10-31,delivered,,300,,Reno,NV,89501,Boise,ID,83702,Retail,6100
+S-7,PRO-7,EXLT,2026-11-02,booked,,700,,Chicago,IL,60607,Dallas,TX,75201,Retail,6100
+S-8,PRO-8,EXLT,2026-10-15,cancelled,,700,,Chicago,IL,60607,Dallas,TX,75201,Retail,6100
+S-9,PRO-9,EXLT,2026-08-20,delivered,350,,,Chicago,IL,60607,Dallas,TX,75201,Retail,6100

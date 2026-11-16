@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "algol-of-duplicates": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "algol-of-duplicates@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

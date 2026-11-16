@@ -1,0 +1,176 @@
+{
+  "note": "Fictional contract for the Spica demo. Carriers, rates and diesel prices are made up; copy your own index source's weekly prices into fuel_index.",
+  "currency": "USD",
+  "tolerance": 1,
+  "fuel_index": [
+    {
+      "week_of": "2026-09-07",
+      "price": 3.62
+    },
+    {
+      "week_of": "2026-09-14",
+      "price": 3.68
+    },
+    {
+      "week_of": "2026-09-21",
+      "price": 3.71
+    },
+    {
+      "week_of": "2026-09-28",
+      "price": 3.74
+    },
+    {
+      "week_of": "2026-10-05",
+      "price": 3.79
+    },
+    {
+      "week_of": "2026-10-12",
+      "price": 3.86
+    },
+    {
+      "week_of": "2026-10-19",
+      "price": 3.94
+    },
+    {
+      "week_of": "2026-10-26",
+      "price": 4.02
+    },
+    {
+      "week_of": "2026-11-02",
+      "price": 4.08
+    }
+  ],
+  "carriers": [
+    {
+      "carrier": "Ridgeline Freight",
+      "scac": "RDGF",
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "origin": "*",
+          "destination": "*",
+          "basis": "per_mile",
+          "rate": 2.1
+        }
+      ],
+      "fuel": {
+        "basis": "pct_of_linehaul",
+        "table": [
+          {
+            "min": 3.5,
+            "max": 3.75,
+            "value": 15
+          },
+          {
+            "min": 3.75,
+            "max": 4.0,
+            "value": 16
+          },
+          {
+            "min": 4.0,
+            "max": 4.25,
+            "value": 17
+          },
+          {
+            "min": 4.25,
+            "max": 4.5,
+            "value": 18
+          }
+        ]
+      }
+    },
+    {
+      "carrier": "Coastal Line Haul",
+      "scac": "CLHL",
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "origin": "*",
+          "destination": "*",
+          "basis": "per_mile",
+          "rate": 2.0
+        }
+      ],
+      "fuel": {
+        "basis": "per_mile",
+        "table": [
+          {
+            "min": 3.5,
+            "max": 3.75,
+            "value": 0.45
+          },
+          {
+            "min": 3.75,
+            "max": 4.0,
+            "value": 0.5
+          },
+          {
+            "min": 4.0,
+            "max": 4.25,
+            "value": 0.55
+          },
+          {
+            "min": 4.25,
+            "max": 4.5,
+            "value": 0.6
+          }
+        ]
+      }
+    },
+    {
+      "carrier": "Prairie Express",
+      "scac": "PRXP",
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "origin": "*",
+          "destination": "*",
+          "basis": "per_mile",
+          "rate": 2.2
+        }
+      ],
+      "fuel": {
+        "basis": "pct_of_linehaul",
+        "table": [
+          {
+            "min": 3.5,
+            "max": 3.75,
+            "value": 18
+          },
+          {
+            "min": 3.75,
+            "max": 4.0,
+            "value": 19.5
+          },
+          {
+            "min": 4.0,
+            "max": 4.25,
+            "value": 21
+          },
+          {
+            "min": 4.25,
+            "max": 4.5,
+            "value": 22.5
+          }
+        ]
+      }
+    },
+    {
+      "carrier": "Summit Carriers",
+      "scac": "SMTC",
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "origin": "*",
+          "destination": "*",
+          "basis": "flat",
+          "rate": 900
+        }
+      ]
+    }
+  ]
+}

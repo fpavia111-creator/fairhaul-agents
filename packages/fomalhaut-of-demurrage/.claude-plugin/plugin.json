@@ -1,0 +1,23 @@
+{
+  "name": "fomalhaut-of-demurrage",
+  "version": "0.1.0",
+  "description": "Tracks every import container's free time at the port and with the line, counts the days left before demurrage and detention start, prices what is accruing from your tariff tiers, checks the line's demurrage and detention invoices and drafts disputes. Never pays or books anything.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/fomalhaut-of-demurrage#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "demurrage",
+    "detention",
+    "per-diem",
+    "containers",
+    "ocean"
+  ]
+}

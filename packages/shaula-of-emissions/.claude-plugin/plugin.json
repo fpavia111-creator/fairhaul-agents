@@ -1,0 +1,22 @@
+{
+  "name": "shaula-of-emissions",
+  "version": "0.1.0",
+  "description": "Estimates the greenhouse gas emissions of your shipments from weight, distance and mode, using emission factors you choose, with totals by mode, carrier, lane and customer, a data quality score and labelled mode-shift what-ifs. Every figure is an estimate; nothing is submitted anywhere.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/shaula-of-emissions#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "emissions",
+    "carbon",
+    "scope-3",
+    "sustainability"
+  ]
+}

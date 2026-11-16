@@ -1,0 +1,5 @@
+load_id,payee,amount,paid,reference
+L-5101,Ridgeline Freight,2150.00,2026-11-12,ACH-4401
+L-5108,Coastal Line Haul,1750.00,2026-10-30,ACH-4310
+L-5108,Coastal Line Haul,1750.00,2026-11-02,ACH-4333
+L-5105,Prairie Express,1890.00,2026-11-14,ACH-4420

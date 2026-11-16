@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "sirius-of-parcels": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "sirius-of-parcels@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "name": "polaris-of-bills",
+  "version": "0.1.0",
+  "description": "Polaris of Bills: audits truckload and LTL freight bills (CSV, Excel or X12 210) against your own contract rates, fuel table and accessorial terms, finds duplicates and math errors, and drafts carrier disputes. Never pays and never sends.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "polaris-of-bills": "bin/polaris-of-bills.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/polaris-of-bills.js demo",
+    "eval": "node bin/polaris-of-bills.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/polaris-of-bills"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/polaris-of-bills#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "ltl",
+    "truckload",
+    "freight-bill-audit",
+    "x12-210"
+  ]
+}

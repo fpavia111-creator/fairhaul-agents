@@ -1,0 +1,23 @@
+invoice_number,carrier,ship_date,invoice_date,amount,miles,charge_description,charge_amount
+F-1001,Ridgeline Freight,2026-10-14,2026-10-16,1392,560,Linehaul,1200
+F-1001,Ridgeline Freight,2026-10-14,2026-10-16,1392,560,Fuel Surcharge,192
+F-1002,Ridgeline Freight,2026-10-28,2026-10-30,1755,700,Linehaul,1500
+F-1002,Ridgeline Freight,2026-10-28,2026-10-30,1755,700,Fuel Surcharge,255
+F-1003,Coastal Line Haul,2026-10-06,2026-10-08,2350,900,Linehaul,1900
+F-1003,Coastal Line Haul,2026-10-06,2026-10-08,2350,900,Fuel Surcharge,450
+F-1004,Coastal Line Haul,2026-09-23,2026-10-27,2395,900,Linehaul,1900
+F-1004,Coastal Line Haul,2026-09-23,2026-10-27,2395,900,Fuel Surcharge,495
+F-1005,Prairie Express,2026-10-01,2026-10-28,1210,450,Linehaul,1000
+F-1005,Prairie Express,2026-10-01,2026-10-28,1210,450,Fuel Surcharge,210
+F-1006,Prairie Express,2026-10-20,2026-10-22,1205,450,Linehaul,1000
+F-1006,Prairie Express,2026-10-20,2026-10-22,1205,450,Fuel Surcharge,205
+F-1007,Ridgeline Freight,2026-11-12,2026-11-13,1404,560,Linehaul,1200
+F-1007,Ridgeline Freight,2026-11-12,2026-11-13,1404,560,Fuel Surcharge,204
+F-1008,Coastal Line Haul,2026-10-15,2026-10-17,2380,,Linehaul,1900
+F-1008,Coastal Line Haul,2026-10-15,2026-10-17,2380,,Fuel Surcharge,480
+F-1009,Summit Carriers,2026-10-10,2026-10-12,960,450,Linehaul,900
+F-1009,Summit Carriers,2026-10-10,2026-10-12,960,450,Fuel Surcharge,60
+F-1010,Ridgeline Freight,2026-10-13,2026-10-15,920,380,Linehaul,800
+F-1010,Ridgeline Freight,2026-10-13,2026-10-15,920,380,Fuel Surcharge,120
+F-1011,Northgate Haulers,2026-10-09,2026-10-11,750,300,Linehaul,700
+F-1011,Northgate Haulers,2026-10-09,2026-10-11,750,300,Fuel Surcharge,50

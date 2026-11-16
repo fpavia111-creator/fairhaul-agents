@@ -1,0 +1,58 @@
+{
+  "name": "rigel-of-scorecards",
+  "version": "0.1.0",
+  "description": "Rigel of Scorecards: scores each carrier on on-time pickup and delivery, tender acceptance, billing accuracy, claims, tracking and cost per mile from your own shipment history, with your weights, ranks them and drafts the quarterly review note. Never sends it.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "rigel-of-scorecards": "bin/rigel-of-scorecards.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/rigel-of-scorecards.js demo",
+    "eval": "node bin/rigel-of-scorecards.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/rigel-of-scorecards"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/rigel-of-scorecards#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "carrier-scorecard",
+    "carrier-performance",
+    "on-time",
+    "otd",
+    "qbr"
+  ]
+}

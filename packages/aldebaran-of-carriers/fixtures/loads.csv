@@ -1,0 +1,7 @@
+load_id,carrier_id,pickup_date,booked_at,cargo_value,dispatch_phone,dispatch_email
+L-9001,RIDG,2026-11-18,2026-11-14,42000,(312) 555-0140,dispatch@ridgeline-freight.example
+L-9002,SWFT,2026-11-17,2026-11-15,118000,(469) 555-0199,swiftlane.dispatch@gmail.com
+L-9003,COAS,2026-12-08,2026-11-15,26500,(904) 555-0102,loads@coastal-linehaul.example
+L-9004,PRAI,2026-11-19,2026-11-15,31000,(913) 555-0123,prairie.loads@outlook.com
+L-9005,NORT,2026-11-20,2026-11-16,64000,,
+L-9006,TRIX,2026-11-21,2026-11-16,15000,,

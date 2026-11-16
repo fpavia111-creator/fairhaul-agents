@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "hadar-of-docks": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "hadar-of-docks@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

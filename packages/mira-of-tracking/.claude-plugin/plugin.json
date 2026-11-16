@@ -1,0 +1,23 @@
+{
+  "name": "mira-of-tracking",
+  "version": "0.1.0",
+  "description": "Reads your open loads and their tracking events, finds loads with stale or no tracking, missed pickups and ETAs that run past the delivery appointment, ranks carriers on tracking compliance and drafts the delay notice to your customer. Never messages anyone itself.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/mira-of-tracking#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "shipment-visibility",
+    "tracking",
+    "eta",
+    "late-shipments",
+    "exceptions"
+  ]
+}

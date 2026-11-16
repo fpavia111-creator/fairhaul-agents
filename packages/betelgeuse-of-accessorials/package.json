@@ -1,0 +1,58 @@
+{
+  "name": "betelgeuse-of-accessorials",
+  "version": "0.1.0",
+  "description": "Betelgeuse of Accessorials: finds where your accessorial charges come from (liftgate, residential, appointment, redelivery, detention and more) by location, carrier and lane, flags charges nobody ordered and charges above your contract, and drafts the address-book fixes that stop the repeat surprises. Never changes your TMS.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "betelgeuse-of-accessorials": "bin/betelgeuse-of-accessorials.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/betelgeuse-of-accessorials.js demo",
+    "eval": "node bin/betelgeuse-of-accessorials.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/betelgeuse-of-accessorials"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/betelgeuse-of-accessorials#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "accessorials",
+    "liftgate",
+    "residential",
+    "redelivery",
+    "accessorial-charges"
+  ]
+}

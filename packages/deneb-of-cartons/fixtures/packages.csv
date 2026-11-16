@@ -1,0 +1,10 @@
+package_id,sku,carton,carton_l,carton_w,carton_h,contents_l,contents_w,contents_h,weight,billed
+P-01,LAMP-SHADE,M2,,,,13,9,5,3.2,18.40
+P-02,LAMP-SHADE,M2,,,,13,9,5,3.1,18.40
+P-03,LAMP-SHADE,M2,,,,13,9,6,3.4,18.40
+P-04,CANDLE-SET,S2,,,,8,6,3,1.8,9.10
+P-05,CANDLE-SET,M1,,,,8,6,3,1.9,12.70
+P-06,THROW-BLANKET,L1,,,,20,15,8,4.5,29.80
+P-07,FLOOR-RUG,CUSTOM,50,10,10,46,8,8,9.0,31.20
+P-08,MIRROR,CUSTOM,34,26,8,30,22,4,12.0,33.50
+P-09,BOOKENDS,S1,,,,7,5,2,2.6,8.20

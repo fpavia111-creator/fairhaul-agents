@@ -1,0 +1,7 @@
+{
+  "note": "Fictional settings for the Nunki demo.",
+  "fuel_per_mile": 0.6,
+  "fuel_pct": 20,
+  "accessorial_allowance": { "tarping": 100, "liftgate": 75 },
+  "above_history_pct": 15
+}

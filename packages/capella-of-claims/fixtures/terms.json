@@ -1,0 +1,12 @@
+{
+  "note": "Fictional claim terms for the demo. Use the window in your own bill of lading or contract.",
+  "filing_window_days": 270,
+  "concealed_report_days": 5,
+  "acknowledge_days": 30,
+  "resolve_days": 120,
+  "include_freight_charges": true,
+  "min_claim_amount": 75,
+  "carriers": {
+    "Coastal Line Haul": { "filing_window_days": 180, "liability_limit_per_shipment": 1000 }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "name": "arcturus-of-edi",
+  "version": "0.1.0",
+  "description": "Arcturus of EDI: reads X12 transport files (204 load tenders, 210 invoices, 214 status, 990 responses, 997/999 acknowledgements), checks envelopes and counts, converts them to spreadsheets, and reconciles invoices against tenders, status and acknowledgements. Never transmits EDI.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "arcturus-of-edi": "bin/arcturus-of-edi.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/arcturus-of-edi.js demo",
+    "eval": "node bin/arcturus-of-edi.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/arcturus-of-edi"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/arcturus-of-edi#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "edi",
+    "x12",
+    "204",
+    "210",
+    "214",
+    "990",
+    "997"
+  ]
+}

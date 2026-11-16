@@ -1,0 +1,9 @@
+pro,carrier,shipment_id,correction_date,product,handling_units,length,width,height,declared_weight,corrected_weight,declared_class,corrected_class,amount_added,certificate
+PRO-7101,Ridgeline Freight,BOL-301,2026-10-02,Bookcase kit,2,48,40,48,820,1100,70,85,212.4,Y
+PRO-7102,Ridgeline Freight,BOL-302,2026-10-05,Bookcase kit,1,48,40,48,410,560,70,85,118.75,Y
+PRO-7103,Ridgeline Freight,BOL-303,2026-10-09,Floor lamp,1,48,40,60,300,310,100,100,14.2,Y
+PRO-7104,Prairie Express,BOL-304,2026-10-12,Patio chair set,2,48,40,22,640,640,85,125,188.0,Y
+PRO-7105,Prairie Express,BOL-305,2026-10-15,Rug bundle,1,48,40,36,700,780,60,60,46.8,N
+PRO-7106,Coastal Line Haul,BOL-306,2026-10-20,Patio chair set,1,48,40,22,320,340,85,85,22.1,
+PRO-7107,Prairie Express,BOL-307,2026-10-23,Mirror crate,1,,,,250,250,85,100,64.0,Y
+PRO-7108,Ridgeline Freight,BOL-308,2026-10-28,Bookcase kit,1,48,40,48,415,555,70,85,117.9,Y

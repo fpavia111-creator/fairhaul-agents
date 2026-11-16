@@ -1,0 +1,58 @@
+{
+  "name": "fomalhaut-of-demurrage",
+  "version": "0.1.0",
+  "description": "Fomalhaut of Demurrage: tracks every import container's free time at the port and with the line, counts the days left before demurrage and detention start, prices what is accruing from your tariff tiers, checks the line's demurrage and detention invoices and drafts disputes. Never pays or books anything.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fomalhaut-of-demurrage": "bin/fomalhaut-of-demurrage.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fomalhaut-of-demurrage.js demo",
+    "eval": "node bin/fomalhaut-of-demurrage.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/fomalhaut-of-demurrage"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/fomalhaut-of-demurrage#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "demurrage",
+    "detention",
+    "per-diem",
+    "containers",
+    "ocean"
+  ]
+}

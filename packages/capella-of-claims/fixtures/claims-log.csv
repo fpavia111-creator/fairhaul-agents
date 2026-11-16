@@ -1,0 +1,6 @@
+claim_id,shipment_id,carrier,carrier_claim_number,filed_on,amount,acknowledged_on,status,paid_on,paid_amount,decline_reason
+C-501,L-2007,Ridgeline Freight,,2026-10-01,1500.00,,Open,,,
+C-498,L-1990,Coastal Line Haul,CLH-77812,2026-06-10,2200.00,2026-06-20,Open,,,
+C-495,L-1985,Ridgeline Freight,RF-C-4410,2026-05-01,3100.00,2026-05-12,Paid,2026-08-30,2400.00,
+C-490,L-1980,Coastal Line Haul,CLH-77104,2026-04-15,980.00,2026-04-28,Declined,,,Clean delivery receipt
+C-488,L-1975,Ridgeline Freight,RF-C-4302,2026-04-01,650.00,2026-04-09,Closed,2026-06-15,650.00,

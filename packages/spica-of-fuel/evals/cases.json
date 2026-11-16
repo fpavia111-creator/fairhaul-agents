@@ -1,0 +1,15 @@
+{
+  "suite": "spica-of-fuel",
+  "root": "..",
+  "data_note": "Fictional invoices, fuel tables and diesel prices in ../fixtures. No model is called.",
+  "cases": [
+    {"id": "check-totals", "tool": "spica_check", "args": {"invoices": "fixtures/invoices.csv", "contract": "fixtures/contract.json"}, "expect": {"equals": {"result.invoices": 11, "result.disputable": 130, "result.over": 3, "result.wrong_week": 2, "result.not_checked": 2}}},
+    {"id": "wrong-week-found", "tool": "spica_check", "args": {"invoices": "fixtures/invoices.csv", "contract": "fixtures/contract.json"}, "expect": {"equals": {"result.items.3.status": "wrong_week", "result.items.3.week_billed": "2026-10-26", "result.items.4.week_billed": "2026-10-26"}}},
+    {"id": "every-status", "tool": "spica_check", "args": {"invoices": "fixtures/invoices.csv", "contract": "fixtures/contract.json"}, "expect": {"contains": ["index_stale", "fuel_under", "fuel_not_in_contract", "not_checked", "no_contract", "fuel_over"]}},
+    {"id": "compare-tables", "tool": "spica_compare", "args": {"contract": "fixtures/contract.json", "prices": [3.6, 3.9, 4.1]}, "expect": {"equals": {"result.highest_at_middle_price": "Coastal Line Haul", "result.lowest_at_middle_price": "Ridgeline Freight", "result.carriers.1.cells.1.fuel": 250}}},
+    {"id": "sensitivity", "tool": "spica_sensitivity", "args": {"invoices": "fixtures/invoices.csv", "contract": "fixtures/contract.json"}, "expect": {"equals": {"result.invoices": 8, "result.change": 75}}},
+    {"id": "nothing-to-dispute", "tool": "spica_draft_dispute", "mode": "auto", "auto_actions": ["spica_draft_dispute"], "args": {"invoices": "fixtures/invoices.csv", "contract": "fixtures/contract.json", "carrier": "Ridgeline Freight"}, "expect": {"status": "error"}},
+    {"id": "send-stays-a-click-in-auto", "tool": "spica_request_send", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
+    {"id": "never-pays", "tool": "ap_pay_invoice", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+  ]
+}

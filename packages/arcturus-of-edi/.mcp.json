@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "arcturus-of-edi": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "arcturus-of-edi@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

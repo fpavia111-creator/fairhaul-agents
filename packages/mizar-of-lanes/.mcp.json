@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "mizar-of-lanes": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mizar-of-lanes@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

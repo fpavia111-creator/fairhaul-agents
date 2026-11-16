@@ -1,0 +1,58 @@
+{
+  "name": "mizar-of-lanes",
+  "version": "0.1.0",
+  "description": "Mizar of Lanes: maps your freight spend by lane and mode, tracks cost per hundredweight and per mile month by month, finds LTL shipments on the same lane and day that could ride together and heavy LTL that should be quoted as truckload, and drafts the consolidation plan for your shipping team. Never changes orders or bookings.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "mizar-of-lanes": "bin/mizar-of-lanes.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/mizar-of-lanes.js demo",
+    "eval": "node bin/mizar-of-lanes.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/mizar-of-lanes"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/mizar-of-lanes#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "lane-analysis",
+    "consolidation",
+    "ltl-to-truckload",
+    "freight-spend",
+    "network"
+  ]
+}

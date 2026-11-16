@@ -1,0 +1,9 @@
+shipment_id,carrier,customer,pickup_appt,delivery_appt,status,destination
+T-601,Ridgeline Freight,Hill Country Home,2026-11-15 08:00,2026-11-16 16:00,In Transit,Austin TX
+T-602,Ridgeline Freight,Lakeside Outfitters,2026-11-15 09:00,2026-11-17 10:00,In Transit,Tulsa OK
+T-603,Coastal Line Haul,Hill Country Home,2026-11-14 07:00,2026-11-16 09:00,In Transit,Austin TX
+T-604,Coastal Line Haul,Bayou Goods,2026-11-16 06:00,2026-11-17 14:00,Dispatched,Houston TX
+T-605,Prairie Express,Lakeside Outfitters,2026-11-15 10:00,2026-11-17 08:00,In Transit,Tulsa OK
+T-606,Prairie Express,Front Range Supply,2026-11-15 11:00,2026-11-16 18:00,In Transit,Denver CO
+T-607,Summit Carriers,Bayou Goods,2026-11-14 08:00,2026-11-16 08:00,In Transit,Houston TX
+T-608,Summit Carriers,Front Range Supply,2026-11-16 14:00,2026-11-18 10:00,Planned,Denver CO

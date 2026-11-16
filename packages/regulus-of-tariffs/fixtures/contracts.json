@@ -1,0 +1,151 @@
+{
+  "note": "Fictional contracts for the Regulus demo.",
+  "currency": "USD",
+  "tolerance": 1,
+  "fuel_index": [
+    {
+      "week_of": "2026-09-28",
+      "price": 3.74
+    },
+    {
+      "week_of": "2026-10-05",
+      "price": 3.79
+    },
+    {
+      "week_of": "2026-10-12",
+      "price": 3.86
+    },
+    {
+      "week_of": "2026-10-19",
+      "price": 3.94
+    },
+    {
+      "week_of": "2026-10-26",
+      "price": 4.02
+    }
+  ],
+  "carriers": [
+    {
+      "carrier": "Ridgeline Freight",
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "origin": "IL",
+          "destination": "TX",
+          "mode": "ltl",
+          "basis": "per_cwt",
+          "rate": 28,
+          "minimum": 150
+        },
+        {
+          "origin": "IL",
+          "destination": "GA",
+          "mode": "ltl",
+          "basis": "per_cwt",
+          "rate": 24,
+          "minimum": 140
+        }
+      ],
+      "fuel": {
+        "basis": "pct_of_linehaul",
+        "table": [
+          {
+            "min": 3.5,
+            "max": 4.0,
+            "value": 16
+          },
+          {
+            "min": 4.0,
+            "max": 4.5,
+            "value": 17
+          }
+        ]
+      },
+      "accessorials": {
+        "liftgate": {
+          "amount": 25
+        },
+        "residential": {
+          "amount": 95
+        }
+      }
+    },
+    {
+      "carrier": "Prairie Express",
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "origin": "IL",
+          "destination": "TX",
+          "mode": "ltl",
+          "basis": "per_cwt",
+          "rate": 24,
+          "minimum": 160
+        },
+        {
+          "origin": "IL",
+          "destination": "GA",
+          "mode": "ltl",
+          "basis": "per_cwt",
+          "rate": 27,
+          "minimum": 150
+        }
+      ],
+      "fuel": {
+        "basis": "pct_of_linehaul",
+        "table": [
+          {
+            "min": 3.5,
+            "max": 4.0,
+            "value": 19.5
+          },
+          {
+            "min": 4.0,
+            "max": 4.5,
+            "value": 21
+          }
+        ]
+      },
+      "accessorials": {
+        "liftgate": {
+          "amount": 40
+        }
+      }
+    },
+    {
+      "carrier": "Coastal Line Haul",
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "origin": "IL",
+          "destination": "GA",
+          "mode": "ltl",
+          "basis": "per_cwt",
+          "rate": 23,
+          "minimum": 145
+        }
+      ],
+      "fuel": {
+        "basis": "pct_of_linehaul",
+        "table": [
+          {
+            "min": 3.5,
+            "max": 4.5,
+            "value": 18
+          }
+        ]
+      },
+      "accessorials": {
+        "liftgate": {
+          "amount": 30
+        },
+        "residential": {
+          "amount": 90
+        }
+      }
+    }
+  ]
+}

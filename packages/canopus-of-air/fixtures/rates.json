@@ -1,0 +1,59 @@
+{
+  "note": "Fictional air rate sheets for the Canopus demo.",
+  "tolerance": 1,
+  "volumetric_factor": 6000,
+  "round_up_to": 0.5,
+  "forwarders": [
+    {
+      "forwarder": "Skyline Logistics",
+      "currency": "USD",
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "origin": "PVG",
+          "destination": "LAX",
+          "minimum": 95,
+          "breaks": {
+            "-45": 6.2,
+            "+45": 4.8,
+            "+100": 4.1,
+            "+300": 3.6,
+            "+500": 3.3,
+            "+1000": 3.0
+          }
+        },
+        {
+          "origin": "FRA",
+          "destination": "ORD",
+          "minimum": 85,
+          "breaks": {
+            "-45": 5.5,
+            "+45": 4.4,
+            "+100": 3.8,
+            "+300": 3.4
+          }
+        }
+      ],
+      "surcharges": {
+        "FSC": {
+          "per_kg": 0.95,
+          "on": "chargeable"
+        },
+        "SSC": {
+          "per_kg": 0.15,
+          "on": "chargeable",
+          "minimum": 15
+        },
+        "AWB": {
+          "flat": 35
+        },
+        "SCREENING": {
+          "per_kg": 0.1,
+          "on": "actual",
+          "minimum": 20
+        }
+      }
+    }
+  ]
+}

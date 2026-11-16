@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "vega-of-detention": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "vega-of-detention@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

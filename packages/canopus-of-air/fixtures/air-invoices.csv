@@ -1,0 +1,17 @@
+invoice_number,forwarder,awb,origin,destination,flight_date,pieces,actual_kg,volume_cbm,billed_kg,charge_code,amount,currency
+SKY-5001,Skyline Logistics,176-11112222,PVG,LAX,2026-10-05,6,420,1.8,420,Air Freight,1512,USD
+SKY-5001,Skyline Logistics,176-11112222,PVG,LAX,2026-10-05,6,420,1.8,420,Fuel Surcharge,399,USD
+SKY-5001,Skyline Logistics,176-11112222,PVG,LAX,2026-10-05,6,420,1.8,420,Security Surcharge,63,USD
+SKY-5001,Skyline Logistics,176-11112222,PVG,LAX,2026-10-05,6,420,1.8,420,AWB Fee,35,USD
+SKY-5001,Skyline Logistics,176-11112222,PVG,LAX,2026-10-05,6,420,1.8,420,Screening,42,USD
+SKY-5002,Skyline Logistics,176-11113333,PVG,LAX,2026-10-12,4,180,2.4,400,Air Freight,1640,USD
+SKY-5002,Skyline Logistics,176-11113333,PVG,LAX,2026-10-12,4,180,2.4,400,Fuel Surcharge,380,USD
+SKY-5002,Skyline Logistics,176-11113333,PVG,LAX,2026-10-12,4,180,2.4,400,AWB Fee,35,USD
+SKY-5003,Skyline Logistics,176-11114444,PVG,LAX,2026-10-20,3,260,0.9,300,Air Freight,1080,USD
+SKY-5003,Skyline Logistics,176-11114444,PVG,LAX,2026-10-20,3,260,0.9,300,Fuel Surcharge,285,USD
+SKY-5003,Skyline Logistics,176-11114444,PVG,LAX,2026-10-20,3,260,0.9,300,AWB Fee,35,USD
+SKY-5004,Skyline Logistics,176-11115555,FRA,ORD,2026-10-22,2,90,0.3,90,Air Freight,432,USD
+SKY-5004,Skyline Logistics,176-11115555,FRA,ORD,2026-10-22,2,90,0.3,90,Fuel Surcharge,85.5,USD
+SKY-5005,Skyline Logistics,176-11116666,FRA,ORD,2026-11-02,1,12,0.04,12,Air Freight,85,USD
+SKY-5005,Skyline Logistics,176-11116666,FRA,ORD,2026-11-02,1,12,0.04,12,Fuel Surcharge,11.4,USD
+SKY-5005,Skyline Logistics,176-11116666,FRA,ORD,2026-11-02,1,12,0.04,12,Terminal Handling,45,USD

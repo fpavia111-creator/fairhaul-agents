@@ -1,0 +1,10 @@
+load_id,carrier,stop,charge_type,amount,hours_billed,invoice_number
+L-100,Example Linehaul,2,Detention,150,5,INV-1
+L-101,Example Linehaul,2,Detention,200,6,INV-1
+L-102,Example Linehaul,1,Detention,100,,INV-1
+L-103,Example Linehaul,2,Detention,75,,INV-1
+L-104,Sample Freightways,2,Layover,250,,INV-2
+L-105,Sample Freightways,2,Lumper,180,,INV-2
+L-106,Sample Freightways,2,Lumper Fee,150,,INV-2
+L-107,Sample Freightways,2,Detention,120,,INV-2
+L-108,Sample Freightways,2,Layover,300,,INV-2

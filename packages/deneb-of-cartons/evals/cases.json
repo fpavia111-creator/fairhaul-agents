@@ -1,0 +1,13 @@
+{
+  "suite": "deneb-of-cartons",
+  "root": "..",
+  "data_note": "Fictional parcels and carton catalog in ../fixtures. No model is called.",
+  "cases": [
+    {"id": "totals", "tool": "deneb_check", "args": {"packages": "fixtures/packages.csv", "cartons": "fixtures/cartons.json"}, "expect": {"equals": {"result.packages": 9, "result.smaller_carton": 4, "result.billable_lbs_saved": 36, "result.est_saving": 39.6, "result.no_fit": 2, "result.oversize_risk": 1}}},
+    {"id": "lamp-shades", "tool": "deneb_check", "args": {"packages": "fixtures/packages.csv", "cartons": "fixtures/cartons.json"}, "expect": {"equals": {"result.items.0.billable_now": 22, "result.items.0.best_carton": "M1", "result.items.0.billable_best": 12, "result.by_sku.0.sku": "LAMP-SHADE"}}},
+    {"id": "new-sizes", "tool": "deneb_check", "args": {"packages": "fixtures/packages.csv", "cartons": "fixtures/cartons.json"}, "expect": {"equals": {"result.suggested_new_cartons.0": "48x10x10"}, "contains": ["likely an additional handling or oversize charge"]}},
+    {"id": "missing-catalog", "tool": "deneb_check", "args": {"packages": "fixtures/packages.csv", "cartons": "fixtures/README.md"}, "expect": {"status": "error"}},
+    {"id": "change-is-production", "tool": "deneb_request_apply", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
+    {"id": "never-changes-wms", "tool": "wms_update_cartonization", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+  ]
+}

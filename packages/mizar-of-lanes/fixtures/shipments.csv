@@ -1,0 +1,13 @@
+shipment_id,ship_date,mode,carrier,origin_city,origin_state,origin_postal,dest_city,dest_state,dest_postal,weight,pallets,miles,cost
+M-01,2026-09-02,LTL,Ridgeline Freight,Chicago,IL,60607,Dallas,TX,75201,4200,6,925,980
+M-02,2026-09-02,LTL,Prairie Express,Chicago,IL,60607,Dallas,TX,75207,5100,8,925,1150
+M-03,2026-09-02,LTL,Ridgeline Freight,Chicago,IL,60607,Dallas,TX,75201,3900,6,925,940
+M-04,2026-09-16,LTL,Ridgeline Freight,Chicago,IL,60607,Dallas,TX,75201,2500,4,925,640
+M-05,2026-10-07,LTL,Ridgeline Freight,Chicago,IL,60607,Dallas,TX,75201,4800,7,925,1210
+M-06,2026-10-07,LTL,Ridgeline Freight,Chicago,IL,60607,Dallas,TX,75201,5200,8,925,1300
+M-07,2026-10-21,LTL,Prairie Express,Chicago,IL,60607,Dallas,TX,75201,3000,5,925,820
+M-08,2026-09-10,LTL,Coastal Line Haul,Chicago,IL,60607,Atlanta,GA,30303,14500,16,716,2480
+M-09,2026-10-14,LTL,Coastal Line Haul,Chicago,IL,60607,Atlanta,GA,30303,1800,3,716,520
+M-10,2026-10-14,LTL,Coastal Line Haul,Chicago,IL,60607,Atlanta,GA,30303,1500,2,716,470
+M-11,2026-09-21,TL,Ridgeline Freight,Chicago,IL,60607,Denver,CO,80202,38000,24,1003,2700
+M-12,2026-10-19,TL,Ridgeline Freight,Chicago,IL,60607,Denver,CO,80202,36000,22,1003,2780

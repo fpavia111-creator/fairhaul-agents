@@ -1,0 +1,14 @@
+{
+  "suite": "mira-of-tracking",
+  "root": "..",
+  "data_note": "Fictional loads and events in ../fixtures, as of 2026-11-16 10:00. No model is called.",
+  "cases": [
+    {"id": "board", "tool": "mira_assess", "args": {"loads": "fixtures/loads.csv", "events": "fixtures/events.csv", "as_of": "2026-11-16 10:00"}, "expect": {"equals": {"result.open": 8, "result.late": 2, "result.at_risk": 1, "result.blind": 1, "result.on_track": 3, "result.delivered_not_closed": 1}}},
+    {"id": "every-issue", "tool": "mira_assess", "args": {"loads": "fixtures/loads.csv", "events": "fixtures/events.csv", "as_of": "2026-11-16 10:00"}, "expect": {"contains": ["missed_pickup", "no_tracking", "stale", "eta_past_appointment", "past_appointment", "delay_reported", "close it in the TMS"]}},
+    {"id": "worst-first", "tool": "mira_assess", "args": {"loads": "fixtures/loads.csv", "events": "fixtures/events.csv", "as_of": "2026-11-16 10:00"}, "expect": {"equals": {"result.items.0.shipment_id": "T-604", "result.items.1.shipment_id": "T-603"}}},
+    {"id": "stale-threshold", "tool": "mira_assess", "args": {"loads": "fixtures/loads.csv", "events": "fixtures/events.csv", "as_of": "2026-11-16 10:00", "stale_hours": 24}, "expect": {"equals": {"result.blind": 0}}},
+    {"id": "nothing-late-for-customer", "tool": "mira_draft_delay_notice", "mode": "auto", "auto_actions": ["mira_draft_delay_notice"], "args": {"loads": "fixtures/loads.csv", "events": "fixtures/events.csv", "as_of": "2026-11-16 10:00", "customer": "Lakeside Outfitters"}, "expect": {"status": "error"}},
+    {"id": "send-stays-a-click-in-auto", "tool": "mira_request_send", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
+    {"id": "never-texts", "tool": "sms_send", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+  ]
+}

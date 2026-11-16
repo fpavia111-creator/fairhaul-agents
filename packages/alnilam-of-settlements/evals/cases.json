@@ -1,0 +1,15 @@
+{
+  "suite": "alnilam-of-settlements",
+  "root": "..",
+  "data_note": "Fictional broker loads in ../fixtures, as of 2026-11-16. No model is called.",
+  "cases": [
+    {"id": "totals", "tool": "alnilam_settle", "args": {"ratecons": "fixtures/ratecons.csv", "invoices": "fixtures/carrier-invoices.csv", "payments": "fixtures/payments.csv", "noas": "fixtures/noas.csv", "as_of": "2026-11-16"}, "expect": {"equals": {"result.batch_total": 6833, "result.batch_loads": 3, "result.recoverable": 1750, "result.wrong_party_exposure": 1890, "result.held_back": 100, "result.past_due": 2328}}},
+    {"id": "every-check", "tool": "alnilam_settle", "args": {"ratecons": "fixtures/ratecons.csv", "invoices": "fixtures/carrier-invoices.csv", "payments": "fixtures/payments.csv", "noas": "fixtures/noas.csv", "as_of": "2026-11-16"}, "expect": {"contains": ["invoice_over_ratecon", "past_due", "no_pod", "paid_wrong_party", "paid_twice", "invoice_without_ratecon"]}},
+    {"id": "factor-paid", "tool": "alnilam_settle", "args": {"ratecons": "fixtures/ratecons.csv", "invoices": "fixtures/carrier-invoices.csv", "noas": "fixtures/noas.csv", "as_of": "2026-11-16"}, "expect": {"contains": ["\"pay_to\":\"Bluewater Factoring\""], "not_contains": ["Peakline Capital\",\"loads"]}},
+    {"id": "quick-pay-net", "tool": "alnilam_settle", "args": {"ratecons": "fixtures/ratecons.csv", "invoices": "fixtures/carrier-invoices.csv", "as_of": "2026-11-16", "quick_pay_pct": 5}, "expect": {"contains": ["\"load_id\":\"L-5103\",\"carrier\":\"Coastal Line Haul\",\"pay_to\":\"Coastal Line Haul\",\"noa\":\"\",\"agreed\":2400,\"quick_pay\":true,\"owed\":2280"]}},
+    {"id": "draft", "tool": "alnilam_draft_payment_batch", "mode": "auto", "auto_actions": ["alnilam_draft_payment_batch"], "args": {"ratecons": "fixtures/ratecons.csv", "invoices": "fixtures/carrier-invoices.csv", "payments": "fixtures/payments.csv", "noas": "fixtures/noas.csv", "as_of": "2026-11-16"}, "expect": {"equals": {"result.amount": 6833}}},
+    {"id": "release-stays-a-click-in-auto", "tool": "alnilam_request_release", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
+    {"id": "never-pays", "tool": "ap_release_payment", "mode": "auto", "args": {}, "expect": {"status": "blocked"}},
+    {"id": "never-transfers", "tool": "bank_transfer", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+  ]
+}

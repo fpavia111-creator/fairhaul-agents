@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "betelgeuse-of-accessorials": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "betelgeuse-of-accessorials@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

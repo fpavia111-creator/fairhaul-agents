@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "capella-of-claims": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "capella-of-claims@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "note": "Fictional free time and rates for the Fomalhaut demo. Use the terms in your own service contract or tariff.",
+  "start_offset_days": 1,
+  "warn_days": 2,
+  "excluded_dates": ["2026-11-11"],
+  "lines": {
+    "Blue Meridian Line": {
+      "demurrage": { "free_days": 4, "tiers": [{ "days": 4, "rate": 150 }, { "days": 4, "rate": 250 }, { "rate": 350 }], "tiers_by_size": { "40HC": [{ "days": 4, "rate": 200 }, { "days": 4, "rate": 300 }, { "rate": 400 }] } },
+      "detention": { "free_days": 4, "tiers": [{ "days": 4, "rate": 100 }, { "rate": 150 }] }
+    },
+    "Northsea Container Line": {
+      "demurrage": { "free_days": 5, "business_days": true, "tiers": [{ "rate": 175 }] },
+      "detention": { "free_days": 7, "tiers": [{ "rate": 125 }] }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+order_id,customer,shipment_id,order_value,freight_billed,terms,freight_cost
+SO-6001,Hill Country Home,S-901,1850.00,0,Prepaid,
+SO-6002,Hill Country Home,S-901,420.00,0,Prepaid,
+SO-6003,Lakeside Outfitters,S-902,3200.00,165.00,Prepaid & Add,
+SO-6004,Bayou Goods,S-903,380.00,0,Prepaid,
+SO-6005,Bayou Goods,S-904,610.00,0,Prepaid & Add,
+SO-6006,Front Range Supply,S-905,9600.00,0,FOB Destination,
+SO-6007,Front Range Supply,S-906,2400.00,0,Collect,
+SO-6008,Lakeside Outfitters,S-907,1150.00,48.00,Prepaid & Add,
+SO-6009,Gulf Coast Gifts,S-908,940.00,0,Prepaid,
+SO-6010,Gulf Coast Gifts,,1300.00,0,Prepaid,

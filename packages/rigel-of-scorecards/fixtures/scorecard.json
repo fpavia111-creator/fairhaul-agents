@@ -1,0 +1,8 @@
+{
+  "note": "Fictional scorecard settings for the demo.",
+  "weights": { "otd_pct": 30, "otp_pct": 15, "acceptance_pct": 20, "billing_accuracy_pct": 15, "claim_free_pct": 10, "tracking_pct": 5, "cost_score": 5 },
+  "targets": { "otd_pct": 95, "otp_pct": 95, "acceptance_pct": 85, "billing_accuracy_pct": 95, "claim_free_pct": 98, "tracking_pct": 90 },
+  "grace_minutes": 60,
+  "billing_tolerance_pct": 2,
+  "min_loads": 5
+}

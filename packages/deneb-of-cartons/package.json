@@ -1,0 +1,58 @@
+{
+  "name": "deneb-of-cartons",
+  "version": "0.1.0",
+  "description": "Deneb of Cartons: checks every parcel's carton against what was inside, finds the smallest carton in your catalog that fits, works out the dimensional weight and freight you would save, flags packages heading for oversize charges, and drafts the carton set and packing rule changes. Never changes your WMS.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "deneb-of-cartons": "bin/deneb-of-cartons.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/deneb-of-cartons.js demo",
+    "eval": "node bin/deneb-of-cartons.js eval"
+  },
+  "dependencies": {
+    "lodestar-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/lodestar-agents.git",
+    "directory": "packages/deneb-of-cartons"
+  },
+  "homepage": "https://github.com/fpavia111-creator/lodestar-agents/tree/main/packages/deneb-of-cartons#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "packaging",
+    "dim-weight",
+    "cartonization",
+    "parcel",
+    "box-size"
+  ]
+}

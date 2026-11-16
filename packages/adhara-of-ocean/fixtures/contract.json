@@ -1,0 +1,91 @@
+{
+  "note": "Fictional ocean contracts for the Adhara demo.",
+  "tolerance": 1,
+  "code_aliases": {
+    "bunker recovery charge": "BAF"
+  },
+  "contracts": [
+    {
+      "carrier": "Blue Meridian Line",
+      "reference": "BML-SC-2026-114",
+      "currency": "USD",
+      "effective": "2026-01-01",
+      "expires": "2026-12-31",
+      "lanes": [
+        {
+          "pol": "CNSHA",
+          "pod": "USLAX",
+          "rates": {
+            "20GP": 1650,
+            "40GP": 2100,
+            "40HC": 2200
+          }
+        },
+        {
+          "pol": "VNSGN",
+          "pod": "USLAX",
+          "rates": {
+            "20GP": 1800,
+            "40HC": 2450
+          }
+        }
+      ],
+      "surcharges": {
+        "BAF": {
+          "per_container": {
+            "20GP": 310,
+            "40GP": 560,
+            "40HC": 560
+          }
+        },
+        "PSS": {
+          "per_container": {
+            "20GP": 200,
+            "40GP": 400,
+            "40HC": 400
+          },
+          "valid_from": "2026-08-01",
+          "valid_to": "2026-10-31"
+        },
+        "DOC": {
+          "flat": 75
+        },
+        "THC_O": {
+          "included": true
+        },
+        "ISPS": {
+          "per_container": {
+            "20GP": 12,
+            "40GP": 12,
+            "40HC": 12
+          }
+        }
+      }
+    },
+    {
+      "carrier": "Northsea Container Line",
+      "reference": "NSL-SC-2026-07",
+      "currency": "USD",
+      "effective": "2026-01-01",
+      "expires": "2026-06-30",
+      "lanes": [
+        {
+          "pol": "DEHAM",
+          "pod": "USNYC",
+          "rates": {
+            "20GP": 1400,
+            "40HC": 1900
+          }
+        }
+      ],
+      "surcharges": {
+        "BAF": {
+          "per_container": {
+            "20GP": 280,
+            "40HC": 510
+          }
+        }
+      }
+    }
+  ]
+}

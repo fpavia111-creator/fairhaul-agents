@@ -1,0 +1,14 @@
+shipment_id,at,event,location,eta
+T-601,2026-11-15 08:40,Picked up,Dallas TX,2026-11-16 15:00
+T-601,2026-11-16 08:10,In transit,Waco TX,2026-11-16 15:30
+T-602,2026-11-15 09:20,Picked up,Wichita KS,2026-11-17 09:00
+T-602,2026-11-15 17:00,In transit,Ponca City OK,2026-11-17 09:00
+T-603,2026-11-14 07:30,Picked up,Memphis TN,2026-11-16 08:00
+T-603,2026-11-15 13:00,Delay - breakdown,Little Rock AR,2026-11-16 13:00
+T-603,2026-11-16 09:30,In transit,Texarkana TX,2026-11-16 14:30
+T-605,2026-11-15 10:15,Picked up,Omaha NE,2026-11-17 07:30
+T-605,2026-11-16 07:45,In transit,Salina KS,2026-11-17 07:30
+T-606,2026-11-15 11:30,Picked up,Salt Lake City UT,2026-11-16 17:00
+T-606,2026-11-16 09:00,In transit,Grand Junction CO,2026-11-16 20:00
+T-607,2026-11-14 08:20,Picked up,Shreveport LA,2026-11-15 16:00
+T-607,2026-11-15 15:50,Delivered,Houston TX,
