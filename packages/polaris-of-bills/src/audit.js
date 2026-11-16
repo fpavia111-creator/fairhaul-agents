@@ -29,12 +29,14 @@ export function auditInvoices(invoices, { contract = {}, shipments = [], paid = 
   const aliases = contract.charge_aliases || {};
   const sIdx = shipmentIndex(shipments);
   const seenInv = new Map(), seenPro = new Map();
-  const paidKeys = new Set(paid.map((p) => `${carrierKey(p.carrier)}|${str(p.invoice_number).toLowerCase()}`));
-  const paidPro = new Set(paid.map((p) => `${carrierKey(p.carrier)}|${str(p.pro).toLowerCase()}`).filter((k) => !k.endsWith('|')));
+  // One carrier billed as its SCAC on one invoice and its name on another is one carrier: key by the contract's name.
+  const cKey = (v) => carrierKey(canonicalCarrier(contract, v));
+  const paidKeys = new Set(paid.map((p) => `${cKey(p.carrier)}|${str(p.invoice_number).toLowerCase()}`));
+  const paidPro = new Set(paid.map((p) => `${cKey(p.carrier)}|${str(p.pro).toLowerCase()}`).filter((k) => !k.endsWith('|')));
   const out = [];
   for (const inv of invoices) {
     const f = []; const add = (code, amount, detail) => f.push({ code, amount: amount === null || amount === undefined ? null : round2(amount), detail });
-    const ck = carrierKey(inv.carrier);
+    const ck = cKey(inv.carrier);
     // Duplicates first: a duplicate is disputable in full and the other checks are moot.
     const invKey = `${ck}|${inv.invoice_number.toLowerCase()}`;
     const proKey = inv.pro ? `${ck}|${inv.pro.toLowerCase()}` : null;

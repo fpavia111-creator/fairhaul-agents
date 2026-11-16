@@ -18,7 +18,8 @@ export const EVENT_FIELDS = Object.freeze({
   location: t(['Location', 'City', 'Place']),
   eta: t(['ETA', 'Estimated Arrival', 'Estimated Delivery'], { type: 'datetime' }),
 });
-const kind = (e) => { const s = str(e).toLowerCase(); return /deliver(ed|y complete)|^d1$|pod/.test(s) ? 'delivered' : /picked|pickup complete|departed (pickup|shipper)|^af$/.test(s) ? 'picked_up' : /arriv/.test(s) ? 'arrived' : /delay|breakdown|weather|reschedul/.test(s) ? 'delay' : 'update'; };
+// A failed or refused delivery is a delay, even though its wording contains "delivered".
+const kind = (e) => { const s = str(e).toLowerCase(); return /not delivered|undeliver|attempt|refus|exception/.test(s) ? 'delay' : /deliver(ed|y complete)|^d1$|\bpod\b/.test(s) ? 'delivered' : /picked|pickup complete|departed (pickup|shipper)|^af$/.test(s) ? 'picked_up' : /arriv/.test(s) ? 'arrived' : /delay|breakdown|weather|reschedul/.test(s) ? 'delay' : 'update'; };
 
 /** Assess open loads as of a date and time. */
 export function assess(loads, events, { asOf, staleHours = 4, riskMinutes = 0 } = {}) {

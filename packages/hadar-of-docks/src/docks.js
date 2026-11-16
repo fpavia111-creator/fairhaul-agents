@@ -38,7 +38,8 @@ export const DOCK_SCHEMA = Object.freeze({
     grace_minutes: { type: 'number', minimum: 0, description: 'Arrival within this many minutes of the appointment counts as on time (default 15)' },
   },
 });
-const hm = (v) => { const m = /(\d{1,2}):(\d{2})/.exec(str(v)); return m ? +m[1] * 60 + +m[2] : null; };
+// "08:00", "8:00", "2:30 PM", "12:15 am" and the time part of "2026-11-18T14:00" are all read.
+const hm = (v) => { const m = /(\d{1,2}):(\d{2})(?::\d{2})?\s*([ap])?\.?m?\b/i.exec(str(v)); if (!m) return null; let h = +m[1]; if (m[3]) { const pm = /p/i.test(m[3]); if (h === 12) h = pm ? 12 : 0; else if (pm) h += 12; } return h * 60 + +m[2]; };
 const fmt = (m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 const mins = (a, b) => (a && b ? Math.round((Date.parse(b) - Date.parse(a)) / 60000) : null);
 const pct = (xs, p) => { if (!xs.length) return null; const s = [...xs].sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.ceil(p * s.length) - 1)]; };

@@ -49,7 +49,9 @@ export function analyseLanes(rows, settings = {}) {
     flush();
   }
   groups.sort((a, b) => (b.saving || 0) - (a.saving || 0));
-  const heavy = ships.filter((x) => isLtl(x.mode) && ((x.weight || 0) >= s.tl_weight_lbs || (x.pallets || 0) >= s.tl_pallets)).map((x) => { const tl = tlCost(x.miles); return { shipment_id: x.id, lane: x.lane, date: x.date, weight: x.weight, pallets: x.pallets, cost: x.cost, truckload_estimate: tl, saving: tl !== null ? round2(x.cost - tl) : null }; }).sort((a, b) => (b.saving || 0) - (a.saving || 0));
+  // A shipment already in a worthwhile group is counted there, not again as a heavy LTL.
+  const grouped = new Set(groups.filter((g) => g.worth_it).flatMap((g) => g.shipments));
+  const heavy = ships.filter((x) => isLtl(x.mode) && !grouped.has(x.id) && ((x.weight || 0) >= s.tl_weight_lbs || (x.pallets || 0) >= s.tl_pallets)).map((x) => { const tl = tlCost(x.miles); return { shipment_id: x.id, lane: x.lane, date: x.date, weight: x.weight, pallets: x.pallets, cost: x.cost, truckload_estimate: tl, saving: tl !== null ? round2(x.cost - tl) : null }; }).sort((a, b) => (b.saving || 0) - (a.saving || 0));
   const good = groups.filter((g) => g.worth_it);
   return { shipments: ships.length, spend, lanes_count: lanes.length, top_lanes_share_pct: Math.round(lanes.slice(0, 3).reduce((a, l) => a + l.share_pct, 0) * 10) / 10, consolidation_groups: good.length, consolidation_saving: round2(good.reduce((a, g) => a + g.saving, 0)), heavy_ltl: heavy.filter((h) => (h.saving || 0) > 0).length, heavy_ltl_saving: round2(heavy.filter((h) => (h.saving || 0) > 0).reduce((a, h) => a + h.saving, 0)), settings: s, lanes, trend, groups, heavy };
 }

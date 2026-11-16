@@ -1,5 +1,5 @@
 // Fomalhaut: container demurrage and detention. Pure functions.
-import { exportProfile, isoDate, addDays, daysBetween, round2, str, num, groupBy } from 'lodestar-core';
+import { exportProfile, carrierKey, isoDate, addDays, daysBetween, round2, str, num, groupBy } from 'lodestar-core';
 
 const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const CONTAINER_FIELDS = Object.freeze({
@@ -46,7 +46,7 @@ const tiersFor = (c, size) => (c.tiers_by_size && size && c.tiers_by_size[String
 export function clocks(rows, terms, { asOf } = {}) {
   const today = isoDate(asOf) || new Date().toISOString().slice(0, 10);
   const off = terms.start_offset_days ?? 1, warn = terms.warn_days ?? 2, ex = terms.excluded_dates || [];
-  const lineTerms = (name) => { const k = Object.keys(terms.lines || {}).find((x) => x.toLowerCase() === str(name).toLowerCase()); return k ? terms.lines[k] : null; };
+  const lineTerms = (name) => { const k = Object.keys(terms.lines || {}).find((x) => carrierKey(x) === carrierKey(name)); return k ? terms.lines[k] : null; };
   return rows.map((r) => {
     const lt = lineTerms(r.line); const disc = isoDate(r.discharged), out = isoDate(r.gate_out), ret = isoDate(r.empty_returned);
     const base = { container: str(r.container), line: str(r.line), bl: str(r.bl) || null, size: str(r.size) || null, discharged: disc, gate_out: out, empty_returned: ret };
@@ -73,14 +73,19 @@ export function clocks(rows, terms, { asOf } = {}) {
 /** Check D&D invoices against the clocks. */
 export function checkCharges(charges, items, { tolerance = 1 } = {}) {
   const byC = new Map(items.map((i) => [i.container.toUpperCase(), i]));
+  // Several invoices for one container and charge type are checked together: the first ones
+  // use up what the terms allow, and anything billed after that is over.
+  const prior = new Map();
   return charges.map((c) => {
     const i = byC.get(str(c.container).toUpperCase()); const type = /det|per ?diem/i.test(str(c.charge_type)) ? 'detention' : 'demurrage'; const billed = num(c.amount) || 0;
     const base = { container: str(c.container), invoice_number: str(c.invoice_number) || null, type, days_billed: num(c.days_billed), billed };
     if (!i || i.status === 'no_terms') return { ...base, expected: null, difference: null, status: 'not_checked', detail: i ? i.detail : 'Container not in your container file.' };
     const exp = type === 'demurrage' ? i.dem_cost : i.det_cost; const days = type === 'demurrage' ? i.dem_charge_days : i.det_charge_days;
     if (exp === undefined) return { ...base, expected: null, difference: null, status: 'not_checked', detail: type === 'demurrage' ? 'No discharge date.' : 'No gate-out date.' };
-    const diff = round2(billed - exp);
-    return { ...base, expected: exp, expected_days: days, difference: diff, status: diff > tolerance ? 'over' : 'ok', detail: diff > tolerance ? `Billed ${billed}${base.days_billed !== null ? ` for ${base.days_billed} day(s)` : ''}; your terms give ${days} chargeable day(s), ${exp}.${i.lfd_note ? ` ${i.lfd_note}` : ''}` : 'Matches your terms.' };
+    const pk = `${i.container.toUpperCase()}|${type}`; const before = prior.get(pk) || { amount: 0, invoices: [] }; prior.set(pk, { amount: round2(before.amount + billed), invoices: [...before.invoices, base.invoice_number || '?'] });
+    const diff = round2(Math.max(0, before.amount + billed - exp) - Math.max(0, before.amount - exp)) || round2(Math.min(0, billed - exp));
+    const earlier = before.amount ? ` Already billed ${before.amount} on ${before.invoices.join(', ')} for this container.` : '';
+    return { ...base, expected: exp, expected_days: days, difference: diff, status: diff > tolerance ? 'over' : 'ok', detail: diff > tolerance ? `Billed ${billed}${base.days_billed !== null ? ` for ${base.days_billed} day(s)` : ''}; your terms give ${days} chargeable day(s), ${exp}.${earlier}${i.lfd_note ? ` ${i.lfd_note}` : ''}` : 'Matches your terms.' };
   });
 }
 

@@ -38,13 +38,16 @@ const D = { fuel_per_mile: 0.6, fuel_pct: 20, accessorial_allowance: {}, above_h
 export function compareQuotes(loads, quotes, settings = {}, { asOf } = {}) {
   const s = { ...D, ...settings }; const today = isoDate(asOf) || new Date().toISOString().slice(0, 10);
   const byLoad = groupBy(quotes, (q) => str(q.load_id).toLowerCase());
+  // "Lift Gate", "lift-gate" and "liftgate" are one accessorial.
+  const akey = (x) => str(x).toLowerCase().replace(/[^a-z0-9]/g, '');
+  const allow = Object.fromEntries(Object.entries(s.accessorial_allowance || {}).map(([k, v]) => [akey(k), v]));
   const items = loads.map((l) => {
     const miles = num(l.miles); const accs = str(l.accessorials).split(/[;,|/]+/).map((x) => x.trim().toLowerCase()).filter(Boolean);
     const qs = (byLoad.get(str(l.load_id).toLowerCase()) || []).map((q) => {
       const amount = num(q.amount) || 0; const allIn = readYesNo(q.all_in) === true; const notes = [];
       const fuel = allIn ? 0 : round2(miles ? s.fuel_per_mile * miles : (amount * s.fuel_pct) / 100); if (!allIn) notes.push(`linehaul only: ${fuel} fuel added`);
-      const accAdd = readYesNo(q.accessorials_included) === true ? 0 : round2(accs.reduce((x, a) => x + (s.accessorial_allowance[a] ?? 0), 0)); if (accAdd) notes.push(`${accAdd} added for ${accs.join(', ')}`);
-      const unknownAcc = readYesNo(q.accessorials_included) === true ? [] : accs.filter((a) => s.accessorial_allowance[a] === undefined); if (unknownAcc.length) notes.push(`ask whether ${unknownAcc.join(', ')} is included`);
+      const accAdd = readYesNo(q.accessorials_included) === true ? 0 : round2(accs.reduce((x, a) => x + (allow[akey(a)] ?? 0), 0)); if (accAdd) notes.push(`${accAdd} added for ${accs.join(', ')}`);
+      const unknownAcc = readYesNo(q.accessorials_included) === true ? [] : accs.filter((a) => allow[akey(a)] === undefined); if (unknownAcc.length) notes.push(`ask whether ${unknownAcc.join(', ')} is included`);
       const valid = isoDate(q.valid_until); const expired = valid ? valid < today : false;
       const transit = num(q.transit_days); const arrives = transit !== null && isoDate(l.pickup_date) ? addDays(isoDate(l.pickup_date), transit) : null; const late = arrives && isoDate(l.deliver_by) ? arrives > isoDate(l.deliver_by) : false;
       if (expired) notes.push(`expired ${valid}`); if (late) notes.push(`arrives ${arrives}, after ${isoDate(l.deliver_by)}`);

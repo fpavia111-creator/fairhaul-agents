@@ -13,7 +13,8 @@ export const str = (v) => String(v ?? '').trim();
 
 // ---------------------------------------------------------------- carriers ----
 
-const CARRIER_NOISE = /\b(inc|incorporated|llc|l\.l\.c|ltd|limited|corp|corporation|co|company|lp|llp|plc|gmbh|sa|the)\b\.?/gi;
+// Legal forms in English and the forms ocean lines and forwarders abroad use (A/S, AG, B.V., S.p.A., K.K., Pte...).
+const CARRIER_NOISE = /\b(inc|incorporated|llc|l\.l\.c|ltd|limited|corp|corporation|co|company|lp|llp|plc|gmbh|a\/s|ag|ab|as|aps|b\.v|bv|n\.v|nv|s\.a\.s|sas|s\.a|sa|s\.p\.a|spa|s\.r\.l|srl|sarl|s\.l|sl|ltda|oy|k\.k|kk|pty|pte|kg|se|the)\b\.?/gi;
 const CARRIER_WORDS = /\b(freight|freightways|trucking|transport|transportation|logistics|lines|line|express|carriers?|systems?|services?|motor|ltl)\b/gi;
 
 /** Canonical key for a carrier name or SCAC, for matching across files. "XPO Logistics, Inc." and "XPO" give "xpo". */
