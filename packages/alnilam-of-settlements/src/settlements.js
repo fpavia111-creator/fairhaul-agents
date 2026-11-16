@@ -50,13 +50,18 @@ export function settle(ratecons, { invoices = [], payments = [], noas = [], asOf
     const billed = round2(invs.reduce((a, x) => a + (num(x.amount) || 0), 0)); const paid = round2(pays.reduce((a, x) => a + (num(x.amount) || 0), 0));
     const recv = invs.map((x) => isoDate(x.received_at)).filter(Boolean).sort()[0] || null;
     const pod = r.pod === true || /yes|true|received/i.test(str(r.pod));
-    const noa = noaFor(r.carrier, recv || today); const payTo = noa ? str(noa.factor) : str(r.carrier);
+    // A notice binds from the day it is in force until it is released, so who is owed
+    // depends on when the money moves: today for the batch, the payment date for a payment.
+    const noa = noaFor(r.carrier, today); const payTo = noa ? str(noa.factor) : str(r.carrier);
     const terms = qp ? 2 : num(r.pay_terms_days) ?? defaultTerms; const due = recv ? addDays(recv, terms) : null;
     if (invs.length && billed - agreed > tolerance) add(id, 'invoice_over_ratecon', `Invoice ${invs.map((x) => x.invoice_number).join(', ')} is ${billed}; the rate confirmation and approved accessorials are ${agreed}. Pay ${agreed} unless more was approved in writing.`, billed - agreed);
     if (invs.length > 1) add(id, 'two_invoices', `${invs.length} carrier invoices for one load: ${invs.map((x) => `${x.invoice_number} ${num(x.amount)}`).join(', ')}.`);
     if (pays.length > 1) add(id, 'paid_twice', `${pays.length} payments for one load: ${pays.map((x) => `${x.reference || '?'} ${num(x.amount)} to ${x.payee}`).join('; ')}.`, paid - owed);
     else if (paid - owed > tolerance) add(id, 'overpaid', `Paid ${paid}; owed ${owed}${qp ? ` after the ${quickPayPct}% quick-pay fee` : ''}.`, paid - owed);
-    for (const p of pays) if (carrierKey(p.payee) !== carrierKey(payTo)) add(id, 'paid_wrong_party', `Paid ${num(p.amount)} to ${p.payee}, but ${noa ? `a notice of assignment directs payment to ${noa.factor}` : `the carrier is ${r.carrier}`}. ${noa ? 'The factor can still claim the full amount.' : 'Check who was paid and why.'}`, num(p.amount));
+    for (const p of pays) {
+      const on = isoDate(p.paid_at) || recv || today; const n = noaFor(r.carrier, on); const owedTo = n ? str(n.factor) : str(r.carrier);
+      if (carrierKey(p.payee) !== carrierKey(owedTo)) add(id, 'paid_wrong_party', `Paid ${num(p.amount)} to ${p.payee}${isoDate(p.paid_at) ? ` on ${isoDate(p.paid_at)}` : ''}, but ${n ? `a notice of assignment in force then directs payment to ${n.factor}` : `the carrier is ${r.carrier}`}. ${n ? 'The factor can still claim the full amount.' : 'Check who was paid and why.'}`, num(p.amount));
+    }
     let status;
     if (pays.length) status = 'paid';
     else if (!invs.length) status = 'awaiting_invoice';

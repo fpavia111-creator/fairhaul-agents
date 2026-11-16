@@ -41,9 +41,12 @@ export function vetCarriers(carriers, loads = [], { asOf, newAuthorityDays = 180
   const add = (c, code, detail) => signals.get(str(c.carrier_id)).push({ code, weight: WEIGHTS[code], detail });
   const active = carriers.filter((c) => !/inactive|blocked|do not use/i.test(str(c.status)));
   const shared = (field, f, code, label) => {
-    for (const [k, list] of groupBy(active.filter((c) => f(c[field])), (c) => f(c[field]))) {
+    // Inactive and blocked carriers are compared too: a blocked carrier's bank account or
+    // phone turning up under a new name is the sign that matters most. Only active
+    // carriers get the signal.
+    for (const [k, list] of groupBy(carriers.filter((c) => f(c[field])), (c) => f(c[field]))) {
       const names = new Set(list.map((c) => carrierKey(c.name))); if (names.size < 2) continue;
-      for (const c of list) add(c, code, `${label} ${field === 'bank_last4' ? `ending ${k}` : str(c[field])} is also on ${list.filter((x) => x !== c).map((x) => `${x.name} (${x.carrier_id})`).join(', ')}.`);
+      for (const c of list.filter((x) => active.includes(x))) add(c, code, `${label} ${field === 'bank_last4' ? `ending ${k}` : str(c[field])} is also on ${list.filter((x) => x !== c).map((x) => `${x.name} (${x.carrier_id}${active.includes(x) ? '' : `, ${str(x.status).toLowerCase()}`})`).join(', ')}.`);
     }
   };
   shared('bank_last4', (v) => digits(v).slice(-4), 'shared_bank', 'Bank account');
@@ -107,7 +110,7 @@ export function verificationText(r, id, a = {}) {
   }
   const L = [`# Carrier verification: ${c.name}`, '', `**To:** ${a.to || '[TO CONFIRM: contact you already had for this carrier]'}`, `**From:** ${a.from || '[YOUR NAME]'}`, '', `Hello,`, '', `As part of our regular carrier review we would like to confirm a few details for ${c.name}${c.mc ? ` (MC ${c.mc})` : ''} before the next load.`, ''];
   for (const x of asks) L.push(`- ${x}`);
-  L.push('', 'Thank you,', a.from || '[YOUR NAME]', '', '---', '', 'Internal note, remove before sending:', '');
+  L.push('', 'Thank you,', a.from || '[YOUR NAME]', '', '---', '', '[CHECK: internal note below, for your team only; delete it before this goes to the carrier]', '');
   for (const d of c.details) L.push(`- ${d}`);
   return L.join('\n');
 }

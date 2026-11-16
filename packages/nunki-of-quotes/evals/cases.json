@@ -150,6 +150,27 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"board\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "nunki_write_report",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "quotes": "fixtures/quotes.csv",
+        "settings": "fixtures/settings.json",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/nunki_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "5 load(s) as of 2026-11-16: 2 ready to book, 1 priced well above history, 1 need new quotes, 1 with none",
+          "Best usable quotes total 6690 all-in (+590 against lane history)"
+        ]
+      }
     }
   ]
 }

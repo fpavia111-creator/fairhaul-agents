@@ -148,6 +148,26 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"with-rules\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "altair_write_report",
+      "args": {
+        "lanes": "fixtures/lanes.csv",
+        "bids": "fixtures/bids.csv",
+        "rules": "fixtures/rules.json",
+        "out_dir": "lodestar-out/evals/altair_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "6 lane(s), 380 annual loads: 5 awarded, 0 partly covered, 1 with no award",
+          "Scenario cost 458840 against 477000 at incumbent rates (savings 18160)"
+        ]
+      }
     }
   ]
 }

@@ -135,6 +135,25 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "adhara_write_report",
+      "args": {
+        "invoices": "fixtures/ocean-invoices.csv",
+        "contract": "fixtures/contract.json",
+        "out_dir": "lodestar-out/evals/adhara_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "6 bill(s) of lading, 28566 billed: 5 with findings, 3355 disputable",
+          "rate_over 1, surcharge_out_of_window 1, surcharge_included 1, duplicate_charge 1, surcharge_not_in_contract 1, container_count 1, contract_expired 1, currency_mismatch 1"
+        ]
+      }
     }
   ]
 }

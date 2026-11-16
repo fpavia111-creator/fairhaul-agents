@@ -20,6 +20,6 @@ test('insurance that ends before pickup flags the load even when the carrier is 
 test('the verification request asks for documents and keeps signals in an internal note', () => {
   const r = vetCarriers([c({ remit_to: 'Bluewater Factoring', bank_changed: '2026-11-10' })], [], { asOf: '2026-11-16' });
   const t = verificationText(r, 'A');
-  assert.match(t, /notice of assignment/); assert.match(t, /call you on the number we already hold/); assert.match(t, /Internal note, remove before sending/);
-  assert.doesNotMatch(t.split('Internal note')[0], /fraud/i);
+  assert.match(t, /notice of assignment/); assert.match(t, /call you on the number we already hold/); assert.match(t, /\[CHECK: internal note below/);
+  assert.doesNotMatch(t.split('[CHECK: internal note')[0], /fraud/i);
 });

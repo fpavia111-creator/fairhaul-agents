@@ -34,7 +34,9 @@ export function tables(records) {
  */
 export function reconcile(records, { tolerance = 1 } = {}) {
   const t = tables(records);
-  const tenders = new Map(t.tenders.map((x) => [str(x.shipment_id).toLowerCase(), x]));
+  // 204 purpose 01 cancels the tender; 04 (change) replaces it. Files are read in order.
+  const tenders = new Map();
+  for (const x of t.tenders) { const k = str(x.shipment_id).toLowerCase(); if (x.purpose === '01') { const prev = tenders.get(k); tenders.set(k, { ...(prev || x), cancelled: true }); } else tenders.set(k, { ...x, cancelled: false }); }
   const responses = groupBy(t.responses, (x) => str(x.shipment_id).toLowerCase());
   const events = groupBy(t.status_events, (x) => str(x.shipment_id || x.pro).toLowerCase());
   const eventsByPro = groupBy(t.status_events, (x) => str(x.pro).toLowerCase());
@@ -44,6 +46,7 @@ export function reconcile(records, { tolerance = 1 } = {}) {
     const sid = str(inv.shipment_ref).toLowerCase();
     const tender = tenders.get(sid);
     if (!tender) { add('invoice_without_tender', inv.invoice_number, `Invoice ${inv.invoice_number} names shipment "${inv.shipment_ref || '(none)'}", which no 204 tender in these files covers.`, inv.amount); continue; }
+    if (tender.cancelled) { add('invoice_on_cancelled_tender', inv.invoice_number, `Invoice ${inv.invoice_number} is for ${tender.shipment_id}, whose tender was cancelled (204 purpose 01). Ask whether the truck moved or a cancellation fee applies before paying.`, inv.amount); continue; }
     const accepted = (responses.get(sid) || []).filter((r) => r.action === 'accepted').map((r) => r.scac);
     if (accepted.length && !accepted.some((s) => carrierKey(s) === carrierKey(inv.scac))) add('invoice_from_other_carrier', inv.invoice_number, `Invoice ${inv.invoice_number} is from ${inv.scac}, but the 990 shows ${accepted.join(', ')} accepted ${tender.shipment_id}.`, inv.amount);
     if (tender.amount !== null && inv.amount !== null && inv.amount - tender.amount > tolerance) add('invoice_over_tender', inv.invoice_number, `Invoice ${inv.invoice_number} is ${inv.amount}; the tender for ${tender.shipment_id} said ${tender.amount} (+${round2(inv.amount - tender.amount)}). Check the charge lines for added accessorials or fuel.`, inv.amount - tender.amount);
@@ -55,7 +58,7 @@ export function reconcile(records, { tolerance = 1 } = {}) {
     if (!tenders.has(sid)) add('response_without_tender', list[0].shipment_id, `990 response for ${list[0].shipment_id}, which is not in these 204 files.`);
     if (list.length && list.every((r) => r.action === 'declined')) add('tender_declined', list[0].shipment_id, `Every carrier declined ${list[0].shipment_id}. It still needs a carrier.`);
   }
-  for (const [sid, tender] of tenders) if (!responses.has(sid)) add('tender_no_response', tender.shipment_id, `No 990 for tender ${tender.shipment_id}.`);
+  for (const [sid, tender] of tenders) if (!tender.cancelled && !responses.has(sid)) add('tender_no_response', tender.shipment_id, `No 990 for tender ${tender.shipment_id}.`);
   for (const a of t.acknowledgements) if (a.set_status && a.set_status !== 'A') add('rejected_by_partner', `${a.set} ${a.control}`, `The partner's ${a.functional ? `${a.functional} ` : ''}acknowledgement for group ${a.acknowledges_group} marks ${a.set} control ${a.control} as ${a.set_status === 'R' ? 'rejected' : a.set_status === 'E' ? 'accepted with errors' : a.set_status}. Fix and resend through your EDI provider.`);
   const byCode = {}; for (const f of findings) byCode[f.code] = (byCode[f.code] || 0) + 1;
   return { tenders: t.tenders.length, invoices: t.invoices.length, status_events: t.status_events.length, responses: t.responses.length, findings, by_finding: byCode };

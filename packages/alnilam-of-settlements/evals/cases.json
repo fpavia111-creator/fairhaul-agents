@@ -171,6 +171,28 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "alnilam_write_report",
+      "args": {
+        "ratecons": "fixtures/ratecons.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/alnilam_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "8 load(s) as of 2026-11-16",
+          "Next batch: 3 load(s), 6833"
+        ]
+      }
     }
   ]
 }

@@ -163,6 +163,29 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "elnath_write_report",
+      "args": {
+        "orders": "fixtures/orders.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000,
+        "alternatives": [
+          2500
+        ],
+        "out_dir": "lodestar-out/evals/elnath_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "10 order(s): freight cost 2215.92, charged 213, 9.6% recovered (gap -2002.92)",
+          "Collect orders we paid: 210"
+        ]
+      }
     }
   ]
 }

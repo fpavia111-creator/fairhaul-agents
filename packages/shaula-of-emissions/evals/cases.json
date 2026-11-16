@@ -161,6 +161,25 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "shaula_write_report",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/factors.json",
+        "out_dir": "lodestar-out/evals/shaula_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "Estimate: 10.292 t CO2e for 7 of 9 shipment(s) (207313 tonne-km, 50 g per tonne-km); 2 not estimated; 22% with measured distance",
+          "Largest: ftl (8369.14 kg)"
+        ]
+      }
     }
   ]
 }

@@ -158,6 +158,25 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"check-totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "spica_write_report",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "out_dir": "lodestar-out/evals/spica_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "11 invoice(s), 2721 fuel billed: 3 over the table for 130 (2 priced on the wrong diesel week); 2 could not be checked",
+          "Latest index week 2026-11-02 (4.08)"
+        ]
+      }
     }
   ]
 }

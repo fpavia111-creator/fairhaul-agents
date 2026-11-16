@@ -142,6 +142,25 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"ranking\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "rigel_write_report",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "settings": "fixtures/scorecard.json",
+        "out_dir": "lodestar-out/evals/rigel_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "4 carrier(s), 21 load(s), 30287 billed",
+          "3 ranked: 1"
+        ]
+      }
     }
   ]
 }

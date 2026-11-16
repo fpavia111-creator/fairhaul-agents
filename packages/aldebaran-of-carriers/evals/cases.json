@@ -188,6 +188,40 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "aldebaran_write_report",
+      "args": {
+        "carriers": "fixtures/carriers.csv",
+        "loads": "fixtures/loads.csv",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/aldebaran_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "7 carrier(s) as of 2026-11-16: 3 high, 1 medium, 1 low on warning signs",
+          "Of 6 booked load(s), 4 to hold until verified and 1 to verify before pickup"
+        ]
+      }
+    },
+    {
+      "id": "recall-empty-memory",
+      "tool": "aldebaran_recall",
+      "args": {},
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.total": 0
+        },
+        "contains": [
+          "0 fact(s) found (memory is empty)"
+        ]
+      }
     }
   ]
 }

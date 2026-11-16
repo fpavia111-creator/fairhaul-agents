@@ -175,6 +175,65 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"audit-totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "sirius_write_report",
+      "args": {
+        "invoices": "fixtures/parcel-invoices.csv",
+        "terms": "fixtures/terms.json",
+        "voids": "fixtures/voids.csv",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/sirius_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 3
+        },
+        "contains": [
+          "Parcel worklist written: 11 package(s), 275.16 billed: 5 to claim (85.93 still in window), 1 past the window (45 lost), 3 to review, 2 clean"
+        ]
+      }
+    },
+    {
+      "id": "draft-refund-request-waits-for-a-person",
+      "tool": "sirius_draft_refund_request",
+      "args": {
+        "invoices": "fixtures/parcel-invoices.csv",
+        "terms": "fixtures/terms.json",
+        "voids": "fixtures/voids.csv",
+        "as_of": "2026-11-16",
+        "carrier": "UPS",
+        "out_dir": "lodestar-out/evals/sirius_draft_refund_request"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "draft-refund-request-after-approval",
+      "tool": "sirius_draft_refund_request",
+      "args": {
+        "invoices": "fixtures/parcel-invoices.csv",
+        "terms": "fixtures/terms.json",
+        "voids": "fixtures/voids.csv",
+        "as_of": "2026-11-16",
+        "carrier": "UPS",
+        "out_dir": "lodestar-out/evals/sirius_draft_refund_request"
+      },
+      "approve": "Pat Example",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.amount": 85.93,
+          "result.open_markers": 3
+        },
+        "contains": [
+          "refund request UPS drafted for 85.93 with 3 open marker(s) ([TO CONFIRM UPS billing adjustments contact or portal], [TO CONFIRM your name and company], [TO CONFIRM shipper account number])"
+        ]
+      }
     }
   ]
 }

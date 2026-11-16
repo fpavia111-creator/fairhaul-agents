@@ -139,6 +139,60 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"plan-totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "hadar_write_report",
+      "args": {
+        "requests": "fixtures/requests.csv",
+        "dock": "fixtures/dock.json",
+        "date": "2026-11-18",
+        "out_dir": "lodestar-out/evals/hadar_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "2026-11-18: 8 of 10 appointment(s) placed on 4 door(s), 06:00-14:00, dock use 34%",
+          "2 could not be placed"
+        ]
+      }
+    },
+    {
+      "id": "draft-schedule-waits-for-a-person",
+      "tool": "hadar_draft_schedule",
+      "args": {
+        "requests": "fixtures/requests.csv",
+        "dock": "fixtures/dock.json",
+        "date": "2026-11-18",
+        "out_dir": "lodestar-out/evals/hadar_draft_schedule"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "draft-schedule-after-approval",
+      "tool": "hadar_draft_schedule",
+      "args": {
+        "requests": "fixtures/requests.csv",
+        "dock": "fixtures/dock.json",
+        "date": "2026-11-18",
+        "out_dir": "lodestar-out/evals/hadar_draft_schedule"
+      },
+      "approve": "Pat Example",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.open_markers": 1
+        },
+        "contains": [
+          "schedule 2026-11-18 drafted with 1 open marker(s) ([TO CONFIRM: carriers on this list])"
+        ]
+      }
     }
   ]
 }

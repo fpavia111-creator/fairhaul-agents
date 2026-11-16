@@ -139,6 +139,62 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "betelgeuse_write_report",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "shipments": "fixtures/shipments.csv",
+        "contract": "fixtures/contract.json",
+        "out_dir": "lodestar-out/evals/betelgeuse_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "9 invoice(s): accessorials 890 of 4750 freight (18.7%)",
+          "6 charge(s) billed but not ordered (380); 1 above contract (10); 4 repeat(s) to fix at the source"
+        ]
+      }
+    },
+    {
+      "id": "draft-address-update-waits-for-a-person",
+      "tool": "betelgeuse_draft_address_update",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "shipments": "fixtures/shipments.csv",
+        "contract": "fixtures/contract.json",
+        "out_dir": "lodestar-out/evals/betelgeuse_draft_address_update"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "draft-address-update-after-approval",
+      "tool": "betelgeuse_draft_address_update",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "shipments": "fixtures/shipments.csv",
+        "contract": "fixtures/contract.json",
+        "out_dir": "lodestar-out/evals/betelgeuse_draft_address_update"
+      },
+      "approve": "Pat Example",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.amount": 680,
+          "result.open_markers": 2,
+          "result.changes": 4
+        },
+        "contains": [
+          "address update address-book drafted for 680 with 2 open marker(s) ([TO CONFIRM who maintains the address book], [TO CONFIRM your name])"
+        ]
+      }
     }
   ]
 }

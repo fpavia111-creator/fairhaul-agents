@@ -39,14 +39,17 @@ export function award(lanes, bids, rules = {}) {
   const byLane = groupBy(bids, (b) => str(b.lane_id).toLowerCase());
   const prepared = lanes.map((l) => {
     const loads = num(l.annual_loads) || 0; const inc = l.incumbent ? canonicalCarrier({}, l.incumbent) : null; const incRate = num(l.incumbent_rate);
-    const list = (byLane.get(str(l.lane_id).toLowerCase()) || []).map((b) => ({ carrier: canonicalCarrier({}, b.carrier), rate: num(b.rate), capacity: num(b.capacity), notes: str(b.notes) })).filter((b) => b.rate !== null && b.rate > 0).sort((a, b) => a.rate - b.rate);
+    const all = (byLane.get(str(l.lane_id).toLowerCase()) || []).map((b) => ({ carrier: canonicalCarrier({}, b.carrier), rate: num(b.rate), capacity: num(b.capacity), notes: str(b.notes) })).filter((b) => b.rate !== null && b.rate > 0).sort((a, b) => a.rate - b.rate);
+    // A carrier that bid more than once on a lane (a revised bid) is counted once, at its lowest rate.
+    const list = all.filter((b, i) => all.findIndex((x) => x.carrier.toLowerCase() === b.carrier.toLowerCase()) === i);
+    const repeat = [...new Set(all.filter((b) => !list.includes(b)).map((b) => b.carrier))].map((c) => `${c} bid more than once on this lane; its lowest bid (${list.find((b) => b.carrier === c).rate}) is used. Confirm which bid stands.`);
     const rates = list.map((b) => b.rate); const median = rates.length ? rates[Math.floor((rates.length - 1) / 2)] : null;
     for (const b of list) b.outlier = median !== null && list.length >= 3 && b.rate < median * (1 - r.outlier_pct / 100);
-    return { lane: l, loads, inc, incRate, list, median, savingsPotential: incRate && list.length ? (incRate - list[0].rate) * loads : 0 };
+    return { lane: l, loads, inc, incRate, list, median, repeat, savingsPotential: incRate && list.length ? (incRate - list[0].rate) * loads : 0 };
   }).sort((a, b) => b.savingsPotential - a.savingsPotential);
-  const results = prepared.map(({ lane, loads, inc, incRate, list, median }) => {
+  const results = prepared.map(({ lane, loads, inc, incRate, list, median, repeat }) => {
     const eligible = list.filter((b) => !excl.has(b.carrier.toLowerCase()) && !b.outlier);
-    const notes = list.filter((b) => b.outlier).map((b) => `${b.carrier} bid ${b.rate}, far below the lane median ${median}; confirm it is not an error before awarding.`);
+    const notes = [...repeat, ...list.filter((b) => b.outlier).map((b) => `${b.carrier} bid ${b.rate}, far below the lane median ${median}; confirm it is not an error before awarding.`)];
     const best = eligible[0] || null;
     let order = eligible;
     if (best && inc && r.prefer_incumbent_pct > 0) { const ib = eligible.find((b) => b.carrier === inc); if (ib && ib.rate <= best.rate * (1 + r.prefer_incumbent_pct / 100)) { order = [ib, ...eligible.filter((b) => b !== ib)]; if (ib !== best) notes.push(`Incumbent ${inc} kept: ${ib.rate} is within ${r.prefer_incumbent_pct}% of the best bid ${best.rate}.`); } }

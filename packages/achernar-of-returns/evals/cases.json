@@ -168,6 +168,28 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "achernar_write_report",
+      "args": {
+        "rmas": "fixtures/rmas.csv",
+        "receipts": "fixtures/receipts.csv",
+        "credits": "fixtures/credits.csv",
+        "charges": "fixtures/return-freight.csv",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/achernar_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "8 return(s) worth 1081, return freight 253.35",
+          "8 point(s): credits owed to customers 250, credit given without goods or over value 119.6, return freight to dispute 106.25"
+        ]
+      }
     }
   ]
 }

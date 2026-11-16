@@ -184,6 +184,26 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"scan-totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "capella_write_report",
+      "args": {
+        "exceptions": "fixtures/exceptions.csv",
+        "claims": "fixtures/claims-log.csv",
+        "terms": "fixtures/terms.json",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/capella_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 3
+        },
+        "contains": [
+          "As of 2026-11-16: 9 exception(s); 4 to file for 8840 (1 due within 30 days); 1 past the filing window (900); 1 already filed; 1 need more data"
+        ]
+      }
     }
   ]
 }

@@ -43,7 +43,9 @@ export function auditOcean(rows, cfg) {
   const items = bls.map((ls) => {
     const r0 = ls[0]; const date = isoDate(r0.sailing_date); const findings = [];
     const add = (code, detail, amount = 0) => findings.push({ code, detail, amount: round2(amount) });
-    const cands = cfg.contracts.filter((c) => [c.carrier, ...(c.aliases || [])].some((n) => carrierKey(n) === carrierKey(r0.carrier)));
+    // An alias names the carrier, so it holds for every contract term of that carrier.
+    const names = (c) => [c.carrier, ...cfg.contracts.filter((o) => carrierKey(o.carrier) === carrierKey(c.carrier)).flatMap((o) => o.aliases || [])];
+    const cands = cfg.contracts.filter((c) => names(c).some((n) => carrierKey(n) === carrierKey(r0.carrier)));
     const live = cands.filter((c) => !date || ((!c.effective || date >= c.effective) && (!c.expires || date <= c.expires)));
     const contract = live[0] || null;
     const equipment = eq(r0.equipment); const boxes = num(r0.containers);

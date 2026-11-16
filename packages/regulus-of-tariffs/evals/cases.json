@@ -122,6 +122,59 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "regulus_write_report",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json",
+        "out_dir": "lodestar-out/evals/regulus_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "7 shipment(s), 2743.01 paid",
+          "Re-rated under every contract: 281.51 more than the cheapest contract on the day"
+        ]
+      }
+    },
+    {
+      "id": "draft-routing-change-waits-for-a-person",
+      "tool": "regulus_draft_routing_change",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json",
+        "out_dir": "lodestar-out/evals/regulus_draft_routing_change"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "draft-routing-change-after-approval",
+      "tool": "regulus_draft_routing_change",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json",
+        "out_dir": "lodestar-out/evals/regulus_draft_routing_change"
+      },
+      "approve": "Pat Example",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.amount": 281.51,
+          "result.open_markers": 3,
+          "result.lanes": 2
+        },
+        "contains": [
+          "routing change routing-guide drafted for 281.51 with 3 open marker(s) ([TO CONFIRM routing guide owner], [TO CONFIRM your name], [TO CONFIRM who approves routing changes])"
+        ]
+      }
     }
   ]
 }

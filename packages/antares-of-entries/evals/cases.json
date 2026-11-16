@@ -176,6 +176,27 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "antares_write_report",
+      "args": {
+        "entries": "fixtures/entries.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300,
+        "out_dir": "lodestar-out/evals/antares_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "3 entries, 8 line(s): 9 point(s) to check",
+          "Estimated duty possibly overpaid 196.5, possibly underpaid 32.4"
+        ]
+      }
     }
   ]
 }

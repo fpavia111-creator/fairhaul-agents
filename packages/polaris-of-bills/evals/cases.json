@@ -200,6 +200,80 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"audit-totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "polaris_write_report",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv",
+        "out_dir": "lodestar-out/evals/polaris_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "Audit worklist written: 11 invoice(s), 7046.3 billed: 4 to dispute, 2 duplicate(s), 4 need review, 1 clean",
+          "Disputable 1065.8 (15.13% of billed)"
+        ]
+      }
+    },
+    {
+      "id": "draft-dispute-waits-for-a-person",
+      "tool": "polaris_draft_dispute",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv",
+        "carrier": "EXLT",
+        "out_dir": "lodestar-out/evals/polaris_draft_dispute"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "draft-dispute-after-approval",
+      "tool": "polaris_draft_dispute",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv",
+        "carrier": "EXLT",
+        "out_dir": "lodestar-out/evals/polaris_draft_dispute"
+      },
+      "approve": "Pat Example",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.amount": 934.8,
+          "result.open_markers": 4
+        },
+        "contains": [
+          "dispute Example Linehaul drafted for 934.8 with 4 open marker(s) ([TO CONFIRM carrier billing contact], [TO CONFIRM your name and company], [TO CONFIRM your account number with the carrier], [ATTACH contract pages or rate confirmation that apply])"
+        ]
+      }
+    },
+    {
+      "id": "recall-empty-memory",
+      "tool": "polaris_recall",
+      "args": {},
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.total": 0
+        },
+        "contains": [
+          "0 fact(s) found (memory is empty)"
+        ]
+      }
     }
   ]
 }

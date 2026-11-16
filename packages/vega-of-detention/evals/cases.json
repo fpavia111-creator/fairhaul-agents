@@ -153,6 +153,62 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"audit-totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "vega_write_report",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json",
+        "out_dir": "lodestar-out/evals/vega_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "Detention worklist written: 9 charge(s), 1525 billed: 7 to dispute (712.5), 1 need dock times, 1 supported"
+        ]
+      }
+    },
+    {
+      "id": "draft-dispute-waits-for-a-person",
+      "tool": "vega_draft_dispute",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json",
+        "carrier": "Example Linehaul",
+        "out_dir": "lodestar-out/evals/vega_draft_dispute"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "draft-dispute-after-approval",
+      "tool": "vega_draft_dispute",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json",
+        "carrier": "Example Linehaul",
+        "out_dir": "lodestar-out/evals/vega_draft_dispute"
+      },
+      "approve": "Pat Example",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.amount": 187.5,
+          "result.open_markers": 3
+        },
+        "contains": [
+          "dispute Example Linehaul drafted for 187.5 with 3 open marker(s) ([TO CONFIRM carrier billing contact], [TO CONFIRM your name and company], [ATTACH gate or dock log extract for each stop])"
+        ]
+      }
     }
   ]
 }

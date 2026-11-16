@@ -122,6 +122,57 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "deneb_write_report",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json",
+        "out_dir": "lodestar-out/evals/deneb_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "9 package(s), average fill 55.1%: 4 could use a smaller carton (36 billable lb, about 39.6); 2 fit no carton in the catalog; 1 at risk of an oversize charge"
+        ]
+      }
+    },
+    {
+      "id": "draft-carton-change-waits-for-a-person",
+      "tool": "deneb_draft_carton_change",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json",
+        "out_dir": "lodestar-out/evals/deneb_draft_carton_change"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "draft-carton-change-after-approval",
+      "tool": "deneb_draft_carton_change",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json",
+        "out_dir": "lodestar-out/evals/deneb_draft_carton_change"
+      },
+      "approve": "Pat Example",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.amount": 39.6,
+          "result.open_markers": 3
+        },
+        "contains": [
+          "carton change cartons drafted for 39.6 with 3 open marker(s) ([TO CONFIRM warehouse or WMS owner], [TO CONFIRM your name], [TO CONFIRM drop test or trial week])"
+        ]
+      }
     }
   ]
 }

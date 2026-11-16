@@ -157,6 +157,27 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"board\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "fomalhaut_write_report",
+      "args": {
+        "containers": "fixtures/containers.csv",
+        "terms": "fixtures/terms.json",
+        "charges": "fixtures/charges.csv",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/fomalhaut_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 3
+        },
+        "contains": [
+          "7 container(s): 2 to move now, 2 accruing charges, 1 in free time, 1 returned, 1 with no terms on file",
+          "Open exposure 1750"
+        ]
+      }
     }
   ]
 }

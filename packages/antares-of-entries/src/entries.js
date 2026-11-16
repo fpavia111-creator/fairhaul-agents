@@ -25,7 +25,8 @@ export const INVOICE_FIELDS = Object.freeze({
   currency: t(['Currency', 'Curr']),
   origin: t(['Origin', 'Country of Origin', 'COO', 'Made In'], { translate: 'country_of_origin' }),
 });
-const rateOf = (v) => { const n = num(v); return n === null ? null : n > 1 ? n / 100 : n; };
+// "5%", "5" and "0.05" are the same rate; "0.5%" is half a percent.
+const rateOf = (v) => { const pct = /%/.test(String(v ?? '')); const n = num(String(v ?? '').replace(/%/g, '')); return n === null ? null : pct || n > 1 ? n / 100 : n; };
 const key = (inv, sku) => `${str(inv).toUpperCase()}|${str(sku).toUpperCase()}`;
 
 /**
@@ -46,9 +47,14 @@ export function checkEntries(entries, invoices, { tolerancePct = 1, asOf = null,
     if (rate !== null && num(e.duty) !== null && Math.abs(value * rate - num(e.duty)) > 0.5) add(e, 'duty_math', `Entered value ${value} at ${Math.round(rate * 10000) / 100}% is ${round2(value * rate)}; the line says ${num(e.duty)}.`, value * rate - num(e.duty));
     const inv = invBy.get(k);
     if (!inv) { add(e, 'not_on_invoice', `${e.sku} is not on commercial invoice ${e.invoice_number} in these files.`); continue; }
+    // One invoice line may be split over several lines of the same entry: compare their total, once.
+    const group = entries.filter((x) => str(x.entry_number) === str(e.entry_number) && key(x.invoice_number, x.sku) === k);
+    const firstOfGroup = group[0] === e;
+    const gValue = round2(group.reduce((a, x) => a + (num(x.entered_value) || 0), 0)); const gQty = group.every((x) => num(x.quantity) === null) ? null : group.reduce((a, x) => a + (num(x.quantity) || 0), 0);
+    const split = group.length > 1 ? ` (${group.length} entry lines together)` : '';
     const fx = num(e.exchange_rate) || 1; const invValue = round2(inv.reduce((a, i) => a + (num(i.value) || 0), 0) * fx); const invQty = inv.reduce((a, i) => a + (num(i.quantity) || 0), 0);
-    if (invValue && Math.abs(value - invValue) / invValue * 100 > tolerancePct) add(e, value < invValue ? 'value_below_invoice' : 'value_above_invoice', `Entered value ${value}; the invoice says ${invValue}${fx !== 1 ? ` (${inv[0].currency || 'foreign'} at ${fx})` : ''}. Difference ${round2(value - invValue)}.`, rate !== null ? (invValue - value) * rate : null);
-    if (num(e.quantity) !== null && invQty && num(e.quantity) !== invQty) add(e, 'quantity_mismatch', `Entered quantity ${num(e.quantity)}; the invoice says ${invQty}.`);
+    if (firstOfGroup && invValue && Math.abs(gValue - invValue) / invValue * 100 > tolerancePct) add(e, gValue < invValue ? 'value_below_invoice' : 'value_above_invoice', `Entered value ${gValue}${split}; the invoice says ${invValue}${fx !== 1 ? ` (${inv[0].currency || 'foreign'} at ${fx})` : ''}. Difference ${round2(gValue - invValue)}.`, rate !== null ? (invValue - gValue) * rate : null);
+    if (firstOfGroup && gQty !== null && invQty && gQty !== invQty) add(e, 'quantity_mismatch', `Entered quantity ${gQty}${split}; the invoice says ${invQty}.`);
     const io = [...new Set(inv.map((i) => str(i.origin).toUpperCase()).filter(Boolean))];
     if (str(e.origin) && io.length && !io.includes(str(e.origin).toUpperCase())) add(e, 'origin_mismatch', `Entry says origin ${str(e.origin).toUpperCase()}; the invoice says ${io.join(', ')}. Ask your broker which document is right.`);
   }

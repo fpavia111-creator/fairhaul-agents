@@ -151,6 +151,26 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "castor_write_report",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "order_lines": "fixtures/order-lines.csv",
+        "basis": "pallets",
+        "out_dir": "lodestar-out/evals/castor_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 3
+        },
+        "contains": [
+          "Allocation written: 5 shipment(s) billed 5225.5; 4325.5 split across 9 order line(s) by pallets, 900 not allocated",
+          "2 problem(s) to look at"
+        ]
+      }
     }
   ]
 }

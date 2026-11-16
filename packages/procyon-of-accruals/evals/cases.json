@@ -149,6 +149,28 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"accrual-total\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "procyon_write_report",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json",
+        "prior": "fixtures/prior-accrual.csv",
+        "out_dir": "lodestar-out/evals/procyon_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 3
+        },
+        "contains": [
+          "Accrual written: Period ending 2026-10-31: 7 shipment(s) shipped, 1 billed in period, 6 to accrue for 2970.5 (1 with no estimate), 1 older than 60 days",
+          "Last accrual: 2066 accrued vs 2130 billed (mean error 3.4%)"
+        ]
+      }
     }
   ]
 }

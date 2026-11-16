@@ -119,6 +119,59 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "mizar_write_report",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "tl_rate_per_mile": 2.5,
+        "out_dir": "lodestar-out/evals/mizar_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "12 shipment(s), 15990 spend on 3 lane(s); the top three carry 100% of spend",
+          "2 group(s) of LTL could have shared a truck (about 955 less); 1 heavy LTL shipment(s) should be quoted as truckload (about 690 less)"
+        ]
+      }
+    },
+    {
+      "id": "draft-consolidation-plan-waits-for-a-person",
+      "tool": "mizar_draft_consolidation_plan",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "tl_rate_per_mile": 2.5,
+        "out_dir": "lodestar-out/evals/mizar_draft_consolidation_plan"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "draft-consolidation-plan-after-approval",
+      "tool": "mizar_draft_consolidation_plan",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "tl_rate_per_mile": 2.5,
+        "out_dir": "lodestar-out/evals/mizar_draft_consolidation_plan"
+      },
+      "approve": "Pat Example",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.amount": 1645,
+          "result.open_markers": 3
+        },
+        "contains": [
+          "consolidation plan consolidation drafted for 1645 with 3 open marker(s) ([TO CONFIRM shipping team or planner], [TO CONFIRM your name], [TO CONFIRM e.g",
+          "hold orders for this lane to one ship day a week, or quote truckload above 10,000 lb])"
+        ]
+      }
     }
   ]
 }

@@ -149,6 +149,26 @@
         }
       },
       "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"board\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "mira_write_report",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00",
+        "stale_hours": 24,
+        "out_dir": "lodestar-out/evals/mira_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "8 open load(s) at 2026-11-16 10:00: 2 late, 1 at risk, 0 with stale or no tracking, 4 on track, 1 delivered but still open"
+        ]
+      }
     }
   ]
 }
