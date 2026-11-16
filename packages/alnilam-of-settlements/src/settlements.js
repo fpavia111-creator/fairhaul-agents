@@ -1,7 +1,7 @@
 // Alnilam: carrier settlements for freight brokers. Pure functions.
 import { round2, str, num, groupBy, isoDate, addDays, daysBetween, carrierKey } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const RATECON_FIELDS = Object.freeze({
   load_id: t(['Load ID', 'Load', 'Load Number', 'Pro'], { required: true }),
   carrier: t(['Carrier', 'Carrier Name'], { required: true }),

@@ -1,7 +1,7 @@
 // Bellatrix: LTL weight and class corrections. Pure functions.
 import { densityPcf, classForDensity, DENSITY_SCALES, canonicalCarrier, readYesNo, round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const CORRECTION_FIELDS = Object.freeze({
   pro: t(['PRO', 'PRO Number', 'Pro #'], { required: true }),
   carrier: t(['Carrier', 'Carrier Name', 'SCAC'], { required: true }),

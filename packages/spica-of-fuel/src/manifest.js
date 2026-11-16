@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, FREIGHT_CONTRACT_SCHEMA, INVOICE_LINE_FIELDS, readInvoiceLines, groupInvoices, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, FREIGHT_CONTRACT_SCHEMA, INVOICE_LINE_FIELDS, INVOICE_PROFILES, readInvoiceLines, groupInvoices, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { checkFuel, compareTables, sensitivity, disputeText } from './fuel.js';
 
@@ -28,7 +28,7 @@ export const manifest = defineManifest({
   description: 'Checks every fuel surcharge against the carrier\'s fuel table and the diesel price for the week the load shipped, spots invoices priced on the wrong week, compares carriers\' fuel tables side by side and shows what a diesel move would cost. Drafts disputes; paying and sending are a person\'s job.',
   model: MODEL_PIN, caps: { maxSteps: 60, maxSpendUsd: 0 },
   configSchemas: { freight_contract: FREIGHT_CONTRACT_SCHEMA },
-  sources: { invoices: { label: 'Carrier invoices', args: ['invoices'], fields: INVOICE_LINE_FIELDS } },
+  sources: { invoices: { label: 'Carrier invoices', args: ['invoices'], fields: INVOICE_LINE_FIELDS, profiles: INVOICE_PROFILES } },
   argDocs: {},
   prompts: [{ name: 'fuel_surcharge_check', title: 'Check fuel surcharges', description: 'Walks the host model through a fuel surcharge review with Spica.', arguments: [{ name: 'invoices', description: 'Invoices file', required: true }, { name: 'contract', description: 'Contract with fuel tables and index', required: true }], text: `You are helping a freight payables or transportation lead check fuel surcharges with spica-of-fuel. Invoices: {{invoices}}. Contract: {{contract}}.
 

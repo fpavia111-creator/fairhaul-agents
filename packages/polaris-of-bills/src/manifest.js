@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, FREIGHT_CONTRACT_SCHEMA, INVOICE_LINE_FIELDS, SHIPMENT_FIELDS, readInvoiceLines, groupInvoices, writeWorklist, draftPair, refusedTools, appendRow, LIMITS, round2, canonicalCarrier } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, FREIGHT_CONTRACT_SCHEMA, INVOICE_LINE_FIELDS, INVOICE_PROFILES, SHIPMENT_FIELDS, readInvoiceLines, groupInvoices, writeWorklist, draftPair, refusedTools, appendRow, LIMITS, round2, canonicalCarrier } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { relative } from 'node:path';
 import { auditInvoices, disputeText } from './audit.js';
@@ -49,8 +49,8 @@ export const manifest = defineManifest({
   caps: { maxSteps: 60, maxSpendUsd: 0 },
   configSchemas: { freight_contract: FREIGHT_CONTRACT_SCHEMA },
   sources: {
-    invoices: { label: 'Carrier invoices or freight bills', args: ['invoices'], fields: INVOICE_LINE_FIELDS },
-    paid: { label: 'Paid invoice history', args: ['paid'], fields: INVOICE_LINE_FIELDS },
+    invoices: { label: 'Carrier invoices or freight bills', args: ['invoices'], fields: INVOICE_LINE_FIELDS, profiles: INVOICE_PROFILES },
+    paid: { label: 'Paid invoice history', args: ['paid'], fields: INVOICE_LINE_FIELDS, profiles: INVOICE_PROFILES },
     shipments: { label: 'Shipments or BOLs', args: ['shipments'], fields: SHIPMENT_FIELDS },
   },
   argDocs: { invoice_number: 'Invoice number to explain, as it appears in the audit', amount: 'Amount to approve for payment, in invoice currency; at most the invoice total' },

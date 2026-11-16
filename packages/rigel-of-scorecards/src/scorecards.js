@@ -1,7 +1,7 @@
 // Rigel: carrier scorecards from your own shipment history. Pure functions.
 import { isoDate, hoursBetween, round2, str, num, readYesNo, canonicalCarrier, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const SCORE_FIELDS = Object.freeze({
   shipment_id: t(['Shipment ID', 'Load ID', 'Load Number', 'Order', 'BOL'], { required: true }),
   carrier: t(['Carrier', 'Carrier Name', 'SCAC'], { required: true }),

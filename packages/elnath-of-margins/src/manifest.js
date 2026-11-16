@@ -1,6 +1,6 @@
 import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
-import { ORDER_FIELDS, COST_FIELDS, freightMargins, termsText } from './margins.js';
+import { ORDER_FIELDS, ORDER_PROFILES, COST_FIELDS, freightMargins, termsText } from './margins.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const OUT = 'lodestar-out/elnath';
@@ -30,7 +30,7 @@ export const manifest = defineManifest({
   name: 'elnath-of-margins', version: pkg.version,
   description: 'Compares the freight you charged each customer with what the freight actually cost: recovery by customer and freight terms, collect orders you paid for, prepaid-and-add orders with no freight on the invoice, orders shipped free below your threshold, and an estimate of how other free-shipping thresholds would change recovery. It never changes terms or bills customers.',
   model: MODEL_PIN, caps: { maxSteps: 60, maxSpendUsd: 0 },
-  sources: { orders: { label: 'Orders', args: ['orders'], fields: ORDER_FIELDS }, costs: { label: 'Freight cost per shipment', args: ['costs'], fields: COST_FIELDS } },
+  sources: { orders: { label: 'Orders', args: ['orders'], fields: ORDER_FIELDS, profiles: ORDER_PROFILES }, costs: { label: 'Freight cost per shipment', args: ['costs'], fields: COST_FIELDS } },
   argDocs: {},
   prompts: [{ name: 'freight_recovery_review', title: 'Check freight recovery', description: 'Walks the host model through a freight recovery review with Elnath.', arguments: [{ name: 'orders', description: 'Orders', required: true }, { name: 'costs', description: 'Freight cost per shipment', required: false }], text: `You are helping a finance, sales ops or e-commerce lead with elnath-of-margins. Orders: {{orders}}. Costs: {{costs}}.
 

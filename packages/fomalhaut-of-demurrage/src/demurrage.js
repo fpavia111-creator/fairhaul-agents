@@ -1,10 +1,10 @@
 // Fomalhaut: container demurrage and detention. Pure functions.
-import { isoDate, addDays, daysBetween, round2, str, num, groupBy } from 'lodestar-core';
+import { exportProfile, isoDate, addDays, daysBetween, round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const CONTAINER_FIELDS = Object.freeze({
   container: t(['Container', 'Container Number', 'Container No', 'Equipment'], { required: true }),
-  line: t(['Line', 'Carrier', 'Steamship Line', 'Ocean Carrier', 'SCAC'], { required: true }),
+  line: t(['Line', 'Carrier', 'Steamship Line', 'Ocean Carrier', 'SCAC'], { required: true, translate: 'ocean_line' }),
   bl: t(['BL', 'B/L', 'Bill of Lading', 'MBL']),
   size: t(['Size', 'Type', 'Size Type', 'Equipment Type']),
   discharged: t(['Discharged', 'Discharge Date', 'Vessel Discharge', 'Unloaded'], { type: 'date', required: true }),
@@ -102,3 +102,8 @@ export function disputeText(list, items, { from, contact }) {
     '[ATTACH terminal gate records and the agreement page with the free time]',
   ].join('\n') };
 }
+
+/** Generic container milestone export (exports.js). Written from knowledge; not checked against a platform's documentation or a live account. */
+export const CONTAINER_PROFILES = Object.freeze([
+  exportProfile('container_milestones', { container: 'Container Number', line: ['Carrier', 'Shipping Line', 'Ocean Carrier', 'Carrier SCAC'], bl: ['Master BL', 'MBL', 'Bill of Lading'], size: ['Container Type', 'Equipment Type', 'Size'], discharged: ['Discharge Date', 'Vessel Discharge'], last_free_day: ['Last Free Day', 'LFD'], gate_out: ['Out Gate', 'Gate Out Full', 'Gate Out'], empty_returned: ['Empty Return', 'Empty Returned', 'Gate In Empty'] }),
+]);

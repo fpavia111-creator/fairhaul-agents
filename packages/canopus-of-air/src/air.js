@@ -1,7 +1,7 @@
 // Canopus: air freight invoices against weight-break rate sheets. Pure functions.
 import { isoDate, round2, str, num, carrierKey } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const AIR_FIELDS = Object.freeze({
   invoice_number: t(['Invoice Number', 'Invoice', 'Invoice #'], { required: true }),
   forwarder: t(['Forwarder', 'Carrier', 'Airline', 'Vendor'], { required: true }),

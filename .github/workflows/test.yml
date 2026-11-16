@@ -27,6 +27,8 @@ jobs:
         run: npm run plugin:check
       - name: Hostile inputs (planted formulas, HTML, path tricks and AI-directed text in every agent's data)
         run: npm run hostile
+      - name: International files (every spreadsheet eval case in 8 languages, legacy encodings, comma decimals, kg and km)
+        run: npm run intl
       - name: Pack contents stay clean
         shell: bash
         run: |

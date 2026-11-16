@@ -1,7 +1,7 @@
 // Castor: freight cost split across order lines. Pure functions.
 import { round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const COST_FIELDS = Object.freeze({
   shipment_id: t(['Shipment ID', 'Load ID', 'BOL', 'PRO'], { required: true }),
   cost: t(['Cost', 'Freight Cost', 'Invoice Amount', 'Total', 'Amount'], { type: 'money', required: true }),

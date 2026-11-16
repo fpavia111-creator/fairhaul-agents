@@ -26,11 +26,11 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { rowsToRecords } from './csv.js';
 import { assertValid } from './schema.js';
-import { normHeader, parseAnyDate, inferDateOrder, cleanAmount, inferDecimal } from './intl.js';
-import { translatedNames } from './i18n/columns.js';
+import { normHeader, parseAnyDate, inferDateOrder, cleanAmount, inferDecimal, decimalEvidence } from './intl.js';
+import { translatedNames, FIELD_CONCEPTS } from './i18n/columns.js';
 import { encodingName, ENCODINGS } from './encoding.js';
 
-export { normHeader, parseAnyDate, inferDateOrder, cleanAmount, inferDecimal };
+export { normHeader, parseAnyDate, inferDateOrder, cleanAmount, inferDecimal, decimalEvidence };
 
 export const FIELD_TYPES = ['text', 'date', 'datetime', 'money', 'number', 'bool', 'email'];
 export const SOURCES_FILE = 'lodestar-sources.json';
@@ -75,7 +75,34 @@ function headersOf(records) {
 }
 
 /** Which entry of the column dictionary a field reads: its own name, another concept (fd.translate: 'ledger_debit'), or none (fd.translate: false). */
-export const conceptOf = (f, fd) => (fd && fd.translate === false ? null : fd && typeof fd.translate === 'string' ? fd.translate : f);
+export const conceptOf = (f, fd) => (fd && fd.translate === false ? null : fd && typeof fd.translate === 'string' ? fd.translate : FIELD_CONCEPTS[f] || f);
+
+// ---- Units ----
+// Freight files weigh in pounds or kilograms and measure in miles or kilometres.
+// A field that declares the unit the agent works in (fd.unit, or the default
+// below for its name) is converted when the column says it holds another unit
+// ("Weight (kg)", "Distance km", "重量(kg)"), when lodestar-sources.json says so
+// ("units": { "weight": "kg" }), or when an export layout says so. A column found
+// by its German, French, Spanish, Portuguese, Italian, Japanese, Chinese or Korean
+// name and with no unit in it is read as metric, and the report says so.
+export const UNITS = ['lb', 'kg', 'mi', 'km', 'in', 'cm'];
+const UNIT_FAMILY = { lb: 'weight', kg: 'weight', mi: 'distance', km: 'distance', in: 'length', cm: 'length' };
+const METRIC = { weight: 'kg', distance: 'km', length: 'cm' };
+const FACTOR = { 'kg>lb': 2.2046226218, 'lb>kg': 0.45359237, 'km>mi': 0.6213711922, 'mi>km': 1.609344, 'cm>in': 0.3937007874, 'in>cm': 2.54 };
+export const DEFAULT_UNITS = Object.freeze({ weight: 'lb', actual_weight: 'lb', declared_weight: 'lb', corrected_weight: 'lb', billed_weight: 'lb', miles: 'mi', length: 'in', width: 'in', height: 'in', billed_kg: 'kg', actual_kg: 'kg' });
+const UNIT_TAIL = /[\s_\-/]*[(\[（【]?\s*(kgs?|kilos?|kilograms?|kilogrammes?|lbs?|pounds?|kms?|kilometers?|kilometres?|kilomètres?|miles?|mi|cm|centimeters?|centimetres?|inch(es)?|in|㎏|㎞|㎝|キロ|キログラム|キロメートル|センチ|公斤|千克|公里|厘米|킬로그램|킬로미터|킬로|센티미터|센티)\s*[)\]）】]?\s*$/iu;
+/** The header without a trailing unit: "Gewicht (kg)" -> "Gewicht". */
+export const stripUnit = (h) => { const s = String(h ?? ''); const t = s.replace(UNIT_TAIL, '').trim(); return t && t !== s.trim() ? t : s; };
+/** The unit a header names for one family ('weight', 'distance' or 'length'), or null. */
+export function unitInHeader(h, family) {
+  const s = String(h ?? '').normalize('NFKC').toLowerCase();
+  if (family === 'weight') { if (/(^|[^a-z])(kgs?|kilos?|kilogram|kilogramm)|㎏|キロ|公斤|千克|킬로/.test(s)) return 'kg'; if (/(^|[^a-z])(lbs?|pounds?)([^a-z]|$)|ポンド|磅|파운드/.test(s)) return 'lb'; }
+  if (family === 'distance') { if (/(^|[^a-z])kms?([^a-z]|$)|kilom|chilom|quilôm|quilom|㎞|キロ|公里|킬로/.test(s)) return 'km'; if (/(^|[^a-z])(mi|miles?|mileage)([^a-z]|$)|マイル|英里|마일/.test(s)) return 'mi'; }
+  if (family === 'length') { if (/(^|[^a-z])cm([^a-z]|$)|centim|zentim|㎝|センチ|厘米|센티/.test(s)) return 'cm'; if (/(^|[^a-z])(in|inch|inches)([^a-z]|$)|インチ|英寸|인치/.test(s)) return 'in'; }
+  return null;
+}
+const unitOf = (f, fd) => (fd && fd.unit === false ? null : (fd && fd.unit) || DEFAULT_UNITS[f] || null);
+const scaleNumber = (v, factor) => { const n = Number(v); return Number.isFinite(n) ? String(Math.round(n * factor * 100) / 100) : v; };
 
 const specFrom = (spec) => (typeof spec === 'string' ? [spec] : Array.isArray(spec) ? spec : spec && spec.from !== undefined ? [].concat(spec.from) : []);
 function wordsOf(def) {
@@ -141,6 +168,9 @@ export function adaptRecords(table, def, { override = null, kind = '', arg = '',
   const headers = table.matrix ? Object.keys(records[0] || (table.matrix[headerRow] ? Object.fromEntries(table.matrix[headerRow].map((h) => [String(h).trim(), ''])) : {})) : headersOf(records);
   const index = new Map(); for (const h of headers) { const k = normHeader(h); if (k && !index.has(k)) index.set(k, h); }
   const has = (h) => index.has(normHeader(h));
+  // Headers with a unit at the end, keyed without it: "Weight (kg)" also answers to "Weight".
+  const unitIndex = new Map(); for (const h of headers) { const s = stripUnit(h); if (s !== h) { const k = normHeader(s); if (k && !unitIndex.has(k) && !index.has(k)) unitIndex.set(k, h); } }
+  const col = (name, unitField) => { const k = index.get(normHeader(name)); return k !== undefined ? k : unitField ? unitIndex.get(normHeader(name)) : undefined; };
   const profile = headerless || matchProfile(def, has, headers.length, ov.profile);
   const warnings = [];
   const nested = new Set(); if (!table.matrix) for (const r of records.slice(0, 50)) if (r && typeof r === 'object') for (const [k, v] of Object.entries(r)) if (v && typeof v === 'object') nested.add(k);
@@ -170,11 +200,13 @@ export function adaptRecords(table, def, { override = null, kind = '', arg = '',
         if (spec && typeof spec === 'object' && !Array.isArray(spec) && spec.default !== undefined) { plan.push({ f, fd, spec, from: [] }); mapped[f] = `(set to "${spec.default}")`; renamed++; continue; }
       }
     }
+    const uf = !!unitOf(f, fd);
     // The agent's own name (any letter case or punctuation) is not a rename.
     if (has(f)) { const k = index.get(normHeader(f)); plan.push({ f, fd, spec: {}, from: [f] }); if (k !== f) consumed.add(k); continue; }
+    if (uf && col(f, true) !== undefined) { const k = col(f, true); plan.push({ f, fd, spec: {}, from: [k] }); mapped[f] = k; consumed.add(k); renamed++; continue; }
     // A nested JSON object is never taken for a column by its name alone.
-    const alias = (fd.aliases || []).find((a) => has(a) && !nested.has(index.get(normHeader(a))));
-    if (alias !== undefined) { const k = index.get(normHeader(alias)); plan.push({ f, fd, spec: {}, from: [alias] }); mapped[f] = k; consumed.add(k); renamed++; }
+    const alias = (fd.aliases || []).find((a) => { const k = col(a, uf); return k !== undefined && !nested.has(k); });
+    if (alias !== undefined) { const k = col(alias, uf); plan.push({ f, fd, spec: {}, from: [k] }); mapped[f] = k; consumed.add(k); renamed++; }
   }
   // Fields still without a column: try their names in German, French, Spanish,
   // Portuguese, Italian, Japanese, Chinese and Korean, never taking a column that
@@ -184,13 +216,25 @@ export function adaptRecords(table, def, { override = null, kind = '', arg = '',
   for (const [f, fd0] of Object.entries(fields)) {
     if (plan.some((p) => p.f === f)) continue;
     const fd = fd0 || {};
-    const hit = translatedNames(conceptOf(f, fd)).find((x) => { const k = index.get(normHeader(x.word)); return k !== undefined && !usedCols.has(k) && !nested.has(k); });
+    const uf = !!unitOf(f, fd);
+    const hit = translatedNames(conceptOf(f, fd)).find((x) => { const k = col(x.word, uf); return k !== undefined && !usedCols.has(k) && !nested.has(k); });
     if (!hit) continue;
-    const k = index.get(normHeader(hit.word));
+    const k = col(hit.word, uf);
     plan.push({ f, fd, spec: {}, from: [k] }); mapped[f] = k; consumed.add(k); usedCols.add(k); renamed++; translated[f] = { column: clipName(k), language: hit.lang };
   }
-  const forced = !!(ov.columns || ov.set || ov.date_order || ov.decimal || ov.profile || ov.encoding || ov.skip_rows !== undefined && ov.skip_rows !== null);
-  const adapted = !!(profile || renamed || forced || headerRow > 0);
+  // Units: convert a column that holds kilograms, kilometres or centimetres (or the other way round).
+  const unitsConverted = {}; const unitsAssumed = [];
+  for (const p of plan) {
+    const target = unitOf(p.f, p.fd);
+    if (!target || !p.from.length || 'value' in p.spec || p.spec.compute) continue;
+    const hdr = col(p.from[0], true) ?? p.from[0]; const fam = UNIT_FAMILY[target];
+    let src = (ov.units && ov.units[p.f]) || (p.spec.unit) || (profile && profile.units && profile.units[p.f]) || unitInHeader(hdr, fam);
+    if (src && UNIT_FAMILY[src] !== fam) src = null;
+    if (!src && translated[p.f]) { src = METRIC[fam]; unitsAssumed.push(`${p.f} ("${clipName(hdr)}")`); }
+    if (src && src !== target) { p.factor = FACTOR[`${src}>${target}`]; unitsConverted[p.f] = `${src} -> ${target}`; }
+  }
+  const forced = !!(ov.columns || ov.set || ov.date_order || ov.decimal || ov.profile || ov.encoding || ov.units || ov.skip_rows !== undefined && ov.skip_rows !== null);
+  const adapted = !!(profile || renamed || forced || headerRow > 0 || Object.keys(unitsConverted).length);
   const base = { arg, kind, file, format: table.format, ...(table.sheet ? { sheet: table.sheet } : {}), ...(table.encoding && table.encoding.name !== 'utf-8' ? { encoding: table.encoding.name } : {}), profile: profile ? profile.id : null, system: profile ? profile.system : null, export: profile ? profile.label || null : null };
   const encWarn = encodingWarning(table);
   if (!adapted) {
@@ -212,8 +256,14 @@ export function adaptRecords(table, def, { override = null, kind = '', arg = '',
     const numeric = plan.filter((p) => (p.fd.type === 'date' || p.fd.type === 'datetime') && p.from.length).flatMap(colValues).map((v) => /^\d{1,2}([/.-])\d{1,2}\1(\d{4}|\d{2})(?!\d)/.exec(String(v ?? '').trim())).filter(Boolean);
     if (numeric.length && numeric.every((m) => m[1] === '.')) { softDmy = true; dateOrder = 'dmy'; }
   }
-  const decimals = new Map();
-  for (const p of plan) if ((p.fd.type === 'money' || p.fd.type === 'number') && p.from.length) decimals.set(p.f, ov.decimal || (profile && profile.decimal) || inferDecimal(colValues(p)));
+  // Decimal mark per column; a column that cannot tell on its own ("38.000", "420")
+  // follows the rest of the file, and a semicolon-separated file with no column
+  // pointing at decimal points is read with decimal commas.
+  const decimals = new Map(); const evidence = new Map();
+  for (const p of plan) if ((p.fd.type === 'money' || p.fd.type === 'number') && p.from.length) evidence.set(p.f, decimalEvidence(colValues(p)));
+  const sum = [...evidence.values()].reduce((a, e) => ({ comma: a.comma + e.comma, dot: a.dot + e.dot }), { comma: 0, dot: 0 });
+  const fileMark = sum.comma > sum.dot ? ',' : sum.dot > sum.comma ? '.' : table.delimiter === ';' ? ',' : '.';
+  for (const [f, e] of evidence) decimals.set(f, ov.decimal || (profile && profile.decimal) || (e.comma > e.dot ? ',' : e.dot > e.comma ? '.' : fileMark));
 
   let ambiguousDates = 0, badDates = 0, badAmounts = 0, convertedDates = 0, numericDates = 0, skipped = 0;
   // A value set by a profile's "values" table or "default" is final: it is the
@@ -235,10 +285,10 @@ export function adaptRecords(table, def, { override = null, kind = '', arg = '',
       return type === 'date' ? d.date : d.iso;
     }
     if (type === 'money' || type === 'number') {
-      if (/^-?\d+(\.\d+)?$/.test(s)) return s;
+      if (/^-?\d+(\.\d+)?$/.test(s) && !(decimals.get(p.f) === ',' && /^-?\d{1,3}(\.\d{3})+$/.test(s))) return p.factor ? scaleNumber(s, p.factor) : s;
       const a = cleanAmount(s, { decimal: decimals.get(p.f) || '.' });
       if (a === null) { badAmounts++; return s; }
-      return a;
+      return p.factor ? scaleNumber(a, p.factor) : a;
     }
     if (type === 'bool') { const [y, n] = p.fd.bool || ['yes', 'no']; return TRUE.test(s) ? y : FALSE.test(s) ? n : s; }
     if (type === 'email') return s.toLowerCase();
@@ -299,6 +349,7 @@ export function adaptRecords(table, def, { override = null, kind = '', arg = '',
   if (dateOrder === 'mixed') warnings.push(`The date columns mix month-first and day-first values; each was read by its own digits where possible. Check the dates.`);
   if (badDates) warnings.push(`${badDates} date value(s) could not be read and were left as they are.`);
   if (badAmounts) warnings.push(`${badAmounts} amount value(s) could not be read and were left as they are.`);
+  if (unitsAssumed.length) warnings.push(`No unit in the column name of ${unitsAssumed.join(', ')}; read as metric (kg, km or cm) because the column was found by its translated name, and converted. Set "units" in ${SOURCES_FILE} if that is wrong.`);
   return {
     rows,
     report: {
@@ -309,6 +360,7 @@ export function adaptRecords(table, def, { override = null, kind = '', arg = '',
       ...(numericDates ? { dates_read_as: dateOrder === 'dmy' ? 'day/month/year' : dateOrder === 'mixed' ? 'mixed' : 'month/day/year' } : {}), ...(convertedDates ? { dates_converted: convertedDates } : {}),
       ...([...decimals.values()].includes(',') ? { decimal_mark: ',' } : {}),
       ...(Object.keys(translated).length ? { translated_columns: translated } : {}),
+      ...(Object.keys(unitsConverted).length ? { units_converted: unitsConverted } : {}),
       ...(profile && profile.note ? { note: profile.note } : {}),
       warnings,
     },
@@ -327,6 +379,7 @@ const OVERRIDE = {
     sheet: { type: ['string', 'integer'], description: 'Excel sheet name or 0-based index' },
     skip_rows: { type: 'integer', minimum: 0, maximum: 1000, description: 'Rows above the header row' },
     delimiter: { type: 'string', enum: [',', ';', '\t', '|'] },
+    units: { type: 'object', additionalProperties: { type: 'string', enum: UNITS }, description: 'Agent column -> the unit your file uses (lb, kg, mi, km, in, cm), converted to the unit the agent works in' },
     encoding: { type: 'string', minLength: 3, maxLength: 40, description: `Text encoding of the file when it is not UTF-8: ${ENCODINGS.join(', ')} (also sjis, cp932, cp949, cp936, cp1252)` },
   },
 };

@@ -1,7 +1,7 @@
 // Capella: loss, shortage and damage claims. Pure functions.
 import { readYesNo, isoDate, addDays, daysBetween, round2, str, num, canonicalCarrier } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const EXCEPTION_FIELDS = Object.freeze({
   shipment_id: t(['Shipment ID', 'Load ID', 'Load Number', 'Order', 'BOL', 'Bill of Lading'], { required: true }),
   pro: t(['PRO', 'PRO Number', 'Pro #', 'Tracking Number']),

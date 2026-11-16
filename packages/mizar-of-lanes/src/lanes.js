@@ -1,7 +1,7 @@
 // Mizar: lane spend, trends and consolidation. Pure functions.
 import { zoneOf, isoDate, addDays, round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const LANE_SHIPMENT_FIELDS = Object.freeze({
   shipment_id: t(['Shipment ID', 'Load ID', 'BOL', 'PRO'], { required: true }),
   ship_date: t(['Ship Date', 'Pickup Date', 'Date'], { type: 'date', required: true }),

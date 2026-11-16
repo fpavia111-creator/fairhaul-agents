@@ -1,7 +1,7 @@
 // Elnath: freight charged to customers against freight cost. Pure functions.
-import { round2, str, num, groupBy } from 'lodestar-core';
+import { exportProfile, firstRowPer, round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const ORDER_FIELDS = Object.freeze({
   order_id: t(['Order', 'Order ID', 'Order Number', 'SO'], { required: true }),
   customer: t(['Customer', 'Customer Name', 'Account']),
@@ -66,3 +66,8 @@ export function termsText(r, a = {}) {
   if (r.scenarios.length > 1) { L.push('', 'Free-shipping threshold, estimated:', '', '| Threshold, enforced | Free-freight orders that would pay | Extra recovery | Recovery % |', '|---|---|---|---|'); for (const s of r.scenarios) L.push(`| ${s.threshold} | ${s.orders_paying} | ${s.extra_recovery_estimate} | ${s.recovery_pct_estimate}% |`); L.push('', `Estimates assume every prepaid order below the threshold is charged ${r.billed_rate_pct}% of order value, the average of orders that paid freight, and that no customer changes behaviour.`); }
   return L.join('\n');
 }
+
+/** Shopify orders export (exports.js). Written from knowledge; not checked against Shopify documentation or a live store. */
+export const ORDER_PROFILES = Object.freeze([
+  exportProfile('shopify_orders', { order_id: 'Name', customer: ['Billing Name', 'Email'], order_value: 'Subtotal', freight_billed: 'Shipping', terms: { value: 'prepaid' } }, { rows: firstRowPer('order_id'), note: 'Shopify orders: one row per order (Shopify repeats the order once per line item); shipping charged is the Shipping column, and every order is read as prepaid.' }),
+]);

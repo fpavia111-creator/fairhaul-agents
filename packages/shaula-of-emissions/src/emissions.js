@@ -2,7 +2,7 @@
 // Factors always come from the user's file; Shaula ships no official values.
 import { round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const SHIPMENT_FIELDS = Object.freeze({
   shipment_id: t(['Shipment ID', 'Load ID', 'BOL', 'Tracking'], { required: true }),
   mode: t(['Mode', 'Service', 'Transport Mode'], { required: true }),
@@ -10,9 +10,9 @@ export const SHIPMENT_FIELDS = Object.freeze({
   customer: t(['Customer', 'Customer Name', 'Ship To']),
   origin: t(['Origin', 'Origin City', 'From']),
   destination: t(['Destination', 'Destination City', 'To']),
-  weight: t(['Weight', 'Weight (lb)', 'Gross Weight', 'Billed Weight'], { type: 'number' }),
+  weight: t(['Weight', 'Weight (lb)', 'Gross Weight', 'Billed Weight'], { type: 'number', unit: false, translate: false }),
   weight_unit: t(['Weight Unit', 'UOM']),
-  distance: t(['Distance', 'Miles', 'Mileage', 'Km', 'Distance (mi)'], { type: 'number' }),
+  distance: t(['Distance', 'Miles', 'Mileage', 'Km', 'Distance (mi)'], { type: 'number', translate: false }),
   distance_unit: t(['Distance Unit']),
   distance_source: t(['Distance Source']),
 });

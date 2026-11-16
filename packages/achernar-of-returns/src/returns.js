@@ -1,7 +1,7 @@
 // Achernar: returns from authorisation to credit, and the freight to bring them back. Pure functions.
 import { round2, str, num, groupBy, isoDate, daysBetween } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const RMA_FIELDS = Object.freeze({
   rma: t(['RMA', 'RMA Number', 'Return ID', 'Return Number'], { required: true }),
   customer: t(['Customer', 'Customer Name', 'Account']),

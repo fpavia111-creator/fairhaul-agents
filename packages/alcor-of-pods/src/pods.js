@@ -1,7 +1,7 @@
 // Alcor: proof of delivery matched to shipments and invoices. Pure functions.
 import { isoDate, daysBetween, canonicalCarrier, readYesNo, round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const LOAD_FIELDS = Object.freeze({
   shipment_id: t(['Shipment ID', 'Load ID', 'Load Number', 'Order', 'BOL'], { required: true }),
   pro: t(['PRO', 'PRO Number', 'Pro #', 'Tracking Number']),

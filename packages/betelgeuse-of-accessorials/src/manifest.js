@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, FREIGHT_CONTRACT_SCHEMA, INVOICE_LINE_FIELDS, SHIPMENT_FIELDS, readInvoiceLines, groupInvoices, writeWorklist, draftPair, refusedTools, LIMITS } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, FREIGHT_CONTRACT_SCHEMA, INVOICE_LINE_FIELDS, INVOICE_PROFILES, SHIPMENT_FIELDS, readInvoiceLines, groupInvoices, writeWorklist, draftPair, refusedTools, LIMITS } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { analyse, fixText } from './accessorials.js';
 
@@ -31,7 +31,7 @@ export const manifest = defineManifest({
   description: 'Shows where your accessorial charges come from by type, location and carrier, flags charges nobody ordered and charges above your contract, and drafts the address-book changes that stop the same surprises repeating. Changing the TMS is a person\'s job.',
   model: MODEL_PIN, caps: { maxSteps: 60, maxSpendUsd: 0 },
   configSchemas: { freight_contract: FREIGHT_CONTRACT_SCHEMA },
-  sources: { invoices: { label: 'Carrier invoices', args: ['invoices'], fields: INVOICE_LINE_FIELDS }, shipments: { label: 'Shipments with accessorials ordered', args: ['shipments'], fields: SHIPMENT_FIELDS } },
+  sources: { invoices: { label: 'Carrier invoices', args: ['invoices'], fields: INVOICE_LINE_FIELDS, profiles: INVOICE_PROFILES }, shipments: { label: 'Shipments with accessorials ordered', args: ['shipments'], fields: SHIPMENT_FIELDS } },
   argDocs: {},
   prompts: [{ name: 'accessorial_review', title: 'Find where accessorials come from', description: 'Walks the host model through an accessorial review with Betelgeuse.', arguments: [{ name: 'invoices', description: 'Invoices file', required: true }, { name: 'shipments', description: 'Shipments with accessorials ordered', required: false }], text: `You are helping a transportation or customer-service lead with betelgeuse-of-accessorials. Invoices: {{invoices}}. Shipments: {{shipments}}.
 

@@ -1,7 +1,7 @@
 // Regulus: re-rate shipment history under every contract. Pure functions.
 import { contractFor, laneFor, laneLinehaul, contractFuel, dieselFor, accessorialAllowed, chargeCode, canonicalCarrier, isoDate, round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const HISTORY_FIELDS = Object.freeze({
   shipment_id: t(['Shipment ID', 'Load ID', 'BOL', 'PRO'], { required: true }),
   carrier: t(['Carrier', 'Carrier Name', 'SCAC'], { required: true }),

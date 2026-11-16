@@ -1,6 +1,6 @@
 import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, isoDate } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
-import { ENTRY_FIELDS, INVOICE_FIELDS, checkEntries, correctionText } from './entries.js';
+import { ENTRY_FIELDS, ENTRY_PROFILES, INVOICE_FIELDS, checkEntries, correctionText } from './entries.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const OUT = 'lodestar-out/antares';
@@ -31,7 +31,7 @@ export const manifest = defineManifest({
   name: 'antares-of-entries', version: pkg.version,
   description: 'Checks your customs broker\'s entry lines against your commercial invoices: entered value (with the exchange rate), quantity, origin, duty arithmetic, invoice lines entered twice or not at all, and the same SKU or code entered differently across entries, with an estimate of duty possibly over or underpaid and the days left to ask for a correction. It gives no classification advice and files nothing.',
   model: MODEL_PIN, caps: { maxSteps: 60, maxSpendUsd: 0 },
-  sources: { entries: { label: 'Entry lines', args: ['entries'], fields: ENTRY_FIELDS }, invoices: { label: 'Commercial invoices', args: ['invoices'], fields: INVOICE_FIELDS } },
+  sources: { entries: { label: 'Entry lines', args: ['entries'], fields: ENTRY_FIELDS, profiles: ENTRY_PROFILES }, invoices: { label: 'Commercial invoices', args: ['invoices'], fields: INVOICE_FIELDS } },
   argDocs: {},
   prompts: [{ name: 'entry_review', title: 'Check customs entries against invoices', description: 'Walks the host model through an entry review with Antares.', arguments: [{ name: 'entries', description: 'Entry lines', required: true }, { name: 'invoices', description: 'Commercial invoices', required: true }], text: `You are helping an import or trade compliance coordinator with antares-of-entries. Entries: {{entries}}. Invoices: {{invoices}}.
 

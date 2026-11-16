@@ -1,7 +1,7 @@
 // Algol: freight invoices paid twice. Pure functions.
-import { carrierKey, isoDate, daysBetween, round2, str, num, groupBy } from 'lodestar-core';
+import { exportProfile, carryGroup, firstRowPer, carrierKey, isoDate, daysBetween, round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const PAYMENT_FIELDS = Object.freeze({
   vendor: t(['Vendor', 'Vendor Name', 'Carrier', 'Payee', 'Supplier'], { required: true }),
   vendor_id: t(['Vendor ID', 'Vendor Number', 'Supplier ID', 'Vendor #']),
@@ -66,3 +66,12 @@ export function recoveryText(groups, { from, contact, confidence = ['high'] }) {
     '[ATTACH remittance advice for each payment]',
   ].join('\n') };
 }
+
+/** Named AP exports (exports.js). Written from knowledge; not checked against vendor documentation or a live account. */
+const abs = (v) => String(v ?? '').trim().replace(/^\((.*)\)$/, '$1').replace(/^-/, '');
+export const PAYMENT_PROFILES = Object.freeze([
+  exportProfile('netsuite_transactions', { vendor: 'Name', invoice_number: ['Reference No.', 'Reference Number', 'Document Number'], invoice_date: 'Date', amount: { from: 'Amount', transform: abs }, memo: 'Memo' }, { skipRow: (_r, get) => !/bill|vendor/i.test(String(get('Type') || 'bill')), note: 'NetSuite saved search: vendor bill rows only; the vendor reference number is used as the invoice number when the search has it.' }),
+  exportProfile('qbo_transaction_list_by_vendor', { invoice_number: 'Num', invoice_date: 'Date', amount: { from: 'Amount', transform: abs }, memo: ['Memo/Description', 'Memo'] }, { provides: ['vendor'], rows: (rows) => carryGroup('vendor')(rows).filter((r) => String(r.invoice_number || '').trim()), note: 'QuickBooks Online: the vendor is read from the group heading above each block of rows; rows without a bill number are skipped.' }),
+  exportProfile('xero_bills', { vendor: 'ContactName', invoice_number: 'InvoiceNumber', invoice_date: 'InvoiceDate', amount: 'Total', memo: ['Reference', 'Description'] }, { rows: firstRowPer('invoice_number'), note: 'Xero bills: one row per bill (Xero repeats the bill once per line).' }),
+  exportProfile('sap_fbl1n_items', { vendor_id: ['Vendor', 'Supplier', 'Account'], vendor: ['Name 1', 'Vendor Name', 'Supplier Name'], invoice_number: 'Reference', invoice_date: 'Document Date', amount: { from: ['Amount in Doc. Curr.', 'Amount in Local Currency'], transform: abs }, paid_date: ['Clearing Date', 'Clearing date'], payment_ref: ['Clearing Document', 'Clrng doc.'], memo: 'Text' }, { note: 'SAP vendor line items: the Reference field holds the supplier invoice number; clearing date and document are read as the payment.' }),
+]);

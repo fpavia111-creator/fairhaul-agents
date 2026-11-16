@@ -127,13 +127,13 @@ test('lodestar-sources.json is schema-checked when read', () => {
 });
 
 test('the catalogue: every entry has a system, a label and a way to be recognised; only checked layouts say so', () => {
-  const all = Object.values(EXPORTS); assert.ok(all.length >= 39);
+  const all = Object.values(EXPORTS); assert.ok(all.length >= 13);
   for (const e of all) { assert.match(e.id, /^[a-z0-9_]+$/); assert.ok(e.system && e.label, e.id); assert.ok((e.signature && e.signature.length) || (e.headerless && typeof e.detect === 'function'), e.id); assert.ok(['documented', 'recalled'].includes(e.basis), e.id); }
-  assert.deepEqual(all.filter((e) => e.basis === 'documented').map((e) => e.id).sort(), ['procore_rfis', 'ramp_transactions']);
+  assert.deepEqual(all.filter((e) => e.basis === 'documented').map((e) => e.id).sort(), []);
   for (const e of all.filter((x) => x.basis === 'documented')) assert.ok(e.source && /^\d{4}-\d{2}-\d{2}$/.test(e.checked), e.id);
   assert.match(EXPORTS_BASIS_NOTE, /None was tested against a live account/);
   assert.throws(() => exportProfile('nope', {}), /unknown export "nope"/);
-  const p = exportProfile('ramp_transactions', { merchant: 'Merchant Name' }, { note: 'n' }); assert.equal(p.system, 'Ramp'); assert.equal(p.note, 'n'); assert.deepEqual(p.map, { merchant: 'Merchant Name' });
+  const p = exportProfile('fedex_fbo_csv', { tracking: 'Express or Ground Tracking ID' }, { note: 'n' }); assert.equal(p.system, 'FedEx Billing Online'); assert.equal(p.note, 'n'); assert.deepEqual(p.map, { tracking: 'Express or Ground Tracking ID' });
 });
 
 test('row helpers for grouped reports, repeated rows and split names', () => {

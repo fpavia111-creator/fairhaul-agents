@@ -1,16 +1,16 @@
 // Deneb: carton fit and dimensional weight. Pure functions.
 import { dimWeight, round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const PACKAGE_FIELDS = Object.freeze({
   package_id: t(['Package ID', 'Tracking Number', 'Order', 'Shipment ID'], { required: true }),
   carton: t(['Carton', 'Box', 'Carton Used', 'Box Code']),
-  carton_l: t(['Carton Length', 'Box Length', 'Length'], { type: 'number' }),
-  carton_w: t(['Carton Width', 'Box Width', 'Width'], { type: 'number' }),
-  carton_h: t(['Carton Height', 'Box Height', 'Height'], { type: 'number' }),
-  contents_l: t(['Contents Length', 'Item Length', 'Product Length'], { type: 'number', required: true }),
-  contents_w: t(['Contents Width', 'Item Width', 'Product Width'], { type: 'number', required: true }),
-  contents_h: t(['Contents Height', 'Item Height', 'Product Height'], { type: 'number', required: true }),
+  carton_l: t(['Carton Length', 'Box Length', 'Length'], { type: 'number', unit: 'in' }),
+  carton_w: t(['Carton Width', 'Box Width', 'Width'], { type: 'number', unit: 'in' }),
+  carton_h: t(['Carton Height', 'Box Height', 'Height'], { type: 'number', unit: 'in' }),
+  contents_l: t(['Contents Length', 'Item Length', 'Product Length'], { type: 'number', unit: 'in', required: true }),
+  contents_w: t(['Contents Width', 'Item Width', 'Product Width'], { type: 'number', unit: 'in', required: true }),
+  contents_h: t(['Contents Height', 'Item Height', 'Product Height'], { type: 'number', unit: 'in', required: true }),
   weight: t(['Weight', 'Actual Weight', 'Weight (lb)'], { type: 'number', required: true }),
   billed: t(['Billed', 'Freight Cost', 'Charge', 'Net Charge'], { type: 'money' }),
   sku: t(['SKU', 'Item', 'Product']),

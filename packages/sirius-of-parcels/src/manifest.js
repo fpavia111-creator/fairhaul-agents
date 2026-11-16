@@ -1,6 +1,6 @@
 import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, toIcs, carrierKey } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
-import { PARCEL_FIELDS, PARCEL_TERMS_SCHEMA, packagesFrom, auditParcels, refundText } from './parcels.js';
+import { PARCEL_FIELDS, PARCEL_PROFILES, PARCEL_TERMS_SCHEMA, packagesFrom, auditParcels, refundText } from './parcels.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const OUT = 'lodestar-out/sirius';
@@ -42,7 +42,7 @@ export const manifest = defineManifest({
   description: 'Audits parcel invoice data for refundable charges: late deliveries on guaranteed services, duplicate tracking numbers, voided labels billed, residential charges on business addresses, repeat address corrections and dimensional-weight overbilling. Gives a request-by date for each and drafts refund requests. Filing is a person\'s job.',
   model: MODEL_PIN, caps: { maxSteps: 60, maxSpendUsd: 0 },
   configSchemas: { parcel_terms: PARCEL_TERMS_SCHEMA },
-  sources: { invoices: { label: 'Parcel invoice data', args: ['invoices'], fields: PARCEL_FIELDS }, voids: { label: 'Voided labels', args: ['voids'], fields: { tracking: { aliases: ['Tracking Number', 'Tracking', 'Tracking ID'], required: true, translate: false } } } },
+  sources: { invoices: { label: 'Parcel invoice data', args: ['invoices'], fields: PARCEL_FIELDS, profiles: PARCEL_PROFILES }, voids: { label: 'Voided labels', args: ['voids'], fields: { tracking: { aliases: ['Tracking Number', 'Tracking', 'Tracking ID'], required: true } } } },
   argDocs: { tracking: 'Tracking number to explain' },
   prompts: [{
     name: 'parcel_refund_audit', title: 'Find parcel refunds before the window closes',

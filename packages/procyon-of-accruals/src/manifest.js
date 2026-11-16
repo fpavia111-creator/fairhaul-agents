@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, FREIGHT_CONTRACT_SCHEMA, INVOICE_LINE_FIELDS, SHIPMENT_FIELDS, readInvoiceLines, groupInvoices, writeWorklist, refusedTools, appendRow, LIMITS, toCsv, sha256 } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, FREIGHT_CONTRACT_SCHEMA, INVOICE_LINE_FIELDS, INVOICE_PROFILES, SHIPMENT_FIELDS, readInvoiceLines, groupInvoices, writeWorklist, refusedTools, appendRow, LIMITS, toCsv, sha256 } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { relative } from 'node:path';
 import { buildAccrual, journalLines } from './accruals.js';
@@ -22,7 +22,7 @@ export const manifest = defineManifest({
   description: 'Builds the month-end freight accrual from your shipments and carrier invoices: what shipped but was not billed by period end, estimated from the quote, your contract or lane history, by GL account and cost center, with a draft journal entry and an accuracy check on last period\'s accrual. Posting is a person\'s job.',
   model: MODEL_PIN, caps: { maxSteps: 60, maxSpendUsd: 0 },
   configSchemas: { freight_contract: FREIGHT_CONTRACT_SCHEMA },
-  sources: { shipments: { label: 'Shipments', args: ['shipments'], fields: SHIPMENT_FIELDS }, invoices: { label: 'Carrier invoices', args: ['invoices'], fields: INVOICE_LINE_FIELDS }, prior: { label: 'Last period accrual', args: ['prior'], fields: { shipment_id: { aliases: ['Shipment ID', 'Load ID', 'Load Number'], required: true, translate: false }, amount: { aliases: ['Amount', 'Accrued', 'Accrual'], type: 'money', required: true, translate: false } } } },
+  sources: { shipments: { label: 'Shipments', args: ['shipments'], fields: SHIPMENT_FIELDS }, invoices: { label: 'Carrier invoices', args: ['invoices'], fields: INVOICE_LINE_FIELDS, profiles: INVOICE_PROFILES }, prior: { label: 'Last period accrual', args: ['prior'], fields: { shipment_id: { aliases: ['Shipment ID', 'Load ID', 'Load Number'], required: true }, amount: { aliases: ['Amount', 'Accrued', 'Accrual'], type: 'money', required: true } } } },
   argDocs: { journal: 'Path of journal-entry-draft.csv written by procyon_write_report', journal_sha256: 'sha256 returned by procyon_write_report for the journal file' },
   prompts: [{ name: 'freight_accrual_close', title: 'Close the month: freight accrual', description: 'Walks the host model through the freight accrual with Procyon.', arguments: [{ name: 'shipments', description: 'Shipments export', required: true }, { name: 'invoices', description: 'Invoices received', required: true }, { name: 'period_end', description: 'Period end date', required: true }], text: `You are helping a controller or AP lead close the month with procyon-of-accruals. Shipments: {{shipments}}. Invoices: {{invoices}}. Period end: {{period_end}}.
 

@@ -1,7 +1,7 @@
 // Hadar: dock appointment plan for a day, and a review of past appointments. Pure functions.
 import { str, num, groupBy, isoDate } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const REQUEST_FIELDS = Object.freeze({
   load_id: t(['Load ID', 'PO', 'Shipment ID', 'Reference'], { required: true }),
   carrier: t(['Carrier', 'Carrier Name', 'SCAC']),

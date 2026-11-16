@@ -1,7 +1,7 @@
 // Vega: detention, layover and lumper charges checked against dock times.
 import { chargeCode, carrierKey, hoursBetween, round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const CHARGE_FIELDS = Object.freeze({
   load_id: t(['Load ID', 'Load Number', 'Load #', 'Shipment ID', 'PRO', 'Order Number'], { required: true }),
   carrier: t(['Carrier', 'Carrier Name', 'SCAC']),

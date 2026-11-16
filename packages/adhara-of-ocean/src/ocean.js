@@ -1,7 +1,7 @@
 // Adhara: ocean freight invoices against the service contract. Pure functions.
 import { isoDate, round2, str, num, carrierKey, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const OCEAN_LINE_FIELDS = Object.freeze({
   invoice_number: t(['Invoice Number', 'Invoice', 'Invoice #'], { required: true }),
   carrier: t(['Carrier', 'Line', 'Forwarder', 'Vendor'], { required: true }),

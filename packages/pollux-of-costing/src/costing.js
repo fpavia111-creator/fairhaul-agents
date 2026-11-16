@@ -1,7 +1,7 @@
 // Pollux: standard freight in item cost against actual freight per unit. Pure functions.
 import { round2, str, num, groupBy, isoDate } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const ITEM_FIELDS = Object.freeze({
   sku: t(['SKU', 'Item', 'Item Number', 'Product'], { required: true }),
   description: t(['Description', 'Item Description', 'Name']),

@@ -1,6 +1,6 @@
 import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
-import { PAYMENT_FIELDS, findDuplicates, recoveryText } from './duplicates.js';
+import { PAYMENT_FIELDS, PAYMENT_PROFILES, findDuplicates, recoveryText } from './duplicates.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const OUT = 'lodestar-out/algol';
@@ -30,7 +30,7 @@ export const manifest = defineManifest({
   name: 'algol-of-duplicates', version: pkg.version,
   description: 'Searches your freight payment history for invoices paid twice: the same invoice in another number format, the same invoice under two vendor records, the same PRO billed twice, and same-amount look-alikes. Nets off credits already received, grades each by confidence and drafts refund requests. Moving money and changing vendor records are a person\'s job.',
   model: MODEL_PIN, caps: { maxSteps: 60, maxSpendUsd: 0 },
-  sources: { payments: { label: 'AP payment history', args: ['payments'], fields: PAYMENT_FIELDS } },
+  sources: { payments: { label: 'AP payment history', args: ['payments'], fields: PAYMENT_FIELDS, profiles: PAYMENT_PROFILES } },
   argDocs: {},
   prompts: [{ name: 'duplicate_payment_search', title: 'Find freight invoices paid twice', description: 'Walks the host model through a duplicate payment search with Algol.', arguments: [{ name: 'payments', description: 'Payment history', required: true }], text: `You are helping an AP or recovery-audit lead with algol-of-duplicates. Payments: {{payments}}.
 

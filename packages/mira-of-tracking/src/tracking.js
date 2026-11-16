@@ -1,7 +1,7 @@
 // Mira: open loads against their tracking events. Pure functions.
 import { hoursBetween, isoDate, canonicalCarrier, round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const OPEN_LOAD_FIELDS = Object.freeze({
   shipment_id: t(['Shipment ID', 'Load ID', 'Load Number', 'Order'], { required: true }),
   carrier: t(['Carrier', 'Carrier Name', 'SCAC'], { required: true }),

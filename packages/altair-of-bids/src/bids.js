@@ -1,7 +1,7 @@
 // Altair: freight RFP bid analysis and award scenarios. Pure functions.
 import { canonicalCarrier, round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const LANE_FIELDS = Object.freeze({
   lane_id: t(['Lane ID', 'Lane', 'Lane Number'], { required: true }),
   origin: t(['Origin', 'Origin City', 'From']),

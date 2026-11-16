@@ -2,7 +2,7 @@
 // Signals, not verdicts: every one has an innocent explanation a person checks.
 import { str, groupBy, isoDate, daysBetween, carrierKey } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const CARRIER_FIELDS = Object.freeze({
   carrier_id: t(['Carrier ID', 'Vendor ID', 'Code', 'SCAC'], { required: true }),
   name: t(['Carrier', 'Carrier Name', 'Legal Name', 'Name'], { required: true }),

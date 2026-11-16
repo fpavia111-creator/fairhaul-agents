@@ -105,7 +105,10 @@ export function cleanAmount(value, { decimal = '.' } = {}) {
 }
 
 /** '.' or ',' : the decimal mark a column of amounts uses. */
-export function inferDecimal(values) {
+export function inferDecimal(values) { const { comma, dot } = decimalEvidence(values); return comma > dot ? ',' : '.'; }
+
+/** How strongly a column's values point at each decimal mark: { comma, dot } (0 and 0 when they cannot tell, as with "38.000" or "420"). */
+export function decimalEvidence(values) {
   let comma = 0, dot = 0;
   for (const v of values) {
     let s = String(v ?? '');
@@ -116,7 +119,7 @@ export function inferDecimal(values) {
     else if (c >= 0 && /,\d{1,2}$/.test(s)) comma += 1;
     else if (d >= 0 && /\.\d{1,2}$/.test(s)) dot += 1;
   }
-  return comma > dot ? ',' : '.';
+  return { comma, dot };
 }
 
 /**

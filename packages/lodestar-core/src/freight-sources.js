@@ -5,8 +5,9 @@
 // against a live account. A buyer can name columns by hand in lodestar-sources.json.
 import { readX12, invoicesFrom210 } from './x12.js';
 import { round2, str, num, chargeCode } from './freight.js';
+import { exportProfile } from './exports.js';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 
 export const INVOICE_LINE_FIELDS = Object.freeze({
   invoice_number: t(['Invoice Number', 'Invoice No', 'Invoice #', 'Invoice', 'Freight Bill Number', 'Freight Bill', 'Bill Number', 'FB Number', 'Inv No'], { required: true }),
@@ -60,6 +61,16 @@ export const SHIPMENT_FIELDS = Object.freeze({
   arrived_at: t(['Arrived At', 'Arrival', 'Check In', 'Checked In', 'In Time', 'Gate In'], { type: 'datetime' }),
   departed_at: t(['Departed At', 'Departure', 'Check Out', 'Checked Out', 'Out Time', 'Gate Out'], { type: 'datetime' }),
 });
+
+/**
+ * Named carrier-invoice exports (see exports.js). Written from knowledge of the
+ * exports; none was checked against vendor documentation or a live account.
+ */
+export const INVOICE_PROFILES = Object.freeze([
+  exportProfile('tms_freight_bill_lines', { invoice_number: 'Freight Bill Number', carrier: ['Carrier Name', 'Carrier', 'SCAC'], pro: ['Pro #', 'PRO'], ship_date: 'Pickup Date', amount: 'Invoice Total', weight: 'Billed Weight', origin_city: 'Shipper City', origin_state: 'Shipper State', origin_postal: 'Shipper Zip', dest_city: 'Consignee City', dest_state: 'Consignee State', dest_postal: 'Consignee Zip', charge_description: 'Charge Type', charge_amount: 'Line Amount' }),
+  exportProfile('sap_tm_freight_settlement', { invoice_number: ['Supplier Invoice', 'Freight Settlement Document'], carrier: ['Carrier', 'Carrier Name', 'Supplier'], pro: ['Freight Order', 'Freight Unit'], invoice_date: ['Document Date', 'Posting Date'], amount: ['Net Amount', 'Net Value'], currency: ['Currency', 'Document Currency'], charge_description: ['Charge Type Description', 'Charge Type'], charge_amount: ['Charge Amount', 'Amount'], weight: { from: ['Gross Weight'], unit: 'kg' } }, { note: 'SAP TM settlement list: the supplier invoice number is used when the list has one, otherwise the settlement document. Gross weight is read as kilograms.' }),
+  exportProfile('sap_tm_freight_settlement_de', { invoice_number: ['Lieferantenrechnung', 'Frachtabrechnungsbeleg'], carrier: ['Frachtführer', 'Spediteur', 'Lieferant'], pro: ['Frachtauftrag', 'Frachteinheit'], invoice_date: ['Belegdatum', 'Buchungsdatum'], amount: ['Nettobetrag', 'Nettowert'], currency: ['Währung', 'Belegwährung'], charge_description: ['Kostenartbezeichnung', 'Frachtkostenart', 'Kostenart'], charge_amount: ['Betrag der Kostenart', 'Betrag'], weight: { from: ['Bruttogewicht'], unit: 'kg' } }, { note: 'SAP TM settlement list with German labels: dates day-first, comma decimals, gross weight in kilograms.' }),
+]);
 
 export const FREIGHT_SOURCE_FIELDS = Object.freeze({ invoices: INVOICE_LINE_FIELDS, shipments: SHIPMENT_FIELDS });
 

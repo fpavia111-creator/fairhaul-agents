@@ -1,7 +1,7 @@
 // Nunki: spot quotes compared on one all-in basis. Pure functions.
 import { isoDate, addDays, canonicalCarrier, readYesNo, round2, str, num, groupBy } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const QUOTE_LOAD_FIELDS = Object.freeze({
   load_id: t(['Load ID', 'Load', 'Shipment ID', 'Order'], { required: true }),
   origin: t(['Origin', 'From', 'Pickup City']), destination: t(['Destination', 'To', 'Delivery City']),

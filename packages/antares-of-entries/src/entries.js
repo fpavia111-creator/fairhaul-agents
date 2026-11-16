@@ -1,8 +1,8 @@
 // Antares: customs entry lines checked against commercial invoices. Pure functions.
 // Checks facts and arithmetic only. It never says which tariff code is right.
-import { round2, str, num, groupBy, isoDate, addDays, daysBetween } from 'lodestar-core';
+import { exportProfile, round2, str, num, groupBy, isoDate, addDays, daysBetween } from 'lodestar-core';
 
-const t = (aliases, extra = {}) => ({ aliases, translate: false, ...extra });
+const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const ENTRY_FIELDS = Object.freeze({
   entry_number: t(['Entry Number', 'Entry No', 'Entry', 'Declaration Number'], { required: true }),
   entry_date: t(['Entry Date', 'Date', 'Release Date'], { type: 'date' }),
@@ -10,7 +10,7 @@ export const ENTRY_FIELDS = Object.freeze({
   invoice_number: t(['Invoice Number', 'Commercial Invoice', 'Invoice'], { required: true }),
   sku: t(['SKU', 'Part Number', 'Item', 'Product'], { required: true }),
   hts: t(['HTS', 'HTS Code', 'Tariff Code', 'Tariff Number', 'Commodity Code', 'HS Code']),
-  origin: t(['Origin', 'Country of Origin', 'COO']),
+  origin: t(['Origin', 'Country of Origin', 'COO'], { translate: 'country_of_origin' }),
   quantity: t(['Quantity', 'Qty', 'Units'], { type: 'number' }),
   entered_value: t(['Entered Value', 'Customs Value', 'Value'], { type: 'money', required: true }),
   exchange_rate: t(['Exchange Rate', 'FX Rate', 'Rate of Exchange'], { type: 'number' }),
@@ -23,7 +23,7 @@ export const INVOICE_FIELDS = Object.freeze({
   quantity: t(['Quantity', 'Qty', 'Units'], { type: 'number' }),
   value: t(['Value', 'Line Value', 'Extended Value', 'Amount'], { type: 'money', required: true }),
   currency: t(['Currency', 'Curr']),
-  origin: t(['Origin', 'Country of Origin', 'COO', 'Made In']),
+  origin: t(['Origin', 'Country of Origin', 'COO', 'Made In'], { translate: 'country_of_origin' }),
 });
 const rateOf = (v) => { const n = num(v); return n === null ? null : n > 1 ? n / 100 : n; };
 const key = (inv, sku) => `${str(inv).toUpperCase()}|${str(sku).toUpperCase()}`;
@@ -83,3 +83,8 @@ export function correctionText(r, entry, a = {}) {
   L.push('', 'We are not asking you to change any tariff classification on our say-so; where codes differ we would like your view of which applies.', '', 'Thank you,', a.from || '[YOUR NAME]');
   return L.join('\n');
 }
+
+/** ACE entry summary line export (exports.js). Written from knowledge; not checked against CBP documentation or a live ACE account. */
+export const ENTRY_PROFILES = Object.freeze([
+  exportProfile('ace_es003_lines', { entry_number: 'Entry Summary Number', line: 'Entry Summary Line Number', entry_date: ['Entry Summary Date', 'Entry Date'], hts: ['HTS Number - Full', 'HTS Number'], origin: ['Country of Origin Code', 'Country of Origin'], quantity: ['Line Tariff Quantity', 'HTS Quantity'], entered_value: ['Line Tariff Goods Value Amount', 'Line Goods Value Amount'], duty: ['Line Duty Amount', 'Line Tariff Duty Amount'], invoice_number: ['Commercial Invoice Number', 'Invoice Number'], sku: ['Part Number', 'Manufacturer Part Number'] }, { note: 'ACE ES-003 line details: one row per entry line (the first tariff number of each line is used).' }),
+]);

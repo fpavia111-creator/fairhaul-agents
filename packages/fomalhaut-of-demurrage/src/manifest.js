@@ -1,6 +1,6 @@
 import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, toIcs } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
-import { CONTAINER_FIELDS, DD_CHARGE_FIELDS, DD_TERMS_SCHEMA, clocks, checkCharges, summary, disputeText } from './demurrage.js';
+import { CONTAINER_FIELDS, CONTAINER_PROFILES, DD_CHARGE_FIELDS, DD_TERMS_SCHEMA, clocks, checkCharges, summary, disputeText } from './demurrage.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const OUT = 'lodestar-out/fomalhaut';
@@ -31,7 +31,7 @@ export const manifest = defineManifest({
   description: 'Tracks each import container\'s free time at the port (demurrage) and with the line (detention or per diem) from your terms, counts the days left, prices what is accruing through your rate tiers, checks the line\'s invoices and drafts disputes. Paying and booking are a person\'s job.',
   model: MODEL_PIN, caps: { maxSteps: 60, maxSpendUsd: 0 },
   configSchemas: { dd_terms: DD_TERMS_SCHEMA },
-  sources: { containers: { label: 'Import containers', args: ['containers'], fields: CONTAINER_FIELDS }, charges: { label: 'D&D charges', args: ['charges'], fields: DD_CHARGE_FIELDS } },
+  sources: { containers: { label: 'Import containers', args: ['containers'], fields: CONTAINER_FIELDS, profiles: CONTAINER_PROFILES }, charges: { label: 'D&D charges', args: ['charges'], fields: DD_CHARGE_FIELDS } },
   argDocs: {},
   prompts: [{ name: 'container_free_time', title: 'Check container free time', description: 'Walks the host model through demurrage and detention with Fomalhaut.', arguments: [{ name: 'containers', description: 'Containers file', required: true }, { name: 'terms', description: 'Free time terms', required: true }], text: `You are helping an import or logistics coordinator with fomalhaut-of-demurrage. Containers: {{containers}}. Terms: {{terms}}.
 
