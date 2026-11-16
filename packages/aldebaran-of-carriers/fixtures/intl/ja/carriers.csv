@@ -1,0 +1,8 @@
+運送会社コード,名前,mc,dot,電話番号,メールアドレス,住所,支払先,bank_last4,bank_changed,authority_date,保険期限,safety_rating,ステータス
+RIDG,Ridgeline Freight LLC,MC-100201,2100201,(312) 555-0140,dispatch@ridgeline-freight.example,"400 Canal St, Chicago IL",Ridgeline Freight LLC,4410,,2014/03/11,2027/05/01,Satisfactory,active
+PRAI,Prairie Express Inc,MC-100245,2100245,(816) 555-0177,ops@prairie-express.example,"18 Grand Blvd, Kansas City MO",Bluewater Factoring,9921,,2018/07/02,2027/01/15,Satisfactory,active
+COAS,Coastal Line Haul,MC-100388,2100388,(904) 555-0102,loads@coastal-linehaul.example,"77 Port Rd, Jacksonville FL",Coastal Line Haul,3307,2026/11/04,2019/09/20,2026/12/02,,active
+SWFT,Swift Lane Logistics,MC-104410,2104410,(469) 555-0199,swiftlane.dispatch@gmail.com,"9 Elm St, Plano TX",Swift Lane Logistics,7781,2026/11/10,2026/08/14,2027/08/14,,active
+NORT,North Star Hauling,MC-104577,2104577,469-555-0199,northstarhaul@gmail.com,"1200 Commerce Dr, Dallas TX",North Star Hauling,7781,,2026/06/30,2026/11/01,,active
+SUMM,Summit Carriers,MC-100512,2100512,(303) 555-0155,dispatch@summit-carriers.example,"5 Alpine Way, Denver CO",Summit Carriers,1204,,2016/02/18,2027/03/31,Conditional,active
+GULF,Gulfport Transport,,,(228) 555-0110,gulfport.t@yahoo.com,"31 Beach Blvd, Gulfport MS",Gulfport Transport,5512,,,2026/12/31,,inactive

@@ -1,0 +1,6 @@
+Retourennummer;Sendungsnummer;Eingangsdatum;Erhaltene Menge;condition
+RMA-3001;1Z-RT-0001;12.09.2026;10;damaged
+RMA-3002;1Z-RT-0002;29.09.2026;6;resaleable
+;1Z-RT-0004;15.10.2026;2;resaleable
+RMA-3005;1Z-RT-0005;21.10.2026;18;resaleable
+RMA-3006;1Z-RT-0006;30.10.2026;1;damaged

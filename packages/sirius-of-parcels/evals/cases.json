@@ -3,14 +3,178 @@
   "root": "..",
   "data_note": "Fictional parcel invoice data in ../fixtures, measured as of 2026-11-16. No model is called.",
   "cases": [
-    {"id": "audit-totals", "tool": "sirius_audit", "args": {"invoices": "fixtures/parcel-invoices.csv", "terms": "fixtures/terms.json", "voids": "fixtures/voids.csv", "as_of": "2026-11-16"}, "expect": {"equals": {"result.packages": 11, "result.refundable_open": 85.93, "result.refundable_lost": 45, "result.claim": 5, "result.window_closed": 1}}},
-    {"id": "every-planted-issue", "tool": "sirius_audit", "args": {"invoices": "fixtures/parcel-invoices.csv", "terms": "fixtures/terms.json", "voids": "fixtures/voids.csv", "as_of": "2026-11-16"}, "expect": {"contains": ["late_delivery", "residential_on_business", "dim_overbilled", "duplicate_tracking", "voided_label_billed", "address_correction", "also on 1ZEX0000000000006", "missing_delivery_scan", "window_closed"]}},
-    {"id": "waived-guarantee", "tool": "sirius_audit", "args": {"invoices": "fixtures/parcel-invoices.csv", "terms": "fixtures/terms-waived.json", "as_of": "2026-11-16"}, "expect": {"contains": ["late_no_guarantee"], "equals": {"result.refundable_open": 19.58, "result.guarantee_waived": true}}},
-    {"id": "urgent-window", "tool": "sirius_audit", "args": {"invoices": "fixtures/parcel-invoices.csv", "terms": "fixtures/terms.json", "as_of": "2026-11-18"}, "expect": {"length": {"result.urgent": 3}}},
-    {"id": "carrier-style-columns", "tool": "sirius_audit", "args": {"invoices": "fixtures/exports/fedex-style-invoice.csv", "as_of": "2026-11-16"}, "expect": {"equals": {"result.packages": 3, "result.billed": 79.5}}},
-    {"id": "explain-dim", "tool": "sirius_explain", "args": {"invoices": "fixtures/parcel-invoices.csv", "tracking": "1ZEX0000000000003", "as_of": "2026-11-16"}, "expect": {"contains": ["Billed at 22 lb", "give 14 lb"]}},
-    {"id": "submit-stays-one-click", "tool": "sirius_request_submit", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
-    {"id": "never-files-in-portal", "tool": "carrier_portal_submit", "mode": "auto", "args": {}, "expect": {"status": "blocked"}},
-    {"id": "never-pays", "tool": "ap_pay_invoice", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+    {
+      "id": "audit-totals",
+      "tool": "sirius_audit",
+      "args": {
+        "invoices": "fixtures/parcel-invoices.csv",
+        "terms": "fixtures/terms.json",
+        "voids": "fixtures/voids.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "equals": {
+          "result.packages": 11,
+          "result.refundable_open": 85.93,
+          "result.refundable_lost": 45,
+          "result.claim": 5,
+          "result.window_closed": 1
+        }
+      }
+    },
+    {
+      "id": "every-planted-issue",
+      "tool": "sirius_audit",
+      "args": {
+        "invoices": "fixtures/parcel-invoices.csv",
+        "terms": "fixtures/terms.json",
+        "voids": "fixtures/voids.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "contains": [
+          "late_delivery",
+          "residential_on_business",
+          "dim_overbilled",
+          "duplicate_tracking",
+          "voided_label_billed",
+          "address_correction",
+          "also on 1ZEX0000000000006",
+          "missing_delivery_scan",
+          "window_closed"
+        ]
+      }
+    },
+    {
+      "id": "waived-guarantee",
+      "tool": "sirius_audit",
+      "args": {
+        "invoices": "fixtures/parcel-invoices.csv",
+        "terms": "fixtures/terms-waived.json",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "contains": [
+          "late_no_guarantee"
+        ],
+        "equals": {
+          "result.refundable_open": 19.58,
+          "result.guarantee_waived": true
+        }
+      }
+    },
+    {
+      "id": "urgent-window",
+      "tool": "sirius_audit",
+      "args": {
+        "invoices": "fixtures/parcel-invoices.csv",
+        "terms": "fixtures/terms.json",
+        "as_of": "2026-11-18"
+      },
+      "expect": {
+        "length": {
+          "result.urgent": 3
+        }
+      }
+    },
+    {
+      "id": "carrier-style-columns",
+      "tool": "sirius_audit",
+      "args": {
+        "invoices": "fixtures/exports/fedex-style-invoice.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "equals": {
+          "result.packages": 3,
+          "result.billed": 79.5
+        }
+      }
+    },
+    {
+      "id": "explain-dim",
+      "tool": "sirius_explain",
+      "args": {
+        "invoices": "fixtures/parcel-invoices.csv",
+        "tracking": "1ZEX0000000000003",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "contains": [
+          "Billed at 22 lb",
+          "give 14 lb"
+        ]
+      }
+    },
+    {
+      "id": "submit-stays-one-click",
+      "tool": "sirius_request_submit",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-files-in-portal",
+      "tool": "carrier_portal_submit",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "never-pays",
+      "tool": "ap_pay_invoice",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-audit-totals",
+      "tool": "sirius_audit",
+      "args": {
+        "invoices": "fixtures/intl/de/parcel-invoices.csv",
+        "terms": "fixtures/terms.json",
+        "voids": "fixtures/intl/de/voids.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "equals": {
+          "result.packages": 11,
+          "result.refundable_open": 85.93,
+          "result.refundable_lost": 45,
+          "result.claim": 5,
+          "result.window_closed": 1
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"audit-totals\"."
+    },
+    {
+      "id": "intl-ja-audit-totals",
+      "tool": "sirius_audit",
+      "args": {
+        "invoices": "fixtures/intl/ja/parcel-invoices.csv",
+        "terms": "fixtures/terms.json",
+        "voids": "fixtures/intl/ja/voids.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "equals": {
+          "result.packages": 11,
+          "result.refundable_open": 85.93,
+          "result.refundable_lost": 45,
+          "result.claim": 5,
+          "result.window_closed": 1
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"audit-totals\"."
+    }
   ]
 }

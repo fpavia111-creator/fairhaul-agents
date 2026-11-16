@@ -1,0 +1,10 @@
+返品番号,顧客,品番,数量,商品価格,理由,承認日,追跡番号,ステータス
+RMA-3001,Hill Country Home,LAMP-SHADE,10,145.00,damaged in transit,2026/09/02,1Z-RT-0001,open
+RMA-3002,Lakeside Outfitters,THROW-BLANKET,6,186.00,wrong item shipped,2026/09/20,1Z-RT-0002,open
+RMA-3003,Bayou Goods,BOOKENDS,4,72.80,damaged in transit,2026/10/01,1Z-RT-0003,open
+RMA-3004,Front Range Supply,FLOOR-RUG,2,192.00,customer changed mind,2026/10/05,1Z-RT-0004,open
+RMA-3005,Hill Country Home,CANDLE-SET,24,187.20,wrong item shipped,2026/10/12,1Z-RT-0005,open
+RMA-3006,Bayou Goods,MIRROR,1,58.00,damaged in transit,2026/10/20,1Z-RT-0006,open
+RMA-3007,Lakeside Outfitters,LAMP-SHADE,8,116.00,customer changed mind,2026/11/02,1Z-RT-0007,open
+RMA-3008,Front Range Supply,MIRROR,3,174.00,damaged in transit,2026/08/30,1Z-RT-0008,cancelled
+RMA-3009,Front Range Supply,THROW-BLANKET,4,124.00,customer changed mind,2026/09/25,1Z-RT-0009,open

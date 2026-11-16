@@ -1,0 +1,9 @@
+Sendungs-ID;Spediteur;Betrag;Gesamtpreis;accessorials_included;Ablaufdatum;Laufzeit;Bemerkung
+Q-701;Ridgeline Freight;2.100,00;yes;;17.11.2026;2;
+Q-701;Prairie Express;1.650,00;no;;17.11.2026;2;Linehaul only
+Q-701;Northgate Haulers;1.990,00;yes;;15.11.2026;2;
+Q-702;Coastal Line Haul;2.350,00;yes;;18.11.2026;1;
+Q-702;Summit Carriers;2.290,00;yes;;18.11.2026;2;Team not available
+Q-703;Summit Carriers;2.150,00;yes;no;18.11.2026;2;
+Q-703;Prairie Express;2.240,00;yes;yes;18.11.2026;3;Tarps included
+Q-704;Ridgeline Freight;980,00;no;no;14.11.2026;1;

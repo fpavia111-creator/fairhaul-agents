@@ -1,0 +1,6 @@
+Sendungs-ID;Abgangsort;Bestimmungsort;Fahrzeugtyp;Abholdatum;Liefertermin;Entfernung (km);Zusatzleistungen;lane_history_avg
+Q-701;Chicago IL;Dallas TX;Dry van 53;18.11.2026;20.11.2026;1.488,6432;;2.150,00
+Q-702;Atlanta GA;Miami FL;Reefer 53;19.11.2026;20.11.2026;1.065,3857;;1.900,00
+Q-703;Denver CO;Phoenix AZ;Flatbed 48;18.11.2026;21.11.2026;1.321,2714;Tarping;2.050,00
+Q-704;Memphis TN;Columbus OH;Dry van 53;20.11.2026;21.11.2026;936,6382;Liftgate;1.300,00
+Q-705;Seattle WA;Portland OR;Dry van 53;19.11.2026;19.11.2026;280,0259;;

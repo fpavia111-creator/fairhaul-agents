@@ -1,0 +1,10 @@
+出荷番号,追跡番号,運送会社,出荷日,ステータス,見積金額,重量,距離,出荷元,origin_state,出荷元郵便番号,届け先,dest_state,届け先郵便番号,原価センタ,勘定科目
+S-1,PRO-1,EXLT,2026/10/20,delivered,,544.3108,,Chicago,IL,60607,Dallas,TX,75201,Retail,6100
+S-2,PRO-2,EXLT,2026/10/28,delivered,410.00,408.2331,,Chicago,IL,60607,Dallas,TX,75201,Retail,6100
+S-3,PRO-3,EXLT,2026/10/29,delivered,,226.7962,,Chicago,IL,60607,Austin,TX,78701,Wholesale,6100
+S-4,L-4,SMPF,2026/10/30,delivered,,"18,143.6948",901.2326,Columbus,OH,43215,Atlanta,GA,30303,Wholesale,6110
+S-5,PRO-5,EXLT,2026/10/31,in transit,,362.8739,,Chicago,IL,60607,Dallas,TX,75201,Retail,6100
+S-6,N-6,Nova Carriers,2026/10/31,delivered,,136.0777,,Reno,NV,89501,Boise,ID,83702,Retail,6100
+S-7,PRO-7,EXLT,2026/11/02,booked,,317.5147,,Chicago,IL,60607,Dallas,TX,75201,Retail,6100
+S-8,PRO-8,EXLT,2026/10/15,cancelled,,317.5147,,Chicago,IL,60607,Dallas,TX,75201,Retail,6100
+S-9,PRO-9,EXLT,2026/08/20,delivered,350.00,,,Chicago,IL,60607,Dallas,TX,75201,Retail,6100

@@ -3,13 +3,158 @@
   "root": "..",
   "data_note": "Fictional items and August to October freight in ../fixtures. No model is called.",
   "cases": [
-    {"id": "totals", "tool": "pollux_compare", "args": {"items": "fixtures/items.csv", "actuals": "fixtures/actual-freight.csv"}, "expect": {"equals": {"result.skus": 8, "result.actual_freight": 4270.44, "result.net_variance": 738.44, "result.under_costed": 798.44, "result.to_change": 4, "result.revaluation_estimate": 995.4}}},
-    {"id": "rug-first", "tool": "pollux_compare", "args": {"items": "fixtures/items.csv", "actuals": "fixtures/actual-freight.csv"}, "expect": {"equals": {"result.rows.0.sku": "FLOOR-RUG", "result.rows.0.status": "standard_too_low", "result.rows.0.proposed_standard": 31.19}}},
-    {"id": "every-status", "tool": "pollux_compare", "args": {"items": "fixtures/items.csv", "actuals": "fixtures/actual-freight.csv"}, "expect": {"contains": ["standard_too_high", "no_standard", "thin_data", "no_shipments"]}},
-    {"id": "looser-threshold", "tool": "pollux_compare", "args": {"items": "fixtures/items.csv", "actuals": "fixtures/actual-freight.csv", "threshold_pct": 40}, "expect": {"equals": {"result.standard_too_low": 0, "result.standard_too_high": 0, "result.to_change": 1}}},
-    {"id": "draft-has-table", "tool": "pollux_draft_standard_update", "mode": "auto", "auto_actions": ["pollux_draft_standard_update"], "args": {"items": "fixtures/items.csv", "actuals": "fixtures/actual-freight.csv", "to": "Priya Nair", "system": "the ERP"}, "expect": {"contains": ["standard_update", "Nothing was sent"]}},
-    {"id": "apply-stays-a-click-in-auto", "tool": "pollux_request_apply", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
-    {"id": "never-changes-costs", "tool": "erp_update_item_cost", "mode": "auto", "args": {}, "expect": {"status": "blocked"}},
-    {"id": "never-revalues", "tool": "erp_revalue_inventory", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+    {
+      "id": "totals",
+      "tool": "pollux_compare",
+      "args": {
+        "items": "fixtures/items.csv",
+        "actuals": "fixtures/actual-freight.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.skus": 8,
+          "result.actual_freight": 4270.44,
+          "result.net_variance": 738.44,
+          "result.under_costed": 798.44,
+          "result.to_change": 4,
+          "result.revaluation_estimate": 995.4
+        }
+      }
+    },
+    {
+      "id": "rug-first",
+      "tool": "pollux_compare",
+      "args": {
+        "items": "fixtures/items.csv",
+        "actuals": "fixtures/actual-freight.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.rows.0.sku": "FLOOR-RUG",
+          "result.rows.0.status": "standard_too_low",
+          "result.rows.0.proposed_standard": 31.19
+        }
+      }
+    },
+    {
+      "id": "every-status",
+      "tool": "pollux_compare",
+      "args": {
+        "items": "fixtures/items.csv",
+        "actuals": "fixtures/actual-freight.csv"
+      },
+      "expect": {
+        "contains": [
+          "standard_too_high",
+          "no_standard",
+          "thin_data",
+          "no_shipments"
+        ]
+      }
+    },
+    {
+      "id": "looser-threshold",
+      "tool": "pollux_compare",
+      "args": {
+        "items": "fixtures/items.csv",
+        "actuals": "fixtures/actual-freight.csv",
+        "threshold_pct": 40
+      },
+      "expect": {
+        "equals": {
+          "result.standard_too_low": 0,
+          "result.standard_too_high": 0,
+          "result.to_change": 1
+        }
+      }
+    },
+    {
+      "id": "draft-has-table",
+      "tool": "pollux_draft_standard_update",
+      "mode": "auto",
+      "auto_actions": [
+        "pollux_draft_standard_update"
+      ],
+      "args": {
+        "items": "fixtures/items.csv",
+        "actuals": "fixtures/actual-freight.csv",
+        "to": "Priya Nair",
+        "system": "the ERP"
+      },
+      "expect": {
+        "contains": [
+          "standard_update",
+          "Nothing was sent"
+        ]
+      }
+    },
+    {
+      "id": "apply-stays-a-click-in-auto",
+      "tool": "pollux_request_apply",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-changes-costs",
+      "tool": "erp_update_item_cost",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "never-revalues",
+      "tool": "erp_revalue_inventory",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-totals",
+      "tool": "pollux_compare",
+      "args": {
+        "items": "fixtures/intl/de/items.csv",
+        "actuals": "fixtures/intl/de/actual-freight.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.skus": 8,
+          "result.actual_freight": 4270.44,
+          "result.net_variance": 738.44,
+          "result.under_costed": 798.44,
+          "result.to_change": 4,
+          "result.revaluation_estimate": 995.4
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"totals\"."
+    },
+    {
+      "id": "intl-ja-totals",
+      "tool": "pollux_compare",
+      "args": {
+        "items": "fixtures/intl/ja/items.csv",
+        "actuals": "fixtures/intl/ja/actual-freight.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.skus": 8,
+          "result.actual_freight": 4270.44,
+          "result.net_variance": 738.44,
+          "result.under_costed": 798.44,
+          "result.to_change": 4,
+          "result.revaluation_estimate": 995.4
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    }
   ]
 }

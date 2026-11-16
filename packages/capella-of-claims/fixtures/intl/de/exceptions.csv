@@ -1,0 +1,10 @@
+Sendungs-ID;Sendungsnummer;Spediteur;Lieferdatum;Abweichung;noted_on_pod;Schaden festgestellt am;Warenwert;Versandkosten;Restwert;Menge;Bemerkung
+L-2001;RF-880101;Ridgeline Freight;02.09.2026;Damage;yes;;4.200,00;380,00;600,00;6;"Six cartons of ceramic lamps crushed; forklift tine marks on pallet 2"
+L-2002;RF-880145;Ridgeline Freight;20.10.2026;Shortage;no;;860,00;140,00;;4;"Four cartons short against the packing list; POD signed without exception"
+L-2003;CL-55210;Coastal Line Haul;02.11.2026;Concealed damage;no;12.11.2026;1.250,00;95,00;;3;Water damage found when the pallet was broken down
+L-2004;RF-879902;Ridgeline Freight;28.02.2026;Damage;yes;;2.650,00;210,00;;9;"Nine cartons of glassware broken; noted on delivery receipt"
+L-2005;RF-879511;Ridgeline Freight;15.01.2026;Damage;yes;;900,00;;;2;Two cartons wet
+L-2006;CL-55033;Coastal Line Haul;28.10.2026;Overage;yes;;0,00;;;1;One extra carton not on the order
+L-2007;RF-880077;Ridgeline Freight;19.08.2026;Damage;yes;;1.500,00;;;3;Already claimed
+L-2008;CL-55188;Coastal Line Haul;30.10.2026;Shortage;yes;;;;;2;"Two cartons short; invoice value not yet looked up"
+L-2009;RF-880190;Ridgeline Freight;05.11.2026;Damage;yes;;40,00;;;1;One carton dented

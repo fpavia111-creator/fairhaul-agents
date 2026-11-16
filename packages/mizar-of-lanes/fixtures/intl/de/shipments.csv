@@ -1,0 +1,13 @@
+Sendungs-ID;Versanddatum;Verkehrsträger;Spediteur;Abgangsort;origin_state;PLZ Abgang;Bestimmungsort;dest_state;PLZ Empfänger;Gewicht (kg);Paletten;Entfernung (km);Frachtkosten
+M-01;02.09.2026;LTL;Ridgeline Freight;Chicago;IL;60607;Dallas;TX;75201;1.905,0880;6;1.488,6432;980,00
+M-02;02.09.2026;LTL;Prairie Express;Chicago;IL;60607;Dallas;TX;75207;2.313,3211;8;1.488,6432;1.150,00
+M-03;02.09.2026;LTL;Ridgeline Freight;Chicago;IL;60607;Dallas;TX;75201;1.769,0102;6;1.488,6432;940,00
+M-04;16.09.2026;LTL;Ridgeline Freight;Chicago;IL;60607;Dallas;TX;75201;1.133,9809;4;1.488,6432;640,00
+M-05;07.10.2026;LTL;Ridgeline Freight;Chicago;IL;60607;Dallas;TX;75201;2.177,2434;7;1.488,6432;1.210,00
+M-06;07.10.2026;LTL;Ridgeline Freight;Chicago;IL;60607;Dallas;TX;75201;2.358,6803;8;1.488,6432;1.300,00
+M-07;21.10.2026;LTL;Prairie Express;Chicago;IL;60607;Dallas;TX;75201;1.360,7771;5;1.488,6432;820,00
+M-08;10.09.2026;LTL;Coastal Line Haul;Chicago;IL;60607;Atlanta;GA;30303;6.577,0894;16;1.152,2903;2.480,00
+M-09;14.10.2026;LTL;Coastal Line Haul;Chicago;IL;60607;Atlanta;GA;30303;816,4663;3;1.152,2903;520,00
+M-10;14.10.2026;LTL;Coastal Line Haul;Chicago;IL;60607;Atlanta;GA;30303;680,3886;2;1.152,2903;470,00
+M-11;21.09.2026;TL;Ridgeline Freight;Chicago;IL;60607;Denver;CO;80202;17.236,5101;24;1.614,1720;2.700,00
+M-12;19.10.2026;TL;Ridgeline Freight;Chicago;IL;60607;Denver;CO;80202;16.329,3253;22;1.614,1720;2.780,00

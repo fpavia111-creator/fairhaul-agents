@@ -1,0 +1,6 @@
+Schadensnummer;Sendungs-ID;Spediteur;Schadennummer Spediteur;Angemeldet am;Betrag;Bestätigt am;Zustand;Zahlungsdatum;Bezahlt;Ablehnungsgrund
+C-501;L-2007;Ridgeline Freight;;01.10.2026;1.500,00;;Open;;;
+C-498;L-1990;Coastal Line Haul;CLH-77812;10.06.2026;2.200,00;20.06.2026;Open;;;
+C-495;L-1985;Ridgeline Freight;RF-C-4410;01.05.2026;3.100,00;12.05.2026;Paid;30.08.2026;2.400,00;
+C-490;L-1980;Coastal Line Haul;CLH-77104;15.04.2026;980,00;28.04.2026;Declined;;;Clean delivery receipt
+C-488;L-1975;Ridgeline Freight;RF-C-4302;01.04.2026;650,00;09.04.2026;Closed;15.06.2026;650,00;

@@ -1,0 +1,6 @@
+出荷番号,出荷元,届け先,車種,集荷日,納期,距離,付帯作業,lane_history_avg
+Q-701,Chicago IL,Dallas TX,Dry van 53,2026/11/18,2026/11/20,"1,488.6432",,"2,150.00"
+Q-702,Atlanta GA,Miami FL,Reefer 53,2026/11/19,2026/11/20,"1,065.3857",,"1,900.00"
+Q-703,Denver CO,Phoenix AZ,Flatbed 48,2026/11/18,2026/11/21,"1,321.2714",Tarping,"2,050.00"
+Q-704,Memphis TN,Columbus OH,Dry van 53,2026/11/20,2026/11/21,936.6382,Liftgate,"1,300.00"
+Q-705,Seattle WA,Portland OR,Dry van 53,2026/11/19,2026/11/19,280.0259,,

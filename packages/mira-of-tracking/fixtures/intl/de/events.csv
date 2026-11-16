@@ -1,0 +1,14 @@
+Sendungs-ID;Zeitpunkt;Ereignis;Lagerort;Voraussichtliche Ankunft
+T-601;15.11.2026 08:40;Picked up;Dallas TX;16.11.2026 15:00
+T-601;16.11.2026 08:10;In transit;Waco TX;16.11.2026 15:30
+T-602;15.11.2026 09:20;Picked up;Wichita KS;17.11.2026 09:00
+T-602;15.11.2026 17:00;In transit;Ponca City OK;17.11.2026 09:00
+T-603;14.11.2026 07:30;Picked up;Memphis TN;16.11.2026 08:00
+T-603;15.11.2026 13:00;Delay - breakdown;Little Rock AR;16.11.2026 13:00
+T-603;16.11.2026 09:30;In transit;Texarkana TX;16.11.2026 14:30
+T-605;15.11.2026 10:15;Picked up;Omaha NE;17.11.2026 07:30
+T-605;16.11.2026 07:45;In transit;Salina KS;17.11.2026 07:30
+T-606;15.11.2026 11:30;Picked up;Salt Lake City UT;16.11.2026 17:00
+T-606;16.11.2026 09:00;In transit;Grand Junction CO;16.11.2026 20:00
+T-607;14.11.2026 08:20;Picked up;Shreveport LA;15.11.2026 16:00
+T-607;15.11.2026 15:50;Delivered;Houston TX;

@@ -3,12 +3,151 @@
   "root": "..",
   "data_note": "Fictional lanes, bids and rules in ../fixtures. No model is called.",
   "cases": [
-    {"id": "with-rules", "tool": "altair_award", "args": {"lanes": "fixtures/lanes.csv", "bids": "fixtures/bids.csv", "rules": "fixtures/rules.json"}, "expect": {"equals": {"result.awarded": 5, "result.no_bids": 1, "result.annual_cost": 458840, "result.baseline_cost": 477000, "result.savings": 18160, "result.incumbents_kept": 2, "result.outlier_bids": 1, "result.carriers.0.share_pct": 40}}},
-    {"id": "no-rules", "tool": "altair_award", "args": {"lanes": "fixtures/lanes.csv", "bids": "fixtures/bids.csv"}, "expect": {"equals": {"result.results.0.awards.0.carrier": "Coastal Line Haul", "result.results.1.awards.0.carrier": "Ridgeline Freight"}}},
-    {"id": "capacity-split", "tool": "altair_award", "args": {"lanes": "fixtures/lanes.csv", "bids": "fixtures/bids.csv"}, "expect": {"equals": {"result.results.2.awards.0.carrier": "Ridgeline Freight", "result.results.2.backup.carrier": "Summit Carriers"}}},
-    {"id": "outlier-not-awarded", "tool": "altair_award", "args": {"lanes": "fixtures/lanes.csv", "bids": "fixtures/bids.csv"}, "expect": {"contains": ["far below the lane median"], "not_contains": ["\"carrier\":\"Northgate Haulers\",\"loads\""]}},
-    {"id": "no-award-no-letter", "tool": "altair_draft_award", "mode": "auto", "auto_actions": ["altair_draft_award"], "args": {"lanes": "fixtures/lanes.csv", "bids": "fixtures/bids.csv", "carrier": "Northgate Haulers"}, "expect": {"status": "error"}},
-    {"id": "send-stays-a-click-in-auto", "tool": "altair_request_send", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
-    {"id": "never-loads-rates", "tool": "tms_load_rates", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+    {
+      "id": "with-rules",
+      "tool": "altair_award",
+      "args": {
+        "lanes": "fixtures/lanes.csv",
+        "bids": "fixtures/bids.csv",
+        "rules": "fixtures/rules.json"
+      },
+      "expect": {
+        "equals": {
+          "result.awarded": 5,
+          "result.no_bids": 1,
+          "result.annual_cost": 458840,
+          "result.baseline_cost": 477000,
+          "result.savings": 18160,
+          "result.incumbents_kept": 2,
+          "result.outlier_bids": 1,
+          "result.carriers.0.share_pct": 40
+        }
+      }
+    },
+    {
+      "id": "no-rules",
+      "tool": "altair_award",
+      "args": {
+        "lanes": "fixtures/lanes.csv",
+        "bids": "fixtures/bids.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.results.0.awards.0.carrier": "Coastal Line Haul",
+          "result.results.1.awards.0.carrier": "Ridgeline Freight"
+        }
+      }
+    },
+    {
+      "id": "capacity-split",
+      "tool": "altair_award",
+      "args": {
+        "lanes": "fixtures/lanes.csv",
+        "bids": "fixtures/bids.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.results.2.awards.0.carrier": "Ridgeline Freight",
+          "result.results.2.backup.carrier": "Summit Carriers"
+        }
+      }
+    },
+    {
+      "id": "outlier-not-awarded",
+      "tool": "altair_award",
+      "args": {
+        "lanes": "fixtures/lanes.csv",
+        "bids": "fixtures/bids.csv"
+      },
+      "expect": {
+        "contains": [
+          "far below the lane median"
+        ],
+        "not_contains": [
+          "\"carrier\":\"Northgate Haulers\",\"loads\""
+        ]
+      }
+    },
+    {
+      "id": "no-award-no-letter",
+      "tool": "altair_draft_award",
+      "mode": "auto",
+      "auto_actions": [
+        "altair_draft_award"
+      ],
+      "args": {
+        "lanes": "fixtures/lanes.csv",
+        "bids": "fixtures/bids.csv",
+        "carrier": "Northgate Haulers"
+      },
+      "expect": {
+        "status": "error"
+      }
+    },
+    {
+      "id": "send-stays-a-click-in-auto",
+      "tool": "altair_request_send",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-loads-rates",
+      "tool": "tms_load_rates",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-with-rules",
+      "tool": "altair_award",
+      "args": {
+        "lanes": "fixtures/intl/de/lanes.csv",
+        "bids": "fixtures/intl/de/bids.csv",
+        "rules": "fixtures/rules.json"
+      },
+      "expect": {
+        "equals": {
+          "result.awarded": 5,
+          "result.no_bids": 1,
+          "result.annual_cost": 458840,
+          "result.baseline_cost": 477000,
+          "result.savings": 18160,
+          "result.incumbents_kept": 2,
+          "result.outlier_bids": 1,
+          "result.carriers.0.share_pct": 40
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"with-rules\"."
+    },
+    {
+      "id": "intl-ja-with-rules",
+      "tool": "altair_award",
+      "args": {
+        "lanes": "fixtures/intl/ja/lanes.csv",
+        "bids": "fixtures/intl/ja/bids.csv",
+        "rules": "fixtures/rules.json"
+      },
+      "expect": {
+        "equals": {
+          "result.awarded": 5,
+          "result.no_bids": 1,
+          "result.annual_cost": 458840,
+          "result.baseline_cost": 477000,
+          "result.savings": 18160,
+          "result.incumbents_kept": 2,
+          "result.outlier_bids": 1,
+          "result.carriers.0.share_pct": 40
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"with-rules\"."
+    }
   ]
 }

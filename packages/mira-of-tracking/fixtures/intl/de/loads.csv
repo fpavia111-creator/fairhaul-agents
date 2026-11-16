@@ -1,0 +1,9 @@
+Sendungs-ID;Spediteur;Kunde;Abholtermin;Termin;Zustand;Bestimmungsort
+T-601;Ridgeline Freight;Hill Country Home;15.11.2026 08:00;16.11.2026 16:00;In Transit;Austin TX
+T-602;Ridgeline Freight;Lakeside Outfitters;15.11.2026 09:00;17.11.2026 10:00;In Transit;Tulsa OK
+T-603;Coastal Line Haul;Hill Country Home;14.11.2026 07:00;16.11.2026 09:00;In Transit;Austin TX
+T-604;Coastal Line Haul;Bayou Goods;16.11.2026 06:00;17.11.2026 14:00;Dispatched;Houston TX
+T-605;Prairie Express;Lakeside Outfitters;15.11.2026 10:00;17.11.2026 08:00;In Transit;Tulsa OK
+T-606;Prairie Express;Front Range Supply;15.11.2026 11:00;16.11.2026 18:00;In Transit;Denver CO
+T-607;Summit Carriers;Bayou Goods;14.11.2026 08:00;16.11.2026 08:00;In Transit;Houston TX
+T-608;Summit Carriers;Front Range Supply;16.11.2026 14:00;18.11.2026 10:00;Planned;Denver CO

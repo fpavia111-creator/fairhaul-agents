@@ -1,0 +1,10 @@
+Retourennummer;Kunde;Artikelnummer;Menge;Warenwert;Grund;Genehmigt am;Sendungsnummer;Zustand
+RMA-3001;Hill Country Home;LAMP-SHADE;10;145,00;damaged in transit;02.09.2026;1Z-RT-0001;open
+RMA-3002;Lakeside Outfitters;THROW-BLANKET;6;186,00;wrong item shipped;20.09.2026;1Z-RT-0002;open
+RMA-3003;Bayou Goods;BOOKENDS;4;72,80;damaged in transit;01.10.2026;1Z-RT-0003;open
+RMA-3004;Front Range Supply;FLOOR-RUG;2;192,00;customer changed mind;05.10.2026;1Z-RT-0004;open
+RMA-3005;Hill Country Home;CANDLE-SET;24;187,20;wrong item shipped;12.10.2026;1Z-RT-0005;open
+RMA-3006;Bayou Goods;MIRROR;1;58,00;damaged in transit;20.10.2026;1Z-RT-0006;open
+RMA-3007;Lakeside Outfitters;LAMP-SHADE;8;116,00;customer changed mind;02.11.2026;1Z-RT-0007;open
+RMA-3008;Front Range Supply;MIRROR;3;174,00;damaged in transit;30.08.2026;1Z-RT-0008;cancelled
+RMA-3009;Front Range Supply;THROW-BLANKET;4;124,00;customer changed mind;25.09.2026;1Z-RT-0009;open

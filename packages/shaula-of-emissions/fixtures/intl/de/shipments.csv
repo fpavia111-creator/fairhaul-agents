@@ -1,0 +1,10 @@
+Sendungs-ID;Verkehrsträger;Spediteur;Kunde;Abgangsort;Bestimmungsort;weight;weight_unit;distance;distance_unit;distance_source
+S-801;Truckload;Ridgeline Freight;Lakeside Outfitters;Chicago IL;Dallas TX;38.000;lb;925;mi;planned
+S-802;LTL;Prairie Express;Bayou Goods;Kansas City MO;New Orleans LA;420;lb;830;mi;planned
+S-803;Truckload;Coastal Line Haul;Front Range Supply;Jacksonville FL;Denver CO;41.000;lb;1.760;mi;telematics
+S-804;Small Parcel;Parcel Co;Hill Country Home;Chicago IL;Austin TX;225;lb;1.100;mi;planned
+S-805;LTL;Summit Carriers;Hill Country Home;Denver CO;Austin TX;1.850;lb;;mi;
+S-806;Ocean;Harborline Shipping;Front Range Supply;Ningbo CN;Long Beach CA;9.800;kg;10.400;km;planned
+S-807;Air;Skyway Cargo;Lakeside Outfitters;Chicago IL;Miami FL;180;kg;1.910;km;planned
+S-808;Truckload;Ridgeline Freight;Front Range Supply;Chicago IL;Denver CO;36.000;lb;1.000;mi;telematics
+S-809;Courier;Metro Couriers;Bayou Goods;Dallas TX;Houston TX;10;lb;240;mi;planned

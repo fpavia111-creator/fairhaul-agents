@@ -1,0 +1,8 @@
+Sendungs-ID;Spediteur;Versanddatum;Verkehrsträger;origin_state;PLZ Abgang;dest_state;PLZ Empfänger;Gewicht (kg);Zusatzleistungen;Bezahlt
+H-01;Ridgeline Freight;01.10.2026;ltl;IL;60607;TX;75201;544,3108;;398,00
+H-02;Ridgeline Freight;08.10.2026;ltl;IL;60607;TX;75201;408,2331;Liftgate;317,32
+H-03;Ridgeline Freight;15.10.2026;ltl;IL;60607;TX;78701;907,1847;;649,60
+H-04;Prairie Express;06.10.2026;ltl;IL;60607;GA;30303;680,3886;;484,27
+H-05;Coastal Line Haul;13.10.2026;ltl;IL;60607;GA;30303;362,8739;Residential;307,12
+H-06;Prairie Express;20.10.2026;ltl;IL;60607;GA;30303;453,5924;;326,70
+H-07;Ridgeline Freight;27.10.2026;ltl;IL;60607;OH;43215;317,5147;;260,00

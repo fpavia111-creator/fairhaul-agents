@@ -3,12 +3,142 @@
   "root": "..",
   "data_note": "Fictional invoices, shipments and contract in ../fixtures. No model is called.",
   "cases": [
-    {"id": "totals", "tool": "betelgeuse_analyse", "args": {"invoices": "fixtures/invoices.csv", "shipments": "fixtures/shipments.csv", "contract": "fixtures/contract.json"}, "expect": {"equals": {"result.accessorial_total": 890, "result.freight_total": 4750, "result.accessorial_share_pct": 18.7, "result.unordered": 6, "result.unordered_amount": 380, "result.over_amount": 10}}},
-    {"id": "repeats", "tool": "betelgeuse_analyse", "args": {"invoices": "fixtures/invoices.csv", "shipments": "fixtures/shipments.csv"}, "expect": {"equals": {"result.fixes.0.location": "Austin TX 78701", "result.fixes.0.code": "residential", "result.fixes.0.times": 3}, "contains": ["Mark the address residential", "liftgate required", "appointment required", "Vega of Detention"]}},
-    {"id": "repeat-threshold", "tool": "betelgeuse_analyse", "args": {"invoices": "fixtures/invoices.csv", "shipments": "fixtures/shipments.csv", "repeat_at": 3}, "expect": {"equals": {"result.fixes.1.code": "liftgate"}}},
-    {"id": "without-shipments", "tool": "betelgeuse_analyse", "args": {"invoices": "fixtures/invoices.csv"}, "expect": {"equals": {"result.unordered": 0, "result.not_matched": 12}}},
-    {"id": "change-list-is-production", "tool": "betelgeuse_request_apply", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
-    {"id": "never-edits-tms", "tool": "tms_update_address", "mode": "auto", "args": {}, "expect": {"status": "blocked"}},
-    {"id": "never-pays", "tool": "ap_pay_invoice", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+    {
+      "id": "totals",
+      "tool": "betelgeuse_analyse",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "shipments": "fixtures/shipments.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.accessorial_total": 890,
+          "result.freight_total": 4750,
+          "result.accessorial_share_pct": 18.7,
+          "result.unordered": 6,
+          "result.unordered_amount": 380,
+          "result.over_amount": 10
+        }
+      }
+    },
+    {
+      "id": "repeats",
+      "tool": "betelgeuse_analyse",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "shipments": "fixtures/shipments.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.fixes.0.location": "Austin TX 78701",
+          "result.fixes.0.code": "residential",
+          "result.fixes.0.times": 3
+        },
+        "contains": [
+          "Mark the address residential",
+          "liftgate required",
+          "appointment required",
+          "Vega of Detention"
+        ]
+      }
+    },
+    {
+      "id": "repeat-threshold",
+      "tool": "betelgeuse_analyse",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "shipments": "fixtures/shipments.csv",
+        "repeat_at": 3
+      },
+      "expect": {
+        "equals": {
+          "result.fixes.1.code": "liftgate"
+        }
+      }
+    },
+    {
+      "id": "without-shipments",
+      "tool": "betelgeuse_analyse",
+      "args": {
+        "invoices": "fixtures/invoices.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.unordered": 0,
+          "result.not_matched": 12
+        }
+      }
+    },
+    {
+      "id": "change-list-is-production",
+      "tool": "betelgeuse_request_apply",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-edits-tms",
+      "tool": "tms_update_address",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "never-pays",
+      "tool": "ap_pay_invoice",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-totals",
+      "tool": "betelgeuse_analyse",
+      "args": {
+        "invoices": "fixtures/intl/de/invoices.csv",
+        "shipments": "fixtures/intl/de/shipments.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.accessorial_total": 890,
+          "result.freight_total": 4750,
+          "result.accessorial_share_pct": 18.7,
+          "result.unordered": 6,
+          "result.unordered_amount": 380,
+          "result.over_amount": 10
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"totals\"."
+    },
+    {
+      "id": "intl-ja-totals",
+      "tool": "betelgeuse_analyse",
+      "args": {
+        "invoices": "fixtures/intl/ja/invoices.csv",
+        "shipments": "fixtures/intl/ja/shipments.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.accessorial_total": 890,
+          "result.freight_total": 4750,
+          "result.accessorial_share_pct": 18.7,
+          "result.unordered": 6,
+          "result.unordered_amount": 380,
+          "result.over_amount": 10
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    }
   ]
 }

@@ -1,0 +1,13 @@
+出荷番号,出荷日,輸送モード,運送会社,出荷元,origin_state,出荷元郵便番号,届け先,dest_state,届け先郵便番号,重量,パレット数,距離,運賃
+M-01,2026/09/02,LTL,Ridgeline Freight,Chicago,IL,60607,Dallas,TX,75201,"1,905.0880",6,"1,488.6432",980.00
+M-02,2026/09/02,LTL,Prairie Express,Chicago,IL,60607,Dallas,TX,75207,"2,313.3211",8,"1,488.6432","1,150.00"
+M-03,2026/09/02,LTL,Ridgeline Freight,Chicago,IL,60607,Dallas,TX,75201,"1,769.0102",6,"1,488.6432",940.00
+M-04,2026/09/16,LTL,Ridgeline Freight,Chicago,IL,60607,Dallas,TX,75201,"1,133.9809",4,"1,488.6432",640.00
+M-05,2026/10/07,LTL,Ridgeline Freight,Chicago,IL,60607,Dallas,TX,75201,"2,177.2434",7,"1,488.6432","1,210.00"
+M-06,2026/10/07,LTL,Ridgeline Freight,Chicago,IL,60607,Dallas,TX,75201,"2,358.6803",8,"1,488.6432","1,300.00"
+M-07,2026/10/21,LTL,Prairie Express,Chicago,IL,60607,Dallas,TX,75201,"1,360.7771",5,"1,488.6432",820.00
+M-08,2026/09/10,LTL,Coastal Line Haul,Chicago,IL,60607,Atlanta,GA,30303,"6,577.0894",16,"1,152.2903","2,480.00"
+M-09,2026/10/14,LTL,Coastal Line Haul,Chicago,IL,60607,Atlanta,GA,30303,816.4663,3,"1,152.2903",520.00
+M-10,2026/10/14,LTL,Coastal Line Haul,Chicago,IL,60607,Atlanta,GA,30303,680.3886,2,"1,152.2903",470.00
+M-11,2026/09/21,TL,Ridgeline Freight,Chicago,IL,60607,Denver,CO,80202,"17,236.5101",24,"1,614.1720","2,700.00"
+M-12,2026/10/19,TL,Ridgeline Freight,Chicago,IL,60607,Denver,CO,80202,"16,329.3253",22,"1,614.1720","2,780.00"

@@ -1,0 +1,23 @@
+Rechnungsnummer;Spediteur;Versanddatum;Rechnungsdatum;Betrag;Entfernung (km);Leistungsbeschreibung;Gebührenbetrag
+F-1001;Ridgeline Freight;14.10.2026;16.10.2026;1.392,00;901,2326;Linehaul;1.200,00
+F-1001;Ridgeline Freight;14.10.2026;16.10.2026;1.392,00;901,2326;Fuel Surcharge;192,00
+F-1002;Ridgeline Freight;28.10.2026;30.10.2026;1.755,00;1.126,5408;Linehaul;1.500,00
+F-1002;Ridgeline Freight;28.10.2026;30.10.2026;1.755,00;1.126,5408;Fuel Surcharge;255,00
+F-1003;Coastal Line Haul;06.10.2026;08.10.2026;2.350,00;1.448,4096;Linehaul;1.900,00
+F-1003;Coastal Line Haul;06.10.2026;08.10.2026;2.350,00;1.448,4096;Fuel Surcharge;450,00
+F-1004;Coastal Line Haul;23.09.2026;27.10.2026;2.395,00;1.448,4096;Linehaul;1.900,00
+F-1004;Coastal Line Haul;23.09.2026;27.10.2026;2.395,00;1.448,4096;Fuel Surcharge;495,00
+F-1005;Prairie Express;01.10.2026;28.10.2026;1.210,00;724,2048;Linehaul;1.000,00
+F-1005;Prairie Express;01.10.2026;28.10.2026;1.210,00;724,2048;Fuel Surcharge;210,00
+F-1006;Prairie Express;20.10.2026;22.10.2026;1.205,00;724,2048;Linehaul;1.000,00
+F-1006;Prairie Express;20.10.2026;22.10.2026;1.205,00;724,2048;Fuel Surcharge;205,00
+F-1007;Ridgeline Freight;12.11.2026;13.11.2026;1.404,00;901,2326;Linehaul;1.200,00
+F-1007;Ridgeline Freight;12.11.2026;13.11.2026;1.404,00;901,2326;Fuel Surcharge;204,00
+F-1008;Coastal Line Haul;15.10.2026;17.10.2026;2.380,00;;Linehaul;1.900,00
+F-1008;Coastal Line Haul;15.10.2026;17.10.2026;2.380,00;;Fuel Surcharge;480,00
+F-1009;Summit Carriers;10.10.2026;12.10.2026;960,00;724,2048;Linehaul;900,00
+F-1009;Summit Carriers;10.10.2026;12.10.2026;960,00;724,2048;Fuel Surcharge;60,00
+F-1010;Ridgeline Freight;13.10.2026;15.10.2026;920,00;611,5507;Linehaul;800,00
+F-1010;Ridgeline Freight;13.10.2026;15.10.2026;920,00;611,5507;Fuel Surcharge;120,00
+F-1011;Northgate Haulers;09.10.2026;11.10.2026;750,00;482,8032;Linehaul;700,00
+F-1011;Northgate Haulers;09.10.2026;11.10.2026;750,00;482,8032;Fuel Surcharge;50,00

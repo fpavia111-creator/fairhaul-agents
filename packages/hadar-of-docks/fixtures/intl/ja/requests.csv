@@ -1,0 +1,11 @@
+出荷番号,運送会社,入出庫区分,door_type,パレット数,floor_loaded,時間帯開始,時間帯終了,優先度
+PO-4401,Ridgeline Freight,inbound,dry,26,no,06:00,08:00,
+PO-4402,Prairie Express,inbound,dry,24,yes,06:00,09:00,
+PO-4403,Coastal Line Haul,inbound,reefer,20,no,06:00,07:00,1
+PO-4404,Summit Carriers,inbound,dry,18,no,07:00,08:00,
+PO-4405,Ridgeline Freight,outbound,dry,22,no,08:00,10:00,
+PO-4406,Coastal Line Haul,inbound,reefer,22,no,06:30,07:15,
+PO-4407,Prairie Express,inbound,dry,26,yes,10:00,13:00,
+PO-4408,North Star Hauling,inbound,flatbed,12,no,09:00,12:00,
+PO-4409,Summit Carriers,inbound,dry,10,no,12:00,14:00,
+PO-4410,Bayou Goods Freight,inbound,dry,26,yes,12:30,13:30,

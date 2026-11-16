@@ -3,12 +3,142 @@
   "root": "..",
   "data_note": "Fictional LTL corrections in ../fixtures. No model is called.",
   "cases": [
-    {"id": "totals", "tool": "bellatrix_review", "args": {"corrections": "fixtures/corrections.csv", "terms": "fixtures/terms.json"}, "expect": {"equals": {"result.corrections": 8, "result.amount_added": 784.15, "result.challenge": 3, "result.challenge_amount": 224.3, "result.ask_for_certificate": 1, "result.fix_our_data": 3, "result.accepted": 1}}},
-    {"id": "reasons", "tool": "bellatrix_review", "args": {"corrections": "fixtures/corrections.csv"}, "expect": {"contains": ["within_tolerance", "class_not_supported", "no_certificate", "cannot be checked against density"]}},
-    {"id": "item-master-fix", "tool": "bellatrix_review", "args": {"corrections": "fixtures/corrections.csv"}, "expect": {"equals": {"result.fixes.0.product": "Bookcase kit", "result.fixes.0.corrections": 3, "result.fixes.0.amount_added": 449.05}}},
-    {"id": "tighter-tolerance", "tool": "bellatrix_review", "args": {"corrections": "fixtures/corrections.csv", "terms": "fixtures/terms.json"}, "expect": {"equals": {"result.items.2.status": "challenge"}}},
-    {"id": "nothing-to-dispute", "tool": "bellatrix_draft_dispute", "mode": "auto", "auto_actions": ["bellatrix_draft_dispute"], "args": {"corrections": "fixtures/corrections.csv", "carrier": "Nobody Freight"}, "expect": {"status": "error"}},
-    {"id": "send-stays-a-click-in-auto", "tool": "bellatrix_request_send", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
-    {"id": "never-edits-item-master", "tool": "erp_update_item_master", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+    {
+      "id": "totals",
+      "tool": "bellatrix_review",
+      "args": {
+        "corrections": "fixtures/corrections.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "equals": {
+          "result.corrections": 8,
+          "result.amount_added": 784.15,
+          "result.challenge": 3,
+          "result.challenge_amount": 224.3,
+          "result.ask_for_certificate": 1,
+          "result.fix_our_data": 3,
+          "result.accepted": 1
+        }
+      }
+    },
+    {
+      "id": "reasons",
+      "tool": "bellatrix_review",
+      "args": {
+        "corrections": "fixtures/corrections.csv"
+      },
+      "expect": {
+        "contains": [
+          "within_tolerance",
+          "class_not_supported",
+          "no_certificate",
+          "cannot be checked against density"
+        ]
+      }
+    },
+    {
+      "id": "item-master-fix",
+      "tool": "bellatrix_review",
+      "args": {
+        "corrections": "fixtures/corrections.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.fixes.0.product": "Bookcase kit",
+          "result.fixes.0.corrections": 3,
+          "result.fixes.0.amount_added": 449.05
+        }
+      }
+    },
+    {
+      "id": "tighter-tolerance",
+      "tool": "bellatrix_review",
+      "args": {
+        "corrections": "fixtures/corrections.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "equals": {
+          "result.items.2.status": "challenge"
+        }
+      }
+    },
+    {
+      "id": "nothing-to-dispute",
+      "tool": "bellatrix_draft_dispute",
+      "mode": "auto",
+      "auto_actions": [
+        "bellatrix_draft_dispute"
+      ],
+      "args": {
+        "corrections": "fixtures/corrections.csv",
+        "carrier": "Nobody Freight"
+      },
+      "expect": {
+        "status": "error"
+      }
+    },
+    {
+      "id": "send-stays-a-click-in-auto",
+      "tool": "bellatrix_request_send",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-edits-item-master",
+      "tool": "erp_update_item_master",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-totals",
+      "tool": "bellatrix_review",
+      "args": {
+        "corrections": "fixtures/intl/de/corrections.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "equals": {
+          "result.corrections": 8,
+          "result.amount_added": 784.15,
+          "result.challenge": 3,
+          "result.challenge_amount": 224.3,
+          "result.ask_for_certificate": 1,
+          "result.fix_our_data": 3,
+          "result.accepted": 1
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"totals\"."
+    },
+    {
+      "id": "intl-ja-totals",
+      "tool": "bellatrix_review",
+      "args": {
+        "corrections": "fixtures/intl/ja/corrections.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "equals": {
+          "result.corrections": 8,
+          "result.amount_added": 784.15,
+          "result.challenge": 3,
+          "result.challenge_amount": 224.3,
+          "result.ask_for_certificate": 1,
+          "result.fix_our_data": 3,
+          "result.accepted": 1
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    }
   ]
 }

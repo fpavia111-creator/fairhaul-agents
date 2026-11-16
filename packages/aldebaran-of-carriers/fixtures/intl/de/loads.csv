@@ -1,0 +1,7 @@
+Sendungs-ID;Spediteurnummer;Abholdatum;Gebucht am;Warenwert;Telefon;E-Mail-Adresse
+L-9001;RIDG;18.11.2026;14.11.2026;42.000,00;(312) 555-0140;dispatch@ridgeline-freight.example
+L-9002;SWFT;17.11.2026;15.11.2026;118.000,00;(469) 555-0199;swiftlane.dispatch@gmail.com
+L-9003;COAS;08.12.2026;15.11.2026;26.500,00;(904) 555-0102;loads@coastal-linehaul.example
+L-9004;PRAI;19.11.2026;15.11.2026;31.000,00;(913) 555-0123;prairie.loads@outlook.com
+L-9005;NORT;20.11.2026;16.11.2026;64.000,00;;
+L-9006;TRIX;21.11.2026;16.11.2026;15.000,00;;

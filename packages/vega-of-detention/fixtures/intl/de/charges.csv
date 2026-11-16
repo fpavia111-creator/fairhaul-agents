@@ -1,0 +1,10 @@
+Sendungs-ID;Spediteur;Stopp;Leistungsbeschreibung;Betrag;Berechnete Stunden;Rechnungsnummer
+L-100;Example Linehaul;2;Detention;150,00;5;INV-1
+L-101;Example Linehaul;2;Detention;200,00;6;INV-1
+L-102;Example Linehaul;1;Detention;100,00;;INV-1
+L-103;Example Linehaul;2;Detention;75,00;;INV-1
+L-104;Sample Freightways;2;Layover;250,00;;INV-2
+L-105;Sample Freightways;2;Lumper;180,00;;INV-2
+L-106;Sample Freightways;2;Lumper Fee;150,00;;INV-2
+L-107;Sample Freightways;2;Detention;120,00;;INV-2
+L-108;Sample Freightways;2;Layover;300,00;;INV-2

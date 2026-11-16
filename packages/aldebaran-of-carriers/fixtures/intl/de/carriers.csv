@@ -1,0 +1,8 @@
+Spediteurnummer;Vollständiger Name;mc;dot;Telefon;E-Mail-Adresse;Adresse;Zahlungsempfänger;bank_last4;bank_changed;authority_date;Versicherung gültig bis;safety_rating;Zustand
+RIDG;Ridgeline Freight LLC;MC-100201;2100201;(312) 555-0140;dispatch@ridgeline-freight.example;400 Canal St, Chicago IL;Ridgeline Freight LLC;4410;;11.03.2014;01.05.2027;Satisfactory;active
+PRAI;Prairie Express Inc;MC-100245;2100245;(816) 555-0177;ops@prairie-express.example;18 Grand Blvd, Kansas City MO;Bluewater Factoring;9921;;02.07.2018;15.01.2027;Satisfactory;active
+COAS;Coastal Line Haul;MC-100388;2100388;(904) 555-0102;loads@coastal-linehaul.example;77 Port Rd, Jacksonville FL;Coastal Line Haul;3307;04.11.2026;20.09.2019;02.12.2026;;active
+SWFT;Swift Lane Logistics;MC-104410;2104410;(469) 555-0199;swiftlane.dispatch@gmail.com;9 Elm St, Plano TX;Swift Lane Logistics;7781;10.11.2026;14.08.2026;14.08.2027;;active
+NORT;North Star Hauling;MC-104577;2104577;469-555-0199;northstarhaul@gmail.com;1200 Commerce Dr, Dallas TX;North Star Hauling;7781;;30.06.2026;01.11.2026;;active
+SUMM;Summit Carriers;MC-100512;2100512;(303) 555-0155;dispatch@summit-carriers.example;5 Alpine Way, Denver CO;Summit Carriers;1204;;18.02.2016;31.03.2027;Conditional;active
+GULF;Gulfport Transport;;;(228) 555-0110;gulfport.t@yahoo.com;31 Beach Blvd, Gulfport MS;Gulfport Transport;5512;;;31.12.2026;;inactive

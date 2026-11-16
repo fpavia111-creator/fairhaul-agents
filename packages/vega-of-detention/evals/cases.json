@@ -3,13 +3,156 @@
   "root": "..",
   "data_note": "Fictional charges, dock log and terms in ../fixtures. No model is called.",
   "cases": [
-    {"id": "audit-totals", "tool": "vega_audit", "args": {"charges": "fixtures/charges.csv", "stops": "fixtures/stops.csv", "terms": "fixtures/terms.json"}, "expect": {"equals": {"result.charges": 9, "result.disputable": 712.5, "result.dispute": 7, "result.review": 1}}},
-    {"id": "every-situation", "tool": "vega_audit", "args": {"charges": "fixtures/charges.csv", "stops": "fixtures/stops.csv", "terms": "fixtures/terms.json"}, "expect": {"contains": ["detention_over", "hours_over_record", "arrived_late", "no_timestamps", "layover_not_earned", "lumper_over_receipt", "lumper_no_receipt", "layover_over"]}},
-    {"id": "carrier-override-rate", "tool": "vega_explain", "args": {"charges": "fixtures/charges.csv", "stops": "fixtures/stops.csv", "terms": "fixtures/terms.json", "load_id": "L-107"}, "expect": {"contains": ["1.25 h at 60"]}},
-    {"id": "default-terms", "tool": "vega_audit", "args": {"charges": "fixtures/charges.csv", "stops": "fixtures/stops.csv"}, "expect": {"equals": {"result.charges": 9}}},
-    {"id": "yard-system-columns", "tool": "vega_audit", "args": {"charges": "fixtures/charges.csv", "stops": "fixtures/yard-log.csv", "terms": "fixtures/terms.json"}, "expect": {"equals": {"result.disputable": 712.5}}},
-    {"id": "facility-ranking", "tool": "vega_facilities", "args": {"charges": "fixtures/charges.csv", "stops": "fixtures/stops.csv"}, "expect": {"equals": {"result.facilities.0.facility": "Example DC Dallas", "result.facilities.0.detention_billed": 600}}},
-    {"id": "send-stays-one-click", "tool": "vega_request_send", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
-    {"id": "never-pays", "tool": "ap_pay_invoice", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+    {
+      "id": "audit-totals",
+      "tool": "vega_audit",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "equals": {
+          "result.charges": 9,
+          "result.disputable": 712.5,
+          "result.dispute": 7,
+          "result.review": 1
+        }
+      }
+    },
+    {
+      "id": "every-situation",
+      "tool": "vega_audit",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "contains": [
+          "detention_over",
+          "hours_over_record",
+          "arrived_late",
+          "no_timestamps",
+          "layover_not_earned",
+          "lumper_over_receipt",
+          "lumper_no_receipt",
+          "layover_over"
+        ]
+      }
+    },
+    {
+      "id": "carrier-override-rate",
+      "tool": "vega_explain",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json",
+        "load_id": "L-107"
+      },
+      "expect": {
+        "contains": [
+          "1.25 h at 60"
+        ]
+      }
+    },
+    {
+      "id": "default-terms",
+      "tool": "vega_audit",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.charges": 9
+        }
+      }
+    },
+    {
+      "id": "yard-system-columns",
+      "tool": "vega_audit",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/yard-log.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "equals": {
+          "result.disputable": 712.5
+        }
+      }
+    },
+    {
+      "id": "facility-ranking",
+      "tool": "vega_facilities",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.facilities.0.facility": "Example DC Dallas",
+          "result.facilities.0.detention_billed": 600
+        }
+      }
+    },
+    {
+      "id": "send-stays-one-click",
+      "tool": "vega_request_send",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-pays",
+      "tool": "ap_pay_invoice",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-audit-totals",
+      "tool": "vega_audit",
+      "args": {
+        "charges": "fixtures/intl/de/charges.csv",
+        "stops": "fixtures/intl/de/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "equals": {
+          "result.charges": 9,
+          "result.disputable": 712.5,
+          "result.dispute": 7,
+          "result.review": 1
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"audit-totals\"."
+    },
+    {
+      "id": "intl-ja-audit-totals",
+      "tool": "vega_audit",
+      "args": {
+        "charges": "fixtures/intl/ja/charges.csv",
+        "stops": "fixtures/intl/ja/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "equals": {
+          "result.charges": 9,
+          "result.disputable": 712.5,
+          "result.dispute": 7,
+          "result.review": 1
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"audit-totals\"."
+    }
   ]
 }

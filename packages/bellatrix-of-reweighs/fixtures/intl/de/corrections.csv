@@ -1,0 +1,9 @@
+Sendungsnummer;Spediteur;Sendungs-ID;Korrekturdatum;Artikel;Packstücke;Länge (cm);Breite (cm);Höhe (cm);Gewicht (kg);Nachgewogenes Gewicht (kg);declared_class;corrected_class;amount_added;certificate
+PRO-7101;Ridgeline Freight;BOL-301;02.10.2026;Bookcase kit;2;121,9200;101,6000;121,9200;371,9457;498,9516;70;85;212,40;Y
+PRO-7102;Ridgeline Freight;BOL-302;05.10.2026;Bookcase kit;1;121,9200;101,6000;121,9200;185,9729;254,0117;70;85;118,75;Y
+PRO-7103;Ridgeline Freight;BOL-303;09.10.2026;Floor lamp;1;121,9200;101,6000;152,4000;136,0777;140,6136;100;100;14,20;Y
+PRO-7104;Prairie Express;BOL-304;12.10.2026;Patio chair set;2;121,9200;101,6000;55,8800;290,2991;290,2991;85;125;188,00;Y
+PRO-7105;Prairie Express;BOL-305;15.10.2026;Rug bundle;1;121,9200;101,6000;91,4400;317,5147;353,8020;60;60;46,80;N
+PRO-7106;Coastal Line Haul;BOL-306;20.10.2026;Patio chair set;1;121,9200;101,6000;55,8800;145,1496;154,2214;85;85;22,10;
+PRO-7107;Prairie Express;BOL-307;23.10.2026;Mirror crate;1;;;;113,3981;113,3981;85;100;64,00;Y
+PRO-7108;Ridgeline Freight;BOL-308;28.10.2026;Bookcase kit;1;121,9200;101,6000;121,9200;188,2408;251,7438;70;85;117,90;Y

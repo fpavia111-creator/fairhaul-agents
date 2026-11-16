@@ -21,15 +21,156 @@ npx -y alcor-of-pods mcp --root ./pods
 
 An invoiced load that is missing its POD, unsigned, short or exception-noted is marked `hold_invoice` for a person to review.
 
+
+<!-- generated:start -->
+
+## A demo run
+
+`npx -y alcor-of-pods demo` runs the agent on the fictional files in [`fixtures/`](fixtures) in a temporary folder. Captured output:
+
+```text
+Alcor of PODs demo (fictional loads, November 2026) in <demo folder>
+
+▶ Match every load to its proof of delivery
+  status: executed  decision: allow
+  10 load(s) as of 2026-11-16: 3 clean POD(s), 2 to chase, 1 still within the wait period, 2 with shortage or damage noted, 2 to fix. 5 invoice(s) to hold for review (7830).
+    D-501 Ridgeline Freight  ok                          
+    D-502 Ridgeline Freight  claim_review  hold invoice  exception_noted
+    D-503 Ridgeline Freight  fix           hold invoice  unsigned
+    D-504 Coastal Line Haul  claim_review  hold invoice  short
+    D-505 Coastal Line Haul  chase         hold invoice  missing_pod
+    D-506 Coastal Line Haul  fix                         date_mismatch
+    D-507 Prairie Express    ok                          
+    D-508 Prairie Express    chase         hold invoice  missing_pod
+    D-509 Prairie Express    waiting                     missing_pod
+    D-510 Summit Carriers    ok                          
+
+▶ Write the POD worklist
+  status: executed  decision: allow
+  POD worklist written. 10 load(s) as of 2026-11-16: 3 clean POD(s), 2 to chase, 1 still within the wait period, 2 with shortage or damage noted, 2 to fix. 5 invoice(s) to hold for review (7830).
+
+▶ Draft the POD request to Coastal Line Haul
+  status: executed  decision: allow  (auto)
+  pod request Coastal Line Haul drafted with 0 open marker(s). Nothing was sent.
+
+▶ Approve sending: waits for a named person even in Auto
+  status: needs_approval  decision: ask
+  reason: binding_send stays one-click, even in Auto
+
+▶ Same call after the click (recorded; a person sends it)
+  status: executed  decision: ask  approved by: Pat Kim (fictional)
+  pod request Coastal-Line-Haul approved and recorded. Nothing was sent or paid by the agent.
+
+▶ Agent tries to hold the invoice in AP itself
+  status: blocked  decision: block
+  reason: Alcor never holds or releases invoices in your AP system; it lists them for a person.
+```
+
 ## Tools
 
-| Tool | Kind | Policy |
+| Tool | What it does | Policy |
 |---|---|---|
-| `alcor_match` | read | allow |
-| `alcor_write_report` | report: `alcor-pods.csv`, `.html` | allow |
-| `alcor_draft_pod_request` | write: `drafts/pod_request-<carrier>.md`, marked DRAFT | ask |
-| `alcor_request_send` | action (binding_send): records that the reviewed request (by sha256) may be sent | one named click, even in Auto |
-| `ap_hold_invoice`, `ap_release_payment`, `email_send` | refused | block |
+| `alcor_match` | For each load: the POD found (by PRO or shipment id), issues (missing_pod, unsigned, date_mismatch, short, exception_noted), a status (ok, chase, waiting, claim_review, fix) and whether to hold the invoice for review. | runs |
+| `alcor_write_report` | Write alcor-pods.csv and .html (one row per load with issues, the invoices to hold, and POD performance by carrier) into out_dir (default lodestar-out/alcor). | runs |
+| `alcor_draft_pod_request` | Write drafts/pod_request-<carrier>.md asking one carrier for each missing or unsigned POD, with shipment, PRO, delivery date and invoice. | asks first (Auto can be opted in) |
+| `alcor_request_send` | After one named human click (even in Auto), record that the reviewed pod request draft is approved in pod_request-requests.csv. | one named click, even in Auto (`binding_send`) |
+| `ap_hold_invoice` | Alcor never holds or releases invoices in your AP system; it lists them for a person. | refused |
+| `ap_release_payment` | Alcor never releases payments. | refused |
+| `email_send` | Alcor never sends email. | refused |
+
+Any tool name not in this table is blocked, including names a model invents. `refused` tools are listed so a model can see they exist and are refused.
+
+## Columns it reads
+
+Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, JSON or JSONL. Columns are matched by the agent's own name, then by the English names below, then by their names in German, French, Spanish, Portuguese, Italian, Japanese, Chinese and Korean. Dates become `YYYY-MM-DD`; amounts are read with either decimal mark; weights, distances and dimensions are converted when the column says it holds kilograms, kilometres or centimetres. Every result lists under `sources` how each file was read.
+
+### Delivered or invoiced loads (`loads`)
+
+| Column | Type | Also read as | For example, in other languages |
+|---|---|---|---|
+| `shipment_id` (required) | text | Shipment ID, Load ID, Load Number, Order, BOL | Sendungs-ID, N° d'expédition, 出荷番号, 发货单号 |
+| `pro` | text | PRO, PRO Number, Pro #, Tracking Number | Sendungsnummer, Numéro de suivi, 追跡番号, 运单号 |
+| `carrier` (required) | text | Carrier, Carrier Name, SCAC | Spediteur, Transporteur, 運送会社, 承运商 |
+| `delivery_date` | date | Delivery Date, Delivered, Actual Delivery | Lieferdatum, Date de livraison, 配達日, 送达日期 |
+| `pieces` | number | Pieces, Handling Units, Pallets, Cartons, Qty | Packstücke, Colis, 個口数, 件数 |
+| `invoice_number` | text | Invoice Number, Invoice, Invoice # | Rechnungsnummer, N° de facture, 請求書番号, 发票号 |
+| `invoice_amount` | amount | Invoice Amount, Amount, Billed | Betrag, Montant, 金額, 金额 |
+| `invoice_delivery_date` | date | Invoice Delivery Date, Billed Delivery Date | - |
+| `pod_required` | yes/no | POD Required, Customer Requires POD | - |
+
+### POD log (`pods`)
+
+| Column | Type | Also read as | For example, in other languages |
+|---|---|---|---|
+| `pro` | text | PRO, PRO Number, Pro #, Tracking Number | Sendungsnummer, Numéro de suivi, 追跡番号, 运单号 |
+| `shipment_id` | text | Shipment ID, Load ID, BOL, Reference | Sendungs-ID, N° d'expédition, 出荷番号, 发货单号 |
+| `received_on` | date | Received On, Received, Uploaded, Document Date | Eingangsdatum, Date de réception, 受領日, 收到日期 |
+| `pod_delivery_date` | date | POD Delivery Date, Delivery Date, Date Signed, Signed On | Lieferdatum, Date de livraison, 配達日, 送达日期 |
+| `signed_by` | text | Signed By, Signature, Receiver, Consignee Signature | Unterschrieben von, Signé par, 受領者, 签收人 |
+| `pieces_delivered` | number | Pieces Delivered, Pieces, Qty Delivered, Count | Zugestellte Packstücke, Colis livrés, 配達個数, 签收件数 |
+| `exceptions` | text | Exceptions, Exception Notes, Notation, OS&D, Remarks | Abweichung, Anomalie, 異常, 异常 |
+| `document` | text | Document, File, File Name, Image | - |
+
+### Files from other countries
+
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx alcor-of-pods inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+
+```json
+{ "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
+```
+
+## Install
+
+Node 20 or newer. No other dependencies.
+
+```bash
+npx -y alcor-of-pods demo
+npx -y alcor-of-pods mcp --root /path/to/your/files
+```
+
+Claude Desktop, Cursor and other MCP hosts:
+
+```json
+{
+  "mcpServers": {
+    "alcor-of-pods": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "alcor-of-pods",
+        "mcp",
+        "--root",
+        "/path/to/your/files"
+      ]
+    }
+  }
+}
+```
+
+Claude Code: `claude mcp add alcor-of-pods -- npx -y alcor-of-pods mcp --root .`, or install the `alcor-of-pods` plugin from this repository's marketplace.
+
+## Modes and approvals
+
+- **Review** (`--mode review`): reads and reports only.
+- **Assist** (default): the policy above. A tool that asks returns an `approval_id`; a person approves it once with `alcor-of-pods approve <id> --as "Your Name"` (or on the local approvals page, `alcor-of-pods approvals`), and the same call is repeated.
+- **Auto** (`--mode auto --auto <tool,...>`): opt-in per tool, with step caps and a kill switch (`alcor-of-pods kill`). Paying, sending, posting to a ledger or a live system and accepting a learned fact stay **one named click even in Auto**; an approval is tied to the sha256 of the reviewed draft, so a changed draft needs a new click.
+
+## CLI
+
+```bash
+alcor-of-pods tools                 # every tool, its policy and arguments
+alcor-of-pods sources               # the columns each input is read from
+alcor-of-pods inspect <file>        # how a file would be read (names and shapes, never values)
+alcor-of-pods call alcor_match '{"loads":"<loads>","pods":"<pods>"}'
+alcor-of-pods eval                  # the private eval cases on the fictional fixtures
+alcor-of-pods demo
+```
+
+## Audit log and data
+
+Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+
+<!-- generated:end -->
 
 ## Limits
 

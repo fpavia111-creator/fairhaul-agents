@@ -16,15 +16,142 @@ Contracts use the Lodestar contract format shared with Polaris of Bills and Spic
 - A carrier prices a shipment only if its contract is in force on the ship date, has a lane that matches, has the measure the lane needs (weight, miles or pallets) and prices every accessorial ordered. Otherwise it shows why not.
 - A lane ranking includes only carriers that can price every shipment on it.
 
+
+<!-- generated:start -->
+
+## A demo run
+
+`npx -y regulus-of-tariffs demo` runs the agent on the fictional files in [`fixtures/`](fixtures) in a temporary folder. Captured output:
+
+```text
+Regulus of Tariffs demo (fictional contracts and history, October 2026) in <demo folder>
+
+▶ Re-rate every past shipment under every contract
+  status: executed  decision: allow
+  7 shipment(s), 2743.01 paid. Re-rated under every contract: 281.51 more than the cheapest contract on the day. 2 lane(s) where another carrier is cheaper overall (281.51). 1 shipment(s) no contract can price.
+    IL → TX   now Ridgeline Freight  best Prairie Express    saves 149.04
+    IL → GA   now Prairie Express    best Coastal Line Haul  saves 132.47
+    IL → OH   now Ridgeline Freight  best null               saves -
+
+▶ Write the re-rating report
+  status: executed  decision: allow
+  Re-rating report written. 7 shipment(s), 2743.01 paid. Re-rated under every contract: 281.51 more than the cheapest contract on the day. 2 lane(s) where another carrier is cheaper overall (281.51). 1 shipment(s) no contract can price.
+
+▶ Draft the routing guide changes
+  status: executed  decision: allow  (auto)
+  routing change routing-guide drafted for 281.51 with 2 open marker(s) ([TO CONFIRM routing guide owner], [TO CONFIRM who approves routing changes]). Nothing was sent.
+
+▶ Approve the change: waits for a named person even in Auto
+  status: needs_approval  decision: ask
+  reason: production_deploy stays one-click, even in Auto
+
+▶ Same call after the click (recorded; a person changes the routing guide)
+  status: executed  decision: ask  approved by: Lee Brown (fictional)
+  routing change routing-guide approved and recorded. Nothing was sent or paid by the agent.
+
+▶ Agent tries to change the routing guide itself
+  status: blocked  decision: block
+  reason: Regulus never changes your routing guide; a person does.
+```
+
 ## Tools
 
-| Tool | Kind | Policy |
+| Tool | What it does | Policy |
 |---|---|---|
-| `regulus_rerate` | read | allow |
-| `regulus_write_report` | report: `regulus-rerate.csv`, `.html` | allow |
-| `regulus_draft_routing_change` | write: `drafts/routing_change-<name>.md`, marked DRAFT | ask |
-| `regulus_request_apply` | action (production_deploy): records that the reviewed change (by sha256) may be applied | one named click, even in Auto |
-| `tms_update_routing_guide`, `email_send` | refused | block |
+| `regulus_rerate` | Each shipment priced under every carrier contract in force on its ship date (linehaul, fuel at that week's diesel, accessorials), the cheapest carrier and what was paid above it; each lane's carrier ranking and saving… | runs |
+| `regulus_write_report` | Write regulus-rerate.csv and .html (one row per shipment with each carrier's price; lanes ranked by savings; carriers) into out_dir (default lodestar-out/regulus). | runs |
+| `regulus_draft_routing_change` | Write drafts/routing_change-<name>.md: for each lane where another contract is cheaper on your history, the current and proposed first-choice carrier with the totals. | asks first (Auto can be opted in) |
+| `regulus_request_apply` | After one named human click (even in Auto), record that the reviewed routing change draft is approved in routing_change-requests.csv. | one named click, even in Auto (`production_deploy`) |
+| `tms_update_routing_guide` | Regulus never changes your routing guide; a person does. | refused |
+| `email_send` | Regulus never sends email. | refused |
+
+Any tool name not in this table is blocked, including names a model invents. `refused` tools are listed so a model can see they exist and are refused.
+
+## Columns it reads
+
+Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, JSON or JSONL. Columns are matched by the agent's own name, then by the English names below, then by their names in German, French, Spanish, Portuguese, Italian, Japanese, Chinese and Korean. Dates become `YYYY-MM-DD`; amounts are read with either decimal mark; weights, distances and dimensions are converted when the column says it holds kilograms, kilometres or centimetres. Every result lists under `sources` how each file was read.
+
+### Shipment history (`history`)
+
+| Column | Type | Also read as | For example, in other languages |
+|---|---|---|---|
+| `shipment_id` (required) | text | Shipment ID, Load ID, BOL, PRO | Sendungs-ID, N° d'expédition, 出荷番号, 发货单号 |
+| `carrier` (required) | text | Carrier, Carrier Name, SCAC | Spediteur, Transporteur, 運送会社, 承运商 |
+| `ship_date` | date | Ship Date, Pickup Date, Date | Versanddatum, Date d'expédition, 出荷日, 发货日期 |
+| `mode` | text | Mode, Service | Verkehrsträger, Mode de transport, 輸送モード, 运输方式 |
+| `origin_city` | text | Origin City, Ship From City | Abgangsort, Lieu d'enlèvement, 出荷元, 起运地 |
+| `origin_state` | text | Origin State, Ship From State | - |
+| `origin_postal` | text | Origin Zip, Origin Postal, Origin Postal Code | PLZ Abgang, Code postal départ, 出荷元郵便番号, 始发地邮编 |
+| `dest_city` | text | Destination City, Dest City, Ship To City | Bestimmungsort, Destination, 届け先, 目的地 |
+| `dest_state` | text | Destination State, Dest State, Ship To State | - |
+| `dest_postal` | text | Destination Zip, Dest Zip, Destination Postal | PLZ Empfänger, Code postal destination, 届け先郵便番号, 目的地邮编 |
+| `weight` | pounds (kg converted) | Weight, Weight (lb), Billed Weight | Gewicht, Poids, 重量, 重量 |
+| `pallets` | number | Pallets, Handling Units | Paletten, Palettes, パレット数, 托盘数 |
+| `miles` | miles (km converted) | Miles, Distance | Entfernung, Distance, 距離, 距离 |
+| `class` | number | Class, Freight Class | - |
+| `accessorials` | text | Accessorials, Services, Accessorials Ordered | Zusatzleistungen, Prestations annexes, 付帯作業, 附加服务 |
+| `paid` | amount | Paid, Paid Amount, Total Cost, Freight Cost, Amount | Bezahlt, Montant payé, 支払額, 已付金额 |
+
+### Files from other countries
+
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx regulus-of-tariffs inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+
+```json
+{ "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
+```
+
+## Install
+
+Node 20 or newer. No other dependencies.
+
+```bash
+npx -y regulus-of-tariffs demo
+npx -y regulus-of-tariffs mcp --root /path/to/your/files
+```
+
+Claude Desktop, Cursor and other MCP hosts:
+
+```json
+{
+  "mcpServers": {
+    "regulus-of-tariffs": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "regulus-of-tariffs",
+        "mcp",
+        "--root",
+        "/path/to/your/files"
+      ]
+    }
+  }
+}
+```
+
+Claude Code: `claude mcp add regulus-of-tariffs -- npx -y regulus-of-tariffs mcp --root .`, or install the `regulus-of-tariffs` plugin from this repository's marketplace.
+
+## Modes and approvals
+
+- **Review** (`--mode review`): reads and reports only.
+- **Assist** (default): the policy above. A tool that asks returns an `approval_id`; a person approves it once with `regulus-of-tariffs approve <id> --as "Your Name"` (or on the local approvals page, `regulus-of-tariffs approvals`), and the same call is repeated.
+- **Auto** (`--mode auto --auto <tool,...>`): opt-in per tool, with step caps and a kill switch (`regulus-of-tariffs kill`). Paying, sending, posting to a ledger or a live system and accepting a learned fact stay **one named click even in Auto**; an approval is tied to the sha256 of the reviewed draft, so a changed draft needs a new click.
+
+## CLI
+
+```bash
+regulus-of-tariffs tools                 # every tool, its policy and arguments
+regulus-of-tariffs sources               # the columns each input is read from
+regulus-of-tariffs inspect <file>        # how a file would be read (names and shapes, never values)
+regulus-of-tariffs call regulus_rerate '{"history":"<history>","contracts":"<contracts>"}'
+regulus-of-tariffs eval                  # the private eval cases on the fictional fixtures
+regulus-of-tariffs demo
+```
+
+## Audit log and data
+
+Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+
+<!-- generated:end -->
 
 ## Limits
 

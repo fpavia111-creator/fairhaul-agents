@@ -1,0 +1,17 @@
+Rechnungsnummer;Speditionsfirma;Luftfrachtbrief;Abgangsort;Bestimmungsort;Flugdatum;Packstücke;Gewicht;Volumen;Frachtpflichtiges Gewicht;Leistungsbeschreibung;Betrag;Währung
+SKY-5001;Skyline Logistics;176-11112222;PVG;LAX;05.10.2026;6;420;1,8;420;Air Freight;1.512,00;USD
+SKY-5001;Skyline Logistics;176-11112222;PVG;LAX;05.10.2026;6;420;1,8;420;Fuel Surcharge;399,00;USD
+SKY-5001;Skyline Logistics;176-11112222;PVG;LAX;05.10.2026;6;420;1,8;420;Security Surcharge;63,00;USD
+SKY-5001;Skyline Logistics;176-11112222;PVG;LAX;05.10.2026;6;420;1,8;420;AWB Fee;35,00;USD
+SKY-5001;Skyline Logistics;176-11112222;PVG;LAX;05.10.2026;6;420;1,8;420;Screening;42,00;USD
+SKY-5002;Skyline Logistics;176-11113333;PVG;LAX;12.10.2026;4;180;2,4;400;Air Freight;1.640,00;USD
+SKY-5002;Skyline Logistics;176-11113333;PVG;LAX;12.10.2026;4;180;2,4;400;Fuel Surcharge;380,00;USD
+SKY-5002;Skyline Logistics;176-11113333;PVG;LAX;12.10.2026;4;180;2,4;400;AWB Fee;35,00;USD
+SKY-5003;Skyline Logistics;176-11114444;PVG;LAX;20.10.2026;3;260;0,9;300;Air Freight;1.080,00;USD
+SKY-5003;Skyline Logistics;176-11114444;PVG;LAX;20.10.2026;3;260;0,9;300;Fuel Surcharge;285,00;USD
+SKY-5003;Skyline Logistics;176-11114444;PVG;LAX;20.10.2026;3;260;0,9;300;AWB Fee;35,00;USD
+SKY-5004;Skyline Logistics;176-11115555;FRA;ORD;22.10.2026;2;90;0,3;90;Air Freight;432,00;USD
+SKY-5004;Skyline Logistics;176-11115555;FRA;ORD;22.10.2026;2;90;0,3;90;Fuel Surcharge;85,50;USD
+SKY-5005;Skyline Logistics;176-11116666;FRA;ORD;02.11.2026;1;12;0,04;12;Air Freight;85,00;USD
+SKY-5005;Skyline Logistics;176-11116666;FRA;ORD;02.11.2026;1;12;0,04;12;Fuel Surcharge;11,40;USD
+SKY-5005;Skyline Logistics;176-11116666;FRA;ORD;02.11.2026;1;12;0,04;12;Terminal Handling;45,00;USD

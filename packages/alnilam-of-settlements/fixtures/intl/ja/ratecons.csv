@@ -1,0 +1,9 @@
+出荷番号,運送会社,料率,付帯作業,配達日,受領書,支払サイト,quick_pay
+L-5101,Ridgeline Freight,"2,150.00",0.00,2026/10/20,yes,30,no
+L-5102,Prairie Express,"1,680.00",75.00,2026/10/22,yes,30,no
+L-5103,Coastal Line Haul,"2,400.00",0.00,2026/11/03,yes,30,yes
+L-5104,Summit Carriers,"1,325.00",0.00,2026/11/05,no,30,no
+L-5105,Prairie Express,"1,890.00",0.00,2026/11/06,yes,30,no
+L-5106,Ridgeline Freight,980.00,0.00,2026/11/10,yes,30,no
+L-5107,North Star Hauling,"2,600.00",150.00,2026/11/12,yes,15,no
+L-5108,Coastal Line Haul,"1,750.00",0.00,2026/10/01,yes,30,no

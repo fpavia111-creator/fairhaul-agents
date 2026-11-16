@@ -1,0 +1,8 @@
+Containernummer;Reederei;Frachtbrief;Containertyp;Entladen am;Letzter freier Tag;Abholung Terminal;Leerrückgabe
+BMLU1000001;Blue Meridian Line;BMLBL-7781;40HC;12.11.2026;;;
+BMLU1000002;Blue Meridian Line;BMLBL-7712;20GP;05.11.2026;09.11.2026;;
+BMLU1000003;Blue Meridian Line;BMLBL-7712;20GP;03.11.2026;;10.11.2026;
+NSCU2000004;Northsea Container Line;NSL-55120;40HC;06.11.2026;13.11.2026;;
+NSCU2000005;Northsea Container Line;NSL-54998;20GP;20.10.2026;;24.10.2026;05.11.2026
+BMLU1000006;Blue Meridian Line;BMLBL-7790;20GP;15.11.2026;;;
+HSLU3000007;Harbor Star Line;HSL-1201;40GP;02.11.2026;;06.11.2026;

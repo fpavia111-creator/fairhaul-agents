@@ -3,13 +3,142 @@
   "root": "..",
   "data_note": "Fictional dock, requests and past appointments in ../fixtures. No model is called.",
   "cases": [
-    {"id": "plan-totals", "tool": "hadar_plan", "args": {"requests": "fixtures/requests.csv", "dock": "fixtures/dock.json", "date": "2026-11-18"}, "expect": {"equals": {"result.requests": 10, "result.scheduled": 8, "result.no_slot": 2}}},
-    {"id": "no-slot-reasons", "tool": "hadar_plan", "args": {"requests": "fixtures/requests.csv", "dock": "fixtures/dock.json"}, "expect": {"contains": ["no door takes flatbed", "the dock closes before it could finish"]}},
-    {"id": "reefer-to-d4", "tool": "hadar_plan", "args": {"requests": "fixtures/requests.csv", "dock": "fixtures/dock.json"}, "expect": {"contains": ["\"load_id\":\"PO-4406\",\"carrier\":\"Coastal Line Haul\",\"direction\":\"inbound\",\"door_type\":\"reefer\",\"pallets\":22,\"minutes\":59,\"window\":\"06:30-07:15\",\"door\":\"D4\",\"start\":\"07:00\""]}},
-    {"id": "review", "tool": "hadar_review", "args": {"history": "fixtures/history.csv"}, "expect": {"equals": {"result.appointments": 10, "result.on_time_pct": 70, "result.no_show": 1, "result.worst_hour.hour": "07:00", "result.by_carrier.0.carrier": "Summit Carriers"}}},
-    {"id": "floor-takes-longer", "tool": "hadar_review", "args": {"history": "fixtures/history.csv"}, "expect": {"contains": ["floor 6.5 min/pallet"]}},
-    {"id": "bad-settings", "tool": "hadar_plan", "args": {"requests": "fixtures/requests.csv", "dock": "fixtures/README.md"}, "expect": {"status": "error"}},
-    {"id": "publish-stays-a-click-in-auto", "tool": "hadar_request_publish", "mode": "auto", "args": {"draft": "fixtures/README.md", "draft_sha256": "0"}, "expect": {"status": "needs_approval"}},
-    {"id": "never-books", "tool": "yms_book_appointment", "mode": "auto", "args": {}, "expect": {"status": "blocked"}}
+    {
+      "id": "plan-totals",
+      "tool": "hadar_plan",
+      "args": {
+        "requests": "fixtures/requests.csv",
+        "dock": "fixtures/dock.json",
+        "date": "2026-11-18"
+      },
+      "expect": {
+        "equals": {
+          "result.requests": 10,
+          "result.scheduled": 8,
+          "result.no_slot": 2
+        }
+      }
+    },
+    {
+      "id": "no-slot-reasons",
+      "tool": "hadar_plan",
+      "args": {
+        "requests": "fixtures/requests.csv",
+        "dock": "fixtures/dock.json"
+      },
+      "expect": {
+        "contains": [
+          "no door takes flatbed",
+          "the dock closes before it could finish"
+        ]
+      }
+    },
+    {
+      "id": "reefer-to-d4",
+      "tool": "hadar_plan",
+      "args": {
+        "requests": "fixtures/requests.csv",
+        "dock": "fixtures/dock.json"
+      },
+      "expect": {
+        "contains": [
+          "\"load_id\":\"PO-4406\",\"carrier\":\"Coastal Line Haul\",\"direction\":\"inbound\",\"door_type\":\"reefer\",\"pallets\":22,\"minutes\":59,\"window\":\"06:30-07:15\",\"door\":\"D4\",\"start\":\"07:00\""
+        ]
+      }
+    },
+    {
+      "id": "review",
+      "tool": "hadar_review",
+      "args": {
+        "history": "fixtures/history.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.appointments": 10,
+          "result.on_time_pct": 70,
+          "result.no_show": 1,
+          "result.worst_hour.hour": "07:00",
+          "result.by_carrier.0.carrier": "Summit Carriers"
+        }
+      }
+    },
+    {
+      "id": "floor-takes-longer",
+      "tool": "hadar_review",
+      "args": {
+        "history": "fixtures/history.csv"
+      },
+      "expect": {
+        "contains": [
+          "floor 6.5 min/pallet"
+        ]
+      }
+    },
+    {
+      "id": "bad-settings",
+      "tool": "hadar_plan",
+      "args": {
+        "requests": "fixtures/requests.csv",
+        "dock": "fixtures/README.md"
+      },
+      "expect": {
+        "status": "error"
+      }
+    },
+    {
+      "id": "publish-stays-a-click-in-auto",
+      "tool": "hadar_request_publish",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-books",
+      "tool": "yms_book_appointment",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-plan-totals",
+      "tool": "hadar_plan",
+      "args": {
+        "requests": "fixtures/intl/de/requests.csv",
+        "dock": "fixtures/dock.json",
+        "date": "2026-11-18"
+      },
+      "expect": {
+        "equals": {
+          "result.requests": 10,
+          "result.scheduled": 8,
+          "result.no_slot": 2
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"plan-totals\"."
+    },
+    {
+      "id": "intl-ja-plan-totals",
+      "tool": "hadar_plan",
+      "args": {
+        "requests": "fixtures/intl/ja/requests.csv",
+        "dock": "fixtures/dock.json",
+        "date": "2026-11-18"
+      },
+      "expect": {
+        "equals": {
+          "result.requests": 10,
+          "result.scheduled": 8,
+          "result.no_slot": 2
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"plan-totals\"."
+    }
   ]
 }

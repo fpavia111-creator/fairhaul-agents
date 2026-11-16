@@ -1,0 +1,8 @@
+Sendungsnummer;Sendungs-ID;Eingangsdatum;Lieferdatum;Unterschrieben von;Zugestellte Packstücke;Abweichung;document
+RF-910001;D-501;03.11.2026;02.11.2026;J. Ortiz;10;None;pod-RF-910001.pdf
+RF-910002;D-502;04.11.2026;03.11.2026;M. Chen;6;2 cartons crushed;pod-RF-910002.pdf
+RF-910003;D-503;05.11.2026;04.11.2026;;8;;pod-RF-910003.pdf
+CL-62004;D-504;09.11.2026;02.11.2026;R. Patel;10;;pod-CL-62004.pdf
+CL-62006;D-506;12.11.2026;07.11.2026;A. Brooks;9;None;pod-CL-62006.pdf
+PX-31007;D-507;07.11.2026;06.11.2026;K. Diaz;5;;pod-PX-31007.pdf
+SC-44010;;05.11.2026;04.11.2026;L. Green;2;;pod-SC-44010.pdf
