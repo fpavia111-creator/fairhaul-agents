@@ -58,36 +58,55 @@ export function earned(stop, tm) {
 export function auditCharges(charges, stops, terms = {}) {
   const tol = num(terms.tolerance) ?? 1;
   const sIdx = new Map(stops.map((s) => [key(s.load_id, s.stop), s]));
+  const byLoad = groupBy(stops, (s) => str(s.load_id).toLowerCase());
+  const used = new Map(); // load|stop|type -> amount already allowed on an earlier line
   const items = [];
   for (const c of charges) {
     const code = chargeCode(c.charge_type);
     if (!['detention', 'layover', 'lumper'].includes(code)) continue;
     const carrier = str(c.carrier); const tm = termsFor(terms, carrier);
-    const stop = sIdx.get(key(c.load_id, c.stop)) || (!str(c.stop) ? stops.find((s) => str(s.load_id).toLowerCase() === str(c.load_id).toLowerCase()) : null);
+    // A charge that names no stop is checked against every stop of its load: only what no stop could earn is disputed.
+    const named = str(c.stop) ? sIdx.get(key(c.load_id, c.stop)) : null;
+    const cands = str(c.stop) ? (named ? [named] : []) : byLoad.get(str(c.load_id).toLowerCase()) || [];
+    const stop = cands.length === 1 ? cands[0] : null;
+    const many = cands.length > 1 ? ` across the load's ${cands.length} stops` : '';
     const billed = num(c.amount) || 0;
     const f = []; let allowed = null;
     if (code === 'detention') {
-      const e = earned(stop, tm);
-      if (e.payable === null) f.push({ code: 'no_timestamps', detail: `Detention billed ${billed} but ${e.reason}. Ask the carrier for in and out times.` });
-      else {
+      const es = cands.map((s) => earned(s, tm)); const known = es.filter((e) => e.payable !== null);
+      const e = known.length === 1 && es.length === 1 ? known[0] : null;
+      if (!known.length) f.push({ code: 'no_timestamps', detail: `Detention billed ${billed} but ${es.length ? es[0].reason : 'no stop record for this load'}. Ask the carrier for in and out times.` });
+      else if (e) {
         allowed = e.payable;
         if (e.late) f.push({ code: 'arrived_late', detail: `Detention billed ${billed}; the ${e.reason}.` });
         else if (billed - allowed > tol) f.push({ code: 'detention_over', detail: `Detention billed ${billed}; dock times give ${allowed} (${e.reason}).` });
         const hb = num(c.hours_billed); if (hb !== null && e.hours !== null && hb > e.hours + 0.25) f.push({ code: 'hours_over_record', detail: `${hb} h billed, but the truck was on site ${e.hours} h in total.` });
+      } else {
+        allowed = round2(known.reduce((a, x) => a + x.payable, 0));
+        if (billed - allowed > tol) f.push({ code: 'detention_over', detail: `Detention billed ${billed}; dock times give ${allowed}${many} (${cands.map((s, i) => `stop ${str(s.stop) || i + 1}: ${es[i].payable === null ? 'no times' : es[i].payable}`).join(', ')}).` });
       }
     } else if (code === 'layover') {
-      const h = stop ? hoursBetween(stop.arrived_at, stop.departed_at) : null;
+      const hs = cands.map((s) => hoursBetween(s.arrived_at, s.departed_at)).filter((h) => h !== null);
+      const h = hs.length ? Math.max(...hs) : null;
       if (h === null) f.push({ code: 'no_timestamps', detail: `Layover billed ${billed} with no dock times on file.` });
-      else if (h < tm.layover_min_hours) { allowed = 0; f.push({ code: 'layover_not_earned', detail: `Layover billed ${billed}, but the truck was on site ${h} h (layover starts at ${tm.layover_min_hours} h).` }); }
+      else if (h < tm.layover_min_hours) { allowed = 0; f.push({ code: 'layover_not_earned', detail: `Layover billed ${billed}, but the truck was on site ${h} h${many ? ' at most' : ''} (layover starts at ${tm.layover_min_hours} h).` }); }
       else { allowed = tm.layover_amount ?? billed; if (billed - allowed > tol) f.push({ code: 'layover_over', detail: `Layover billed ${billed}, terms allow ${allowed}.` }); }
     } else {
-      const receipt = stop && str(stop.lumper_receipt); const ra = stop ? num(stop.lumper_receipt_amount) : null;
-      if (!receipt && tm.lumper_requires_receipt) { allowed = 0; f.push({ code: 'lumper_no_receipt', detail: `Lumper billed ${billed} with no receipt on file. Ask for the receipt before paying.` }); }
-      else if (ra !== null) { allowed = ra; if (billed - ra > tol) f.push({ code: 'lumper_over_receipt', detail: `Lumper billed ${billed}, the receipt says ${ra}.` }); }
+      const withReceipt = cands.filter((s) => str(s.lumper_receipt));
+      const amounts = withReceipt.map((s) => num(s.lumper_receipt_amount)).filter((x) => x !== null);
+      if (!withReceipt.length && tm.lumper_requires_receipt) { allowed = 0; f.push({ code: 'lumper_no_receipt', detail: `Lumper billed ${billed} with no receipt on file. Ask for the receipt before paying.` }); }
+      else if (amounts.length) { allowed = round2(amounts.reduce((a, x) => a + x, 0)); if (billed - allowed > tol) f.push({ code: 'lumper_over_receipt', detail: `Lumper billed ${billed}, the receipt${amounts.length > 1 ? 's say' : ' says'} ${allowed}.` }); }
       else allowed = billed;
     }
+    // The same stop's detention, layover or lumper billed again (a second invoice, a rebill) gets only what is left.
+    if (allowed !== null) {
+      const uk = `${str(c.load_id).toLowerCase()}|${str(c.stop) || '*'}|${code}`;
+      const before = used.get(uk) || 0;
+      if (before > 0) { const left = round2(Math.max(0, allowed - before)); f.push({ code: 'already_billed', detail: `${before} of the ${allowed} this stop earns was already allowed on an earlier line${left ? `; ${left} is left` : ''}.` }); allowed = left; }
+      used.set(uk, round2(before + Math.min(billed, allowed)));
+    }
     const disputable = allowed === null ? 0 : round2(Math.max(0, billed - allowed));
-    items.push({ load_id: str(c.load_id), stop: str(c.stop) || (stop && str(stop.stop)) || null, facility: stop ? str(stop.facility) : null, carrier, invoice_number: str(c.invoice_number) || null, type: code, billed, allowed, disputable, status: disputable > tol ? 'dispute' : f.length ? (allowed === null ? 'review' : 'ok') : 'ok', findings: f });
+    items.push({ load_id: str(c.load_id), stop: str(c.stop) || (stop && str(stop.stop)) || null, facility: stop ? str(stop.facility) : cands.length ? [...new Set(cands.map((s) => str(s.facility)).filter(Boolean))].join(', ') || null : null, carrier, invoice_number: str(c.invoice_number) || null, type: code, billed, allowed, disputable, status: disputable > tol ? 'dispute' : f.length ? (allowed === null ? 'review' : 'ok') : 'ok', findings: f });
   }
   const sum = (k, st) => round2(items.filter((i) => !st || i.status === st).reduce((s, i) => s + (i[k] || 0), 0));
   return { charges: items.length, billed: sum('billed'), disputable: sum('disputable'), dispute: items.filter((i) => i.status === 'dispute').length, review: items.filter((i) => i.status === 'review').length, ok: items.filter((i) => i.status === 'ok').length, items };

@@ -30,17 +30,25 @@ export const FACTOR_SCHEMA = Object.freeze({
   },
 });
 const LB = 0.45359237, MI = 1.609344;
+// Kilograms per weight unit and km per distance unit. A unit not listed here (a US or long "ton",
+// "cwt") is not guessed: the shipment is left out and the issue names the unit.
+const WEIGHT_UNITS = [[/^(lb|lbs|pound|pounds|#)$/, LB], [/^(kg|kgs|kilo|kilos|kilogram|kilograms)$/, 1], [/^(t|mt|tonne|tonnes|metric ton|metric tons)$/, 1000]];
+const DISTANCE_UNITS = [[/^(mi|mile|miles)$/, MI], [/^(km|kms|kilometer|kilometers|kilometre|kilometres)$/, 1]];
+const factorOf = (u, table) => { const s = str(u).toLowerCase().replace(/\.$/, '').trim(); const hit = table.find(([re]) => re.test(s)); return hit ? hit[1] : null; };
 
 /** Estimate kg CO2e per shipment: tonnes x km x factor (g per tonne-km) / 1000. */
 export function estimate(shipments, f) {
   const modeKey = (m) => { const s = str(m).toLowerCase(); return (f.aliases && (f.aliases[s] || f.aliases[str(m)])) || s; };
   const rows = shipments.map((s) => {
     const mk = modeKey(s.mode); const factor = f.modes[mk];
-    const wu = (str(s.weight_unit) || f.default_weight_unit || 'lb').toLowerCase(); const du = (str(s.distance_unit) || f.default_distance_unit || 'mi').toLowerCase();
+    const wu = str(s.weight_unit) || f.default_weight_unit || 'lb'; const du = str(s.distance_unit) || f.default_distance_unit || 'mi';
+    const wf = factorOf(wu, WEIGHT_UNITS), df = factorOf(du, DISTANCE_UNITS);
     const w = num(s.weight); const d = num(s.distance);
-    const tonnes = w === null ? null : (wu.startsWith('k') ? w : w * LB) / 1000; const km = d === null ? null : du.startsWith('k') ? d : d * MI;
+    const tonnes = w === null || wf === null ? null : (w * wf) / 1000; const km = d === null || df === null ? null : d * df;
     const issues = [];
-    if (factor === undefined) issues.push(`no factor for mode "${s.mode}"`); if (tonnes === null || tonnes <= 0) issues.push('no weight'); if (km === null || km <= 0) issues.push('no distance');
+    if (factor === undefined) issues.push(`no factor for mode "${s.mode}"`);
+    if (w !== null && wf === null) issues.push(`weight unit "${wu}" not understood`); else if (tonnes === null || tonnes <= 0) issues.push('no weight');
+    if (d !== null && df === null) issues.push(`distance unit "${du}" not understood`); else if (km === null || km <= 0) issues.push('no distance');
     const tkm = tonnes && km ? tonnes * km : null; const kg = tkm !== null && factor !== undefined ? (tkm * factor) / 1000 : null;
     const quality = issues.length ? 'not_estimated' : /actual|measured|gps|telematics/i.test(str(s.distance_source)) ? 'measured_distance' : 'planned_distance';
     return { shipment_id: str(s.shipment_id), mode: mk, carrier: str(s.carrier) || '(none)', customer: str(s.customer) || '(none)', lane: `${str(s.origin)} > ${str(s.destination)}`, tonnes: tonnes === null ? null : Math.round(tonnes * 1000) / 1000, km: km === null ? null : Math.round(km), tonne_km: tkm === null ? null : Math.round(tkm * 10) / 10, factor: factor ?? null, kg_co2e: kg === null ? null : round2(kg), quality, issues: issues.join('; ') };
@@ -50,7 +58,7 @@ export function estimate(shipments, f) {
   const tk = ok.reduce((a, x) => a + x.tonne_km, 0); const kg = ok.reduce((a, x) => a + x.kg_co2e, 0);
   let shift = null;
   if (f.shift && f.shift.to && f.modes[f.shift.to] !== undefined) {
-    const from = (f.shift.from || []).map((x) => x.toLowerCase()); const minKm = f.shift.min_km ?? 800; const extra = 1 + (f.shift.extra_km_pct ?? 10) / 100;
+    const from = (f.shift.from || []).map(modeKey); const minKm = f.shift.min_km ?? 800; const extra = 1 + (f.shift.extra_km_pct ?? 10) / 100;
     const cand = ok.filter((r) => from.includes(r.mode) && r.km >= minKm);
     const after = cand.reduce((a, r) => a + (r.tonne_km * extra * f.modes[f.shift.to]) / 1000, 0); const before = cand.reduce((a, r) => a + r.kg_co2e, 0);
     shift = { to: f.shift.to, from: from.join(', '), min_km: minKm, extra_km_pct: f.shift.extra_km_pct ?? 10, shipments: cand.length, kg_before: round2(before), kg_after: round2(after), kg_saved: round2(before - after), shipment_ids: cand.map((r) => r.shipment_id).join(' ') };

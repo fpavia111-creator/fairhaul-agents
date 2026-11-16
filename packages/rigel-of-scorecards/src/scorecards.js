@@ -1,5 +1,5 @@
 // Rigel: carrier scorecards from your own shipment history. Pure functions.
-import { isoDate, hoursBetween, round2, str, num, readYesNo, canonicalCarrier, groupBy } from 'lodestar-core';
+import { isoDate, hoursBetween, round2, str, num, readYesNo, carrierKey, groupBy } from 'lodestar-core';
 
 const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const SCORE_FIELDS = Object.freeze({
@@ -48,9 +48,12 @@ const quarterOf = (d) => { const x = isoDate(d); return x ? `${x.slice(0, 4)}-Q$
 /** Score every carrier. */
 export function scorecards(rows, cfg = {}) {
   const c = { ...D, ...cfg, weights: { ...D.weights, ...(cfg.weights || {}) }, targets: { ...D.targets, ...(cfg.targets || {}) } };
-  const by = groupBy(rows, (r) => canonicalCarrier({}, r.carrier) || '(none)');
+  // "Ridgeline Freight Inc." and "Ridgeline Freight" are one carrier, shown by the name used most.
+  const by = groupBy(rows, (r) => carrierKey(r.carrier) || '(none)');
   const cards = [];
-  for (const [carrier, list] of by) {
+  for (const [, list] of by) {
+    const counts = new Map(); for (const r of list) { const n = str(r.carrier) || '(none)'; counts.set(n, (counts.get(n) || 0) + 1); }
+    const carrier = [...counts].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))[0][0];
     const tendered = list.map((r) => accepted(r.tender)).filter((x) => x !== null);
     const loads = list.filter((r) => accepted(r.tender) !== false);
     const otd = loads.map((r) => onTime(r.delivery_planned, r.delivery_actual, c.grace_minutes)).filter((x) => x !== null);

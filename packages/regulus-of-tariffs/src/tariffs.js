@@ -31,7 +31,8 @@ export function priceUnder(block, s, contract) {
 
 /** Re-rate every shipment under every carrier. */
 export function rerate(rows, contract) {
-  const carriers = (contract.carriers || []).map((c) => c.carrier);
+  // A carrier with several contract terms is one carrier; contractFor picks the term in force.
+  const carriers = [...new Set((contract.carriers || []).map((c) => c.carrier))];
   const items = rows.map((s) => {
     const date = isoDate(s.ship_date); const actual = canonicalCarrier(contract, s.carrier); const paid = num(s.paid);
     const quotes = carriers.map((c) => { const { block, expired } = contractFor(contract, c, date); if (!block) return { carrier: c, total: null, why: expired ? 'contract not in force on the ship date' : 'no contract' }; return { carrier: c, ...priceUnder(block, s, contract) }; });

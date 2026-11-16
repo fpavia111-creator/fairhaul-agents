@@ -246,7 +246,9 @@ export const FREIGHT_CONTRACT_SCHEMA = Object.freeze({
 export function contractFor(contract, carrier, date) {
   const list = (contract && contract.carriers) || [];
   const k = carrierKey(carrier);
-  const hits = list.filter((c) => [c.carrier, c.scac, ...(c.aliases || [])].filter(Boolean).some((n) => carrierKey(n) === k));
+  // A carrier's SCAC and aliases name it in every one of its contract terms, even when only one term lists them.
+  const names = (c) => list.filter((x) => carrierKey(x.carrier) === carrierKey(c.carrier)).flatMap((x) => [x.carrier, x.scac, ...(x.aliases || [])]).filter(Boolean);
+  const hits = list.filter((c) => names(c).some((n) => carrierKey(n) === k));
   const d = isoDate(date);
   const live = hits.filter((c) => !d || ((!c.effective || d >= c.effective) && (!c.expires || d <= c.expires)));
   return { block: live[0] || null, expired: !live.length && hits.length ? hits[0] : null };

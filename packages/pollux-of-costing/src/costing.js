@@ -38,7 +38,7 @@ export function compareStandards(items, actuals, { thresholdPct = 10, minUnits =
     if (!item) status = 'no_standard';
     else if (!units) status = 'no_shipments';
     else if (units < minUnits) status = 'thin_data';
-    else if (variancePct !== null && variancePct > thresholdPct) status = 'standard_too_low';
+    else if ((variancePct !== null && variancePct > thresholdPct) || (s === 0 && actual > 0)) status = 'standard_too_low'; // a zero standard with real freight is always too low
     else if (variancePct !== null && variancePct < -thresholdPct) status = 'standard_too_high';
     else status = 'ok';
     const change = status === 'standard_too_low' || status === 'standard_too_high' || (status === 'no_standard' && units >= minUnits);

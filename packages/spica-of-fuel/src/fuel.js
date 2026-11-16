@@ -1,5 +1,5 @@
 // Spica: fuel surcharges against fuel tables and the diesel index. Pure functions.
-import { contractFor, contractFuel, dieselFor, canonicalCarrier, isoDate, daysBetween, round2, groupBy } from 'lodestar-core';
+import { contractFor, contractFuel, dieselFor, canonicalCarrier, carrierKey, isoDate, daysBetween, round2, groupBy, str } from 'lodestar-core';
 
 const linehaulOf = (inv) => { const lh = (inv.by_code.linehaul || 0) + (inv.by_code.discount || 0); return inv.by_code.linehaul === undefined ? null : round2(lh); };
 const weeks = (index) => [...(index || [])].sort((a, b) => (a.week_of < b.week_of ? -1 : 1));
@@ -54,9 +54,13 @@ export function checkFuel(invoices, contract = {}, { tolerance, staleDays = 7 } 
 export function compareTables(contract = {}, { prices, linehaul = 1000, miles = 500, date } = {}) {
   const latest = weeks(contract.fuel_index).at(-1);
   const ps = (prices && prices.length ? prices : latest ? [round2(latest.price - 0.5), latest.price, round2(latest.price + 0.5)] : [3.5, 4, 4.5]).map(Number);
-  const rows = (contract.carriers || []).filter((c) => c.fuel && (!date || ((!c.effective || date >= c.effective) && (!c.expires || date <= c.expires)))).map((c) => {
+  // One row per carrier: the terms in force on the date (default: the latest index week), else its latest terms.
+  const on = date || (latest && latest.week_of) || null;
+  const live = (c) => !on || ((!c.effective || on >= c.effective) && (!c.expires || on <= c.expires));
+  const picked = [...groupBy((contract.carriers || []).filter((c) => c.fuel), (c) => carrierKey(c.carrier))].map(([, l]) => l.find(live) || (date ? null : [...l].sort((a, b) => (str(a.effective) < str(b.effective) ? 1 : -1))[0])).filter(Boolean);
+  const rows = picked.map((c) => {
     const cells = ps.map((p) => { const f = contractFuel(c, p, linehaul, miles); return { diesel: p, fuel: f, pct_of_linehaul: f === null ? null : Math.round((f / linehaul) * 1000) / 10 }; });
-    return { carrier: c.carrier, basis: c.fuel.basis, cells };
+    return { carrier: c.carrier, basis: c.fuel.basis, terms: [c.effective, c.expires].filter(Boolean).join(' to ') || null, cells };
   });
   const at = (i) => rows.filter((r) => r.cells[i].fuel !== null).sort((a, b) => b.cells[i].fuel - a.cells[i].fuel);
   const mid = Math.floor(ps.length / 2);

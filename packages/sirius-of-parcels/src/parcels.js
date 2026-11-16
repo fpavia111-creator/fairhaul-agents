@@ -48,6 +48,15 @@ export const PARCEL_TERMS_SCHEMA = Object.freeze({
 });
 
 const TRANSPORT = new Set(['linehaul', 'fuel', 'discount']);
+/** Economy services that share a word with a guaranteed one but carry no money-back commitment. */
+export const NOT_GUARANTEED = ['ground saver', 'ground economy', 'surepost', 'smartpost', 'mail innovations', 'ground advantage', 'economy'];
+const hasTime = (v) => /\d{1,2}:\d{2}/.test(str(v));
+const ms = (v) => Date.parse(`${String(v).replace(' ', 'T')}${/[zZ]|[+-]\d\d:?\d\d$/.test(v) ? '' : 'Z'}`);
+/** Minutes late (positive) or early. Without a time on both sides, days are compared: a commitment with no time means by the end of that day. Null when it cannot be told. */
+function minutesLate(promised, delivered, graceMs) {
+  if (!hasTime(promised) || !hasTime(delivered)) { const p = isoDate(promised), d = isoDate(delivered); return p && d ? (d > p ? daysBetween(p, d) * 1440 : 0) : null; }
+  const x = ms(delivered) - ms(promised) - graceMs; return Number.isFinite(x) ? x / 60000 : null;
+}
 
 /** Group lines into packages (tracking + invoice), keeping every charge. */
 export function packagesFrom(rows, aliases = {}) {
@@ -63,7 +72,8 @@ export function packagesFrom(rows, aliases = {}) {
 
 /**
  * Audit packages. Finding codes: duplicate_tracking, voided_label_billed, late_delivery,
- * residential_on_business, address_correction, dim_overbilled, missing_delivery_scan.
+ * residential_on_business, address_correction, dim_overbilled, dim_unverified, late_no_guarantee,
+ * missing_delivery_scan.
  */
 export function auditParcels(pkgs, { terms = {}, voids = [], asOf } = {}) {
   const divisor = terms.dim_divisor || 139;
@@ -78,13 +88,15 @@ export function auditParcels(pkgs, { terms = {}, voids = [], asOf } = {}) {
   for (const p of pkgs) {
     const f = []; const add = (code, amount, detail) => f.push({ code, amount: amount === null ? null : round2(amount), detail });
     const transport = round2(Object.entries(p.by_code).filter(([c]) => TRANSPORT.has(c)).reduce((s, [, v]) => s + v, 0));
-    if (seen.has(p.tracking)) add('duplicate_tracking', p.total, `Tracking ${p.tracking} was already billed on invoice ${seen.get(p.tracking)}.`);
-    else seen.set(p.tracking, p.invoice_number || '(no invoice number)');
+    // A later invoice for the same label is a duplicate only if it bills the transportation again;
+    // one carrying only an adjustment (an address correction, a residential charge) is checked on its own.
+    if (seen.has(p.tracking) && p.by_code.linehaul > 0) add('duplicate_tracking', p.total, `Tracking ${p.tracking} was already billed on invoice ${seen.get(p.tracking)}.`);
+    else if (!seen.has(p.tracking)) seen.set(p.tracking, p.invoice_number || '(no invoice number)');
     if (voided.has(p.tracking)) add('voided_label_billed', p.total, `Label ${p.tracking} is in your void list but was billed.`);
     const svc = p.service.toLowerCase();
-    const isGuaranteed = !terms.guarantee_waived && guaranteed.some((g) => svc.includes(g));
+    const isGuaranteed = !terms.guarantee_waived && guaranteed.some((g) => svc.includes(g)) && !(terms.guaranteed_services ? [] : NOT_GUARANTEED).some((g) => svc.includes(g));
     if (p.promised_at && p.delivered_at) {
-      const late = Date.parse(`${String(p.delivered_at).replace(' ', 'T')}${/[zZ]|[+-]\d\d:?\d\d$/.test(p.delivered_at) ? '' : 'Z'}`) - Date.parse(`${String(p.promised_at).replace(' ', 'T')}${/[zZ]|[+-]\d\d:?\d\d$/.test(p.promised_at) ? '' : 'Z'}`) - grace;
+      const late = minutesLate(p.promised_at, p.delivered_at, grace);
       if (late > 0) {
         if (isGuaranteed) add('late_delivery', transport || p.total, `Delivered ${p.delivered_at}, committed ${p.promised_at} (${p.service}). The transportation charge may be refundable under the delivery guarantee.`);
         else add('late_no_guarantee', null, `Delivered late (${p.delivered_at} vs ${p.promised_at}), but ${terms.guarantee_waived ? 'your terms waive the guarantee' : `"${p.service}" is not in your guaranteed services`}. Track it for carrier performance.`);
@@ -98,7 +110,8 @@ export function auditParcels(pkgs, { terms = {}, voids = [], asOf } = {}) {
       if (!prev) corrections.set(addrKey || p.recipient_postal, p.tracking);
     }
     const dw = dimWeight(p.length, p.width, p.height, divisor);
-    if (p.billed_weight && (p.actual_weight || dw)) {
+    if (p.billed_weight && !dw && p.actual_weight && p.billed_weight > Math.ceil(p.actual_weight)) add('dim_unverified', null, `Billed at ${p.billed_weight} lb against ${p.actual_weight} lb actual, with no dimensions on file. Ask the carrier for the dimensions it measured before disputing.`);
+    else if (p.billed_weight && (p.actual_weight || dw)) {
       const should = Math.max(Math.ceil(p.actual_weight || 0), dw || 0);
       if (p.billed_weight > should && transport) add('dim_overbilled', round2(transport * (p.billed_weight - should) / p.billed_weight), `Billed at ${p.billed_weight} lb; your dimensions and weight give ${should} lb (divisor ${divisor}). Estimated overcharge is pro rata to weight; the true figure needs the rate card.`);
     }

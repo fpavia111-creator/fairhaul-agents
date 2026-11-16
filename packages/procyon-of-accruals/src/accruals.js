@@ -26,7 +26,8 @@ export function estimate(s, { contract, history }) {
  */
 export function buildAccrual(shipments, invoices, { periodEnd, contract = {}, prior = [], defaultGl = 'freight_expense' } = {}) {
   const pe = isoDate(periodEnd); if (!pe) throw new Error('period_end must be a date, YYYY-MM-DD');
-  const byId = new Map(); for (const inv of invoices) for (const k of ids(inv)) { if (!byId.has(k)) byId.set(k, []); byId.get(k).push(inv); }
+  // An invoice whose PRO and shipment id are the same value is listed once under it.
+  const byId = new Map(); for (const inv of invoices) for (const k of new Set(ids(inv))) { if (!byId.has(k)) byId.set(k, []); byId.get(k).push(inv); }
   const history = { lanes: new Map(), carriers: new Map() };
   for (const inv of invoices) {
     const c = canonicalCarrier(contract, inv.carrier); const lk = `${c}|${zoneOf(inv.origin.postal) || inv.origin.state}|${zoneOf(inv.destination.postal) || inv.destination.state}`;
@@ -41,9 +42,11 @@ export function buildAccrual(shipments, invoices, { periodEnd, contract = {}, pr
     const invs = ids(s).flatMap((k) => byId.get(k) || []);
     const uniq = [...new Set(invs)];
     const inPeriod = uniq.filter((i) => i.invoice_date && isoDate(i.invoice_date) <= pe);
-    if (inPeriod.length) { billedIn.push({ shipment_id: s.shipment_id, invoices: inPeriod.map((i) => i.invoice_number) }); continue; }
     const late = uniq.filter((i) => !i.invoice_date || isoDate(i.invoice_date) > pe);
-    const est = late.length ? { amount: round2(late.reduce((a, i) => a + i.total, 0)), basis: 'invoice_after_period_end' } : estimate(s, { contract, history });
+    // Billed in the period: nothing to estimate, but a later bill for the same shipment
+    // (an accessorial or a balance due) is still a cost of this period.
+    if (inPeriod.length) { billedIn.push({ shipment_id: s.shipment_id, invoices: inPeriod.map((i) => i.invoice_number) }); if (!late.length) continue; }
+    const est = late.length ? { amount: round2(late.reduce((a, i) => a + i.total, 0)), basis: inPeriod.length ? 'later_invoice_after_one_in_period' : 'invoice_after_period_end' } : estimate(s, { contract, history });
     lines.push({ shipment_id: str(s.shipment_id), carrier: canonicalCarrier(contract, s.carrier), ship_date: d, age_days: daysBetween(d, pe), cost_center: str(s.cost_center) || '(none)', gl_account: str(s.gl_account) || defaultGl, amount: est.amount, basis: est.basis, invoices_after: late.map((i) => i.invoice_number) });
   }
   const total = round2(lines.reduce((a, l) => a + (l.amount || 0), 0));
@@ -55,10 +58,10 @@ export function buildAccrual(shipments, invoices, { periodEnd, contract = {}, pr
   const reversals = []; for (const [sid, amt] of priorIdx) { const invs = byId.get(sid) || []; const actual = invs.length ? round2(invs.reduce((a, i) => a + i.total, 0)) : null; reversals.push({ shipment_id: sid, accrued: amt, actual, variance: actual === null ? null : round2(actual - amt), status: actual === null ? 'still_unbilled' : 'billed' }); }
   const billed = reversals.filter((r) => r.status === 'billed');
   const accuracy = billed.length ? { shipments: billed.length, accrued: round2(billed.reduce((a, r) => a + r.accrued, 0)), actual: round2(billed.reduce((a, r) => a + r.actual, 0)), variance: round2(billed.reduce((a, r) => a + r.variance, 0)), mean_abs_error_pct: Math.round((billed.reduce((a, r) => a + Math.abs(r.variance) / (r.accrued || 1), 0) / billed.length) * 1000) / 10 } : null;
-  return { period_end: pe, shipments_in_period: lines.length + billedIn.length, billed_in_period: billedIn.length, accrued: lines.length, total, without_estimate: noEst.length, over_60_days: aged.length, by_cost_center: byCc, by_basis: Object.fromEntries([...groupBy(lines, (l) => l.basis.replace(/_of_\d+$/, ''))].map(([k, v]) => [k, v.length])), skipped, lines, reversals, accuracy };
+  return { period_end: pe, shipments_in_period: new Set([...lines.map((l) => l.shipment_id.toLowerCase()), ...billedIn.map((b) => str(b.shipment_id).toLowerCase())]).size, billed_in_period: billedIn.length, accrued: lines.length, total, without_estimate: noEst.length, over_60_days: aged.length, by_cost_center: byCc, by_basis: Object.fromEntries([...groupBy(lines, (l) => l.basis.replace(/_of_\d+$/, ''))].map(([k, v]) => [k, v.length])), skipped, lines, reversals, accuracy };
 }
 
-/** Draft journal entry lines: debit expense per GL and cost center, credit the accrual account, and reverse on day one of the next period. */
+/** Draft journal entry lines: debit expense per GL and cost center, credit the accrual account. Set the entry to reverse on the first day of the next period in your ERP. */
 export function journalLines(r, { liability = 'accrued_freight', memo } = {}) {
   const m = memo || `Freight accrual ${r.period_end} (draft by procyon-of-accruals)`;
   const out = r.by_cost_center.filter((x) => x.amount > 0).map((x) => ({ date: r.period_end, account: x.gl_account, cost_center: x.cost_center, debit: x.amount, credit: '', memo: m }));
