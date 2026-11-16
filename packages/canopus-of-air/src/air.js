@@ -58,11 +58,16 @@ export function auditAir(rows, rates) {
     const { volumetric_kg, chargeable_kg } = chargeableKg(r0.actual_kg, num(r0.volume_cbm), { factor, step });
     const billedKg = num(r0.billed_kg); const lines = ls.map((r) => ({ code: airCode(r.charge_code), description: str(r.charge_code), amount: num(r.amount) || 0, currency: str(r.currency).toUpperCase() || null }));
     const base = { invoice_number: str(r0.invoice_number), forwarder: str(r0.forwarder), awb: str(r0.awb), lane: `${ap(r0.origin)}-${ap(r0.destination)}`, flight_date: date, actual_kg: num(r0.actual_kg), volumetric_kg, chargeable_kg, billed_kg: billedKg, billed: round2(lines.reduce((s, l) => s + l.amount, 0)) };
-    const fw = rates.forwarders.filter((f) => [f.forwarder, ...(f.aliases || [])].some((n) => carrierKey(n) === carrierKey(r0.forwarder))).find((f) => !date || ((!f.effective || date >= f.effective) && (!f.expires || date <= f.expires)));
+    // An alias names the forwarder, so it holds for every rate sheet term of that forwarder.
+    const names = (f) => [f.forwarder, ...rates.forwarders.filter((o) => carrierKey(o.forwarder) === carrierKey(f.forwarder)).flatMap((o) => o.aliases || [])];
+    const fw = rates.forwarders.filter((f) => names(f).some((n) => carrierKey(n) === carrierKey(r0.forwarder))).find((f) => !date || ((!f.effective || date >= f.effective) && (!f.expires || date <= f.expires)));
     if (!fw) { add('no_rate_sheet', `No rate sheet in force for ${r0.forwarder} on ${date || 'an unknown date'}.`); return { ...base, findings, disputable: 0 }; }
     if (fw.currency && lines.some((l) => l.currency && l.currency !== fw.currency.toUpperCase())) { add('currency_mismatch', `Billed in another currency than the rate sheet (${fw.currency}); not compared.`); return { ...base, findings, disputable: 0 }; }
     if (billedKg !== null && chargeable_kg !== null && billedKg - chargeable_kg > step / 2) add('weight_over', `Billed on ${billedKg} kg; actual ${base.actual_kg} kg and volumetric ${volumetric_kg} kg give ${chargeable_kg} kg chargeable.`);
-    const lane = fw.lanes.find((l) => ap(l.origin) === ap(r0.origin) && ap(l.destination) === ap(r0.destination) && (!l.service || !str(r0.service) || l.service.toLowerCase() === str(r0.service).toLowerCase()));
+    // A lane for the shipment's own service wins over a general lane on the same route.
+    const svc = str(r0.service).toLowerCase();
+    const routes = fw.lanes.filter((l) => ap(l.origin) === ap(r0.origin) && ap(l.destination) === ap(r0.destination));
+    const lane = (svc && routes.find((l) => l.service && l.service.toLowerCase() === svc)) || routes.find((l) => !l.service) || (!svc ? routes[0] : null) || null;
     for (const l of lines) {
       if (l.code === 'AF') {
         if (!lane) { add('no_lane', `No rate for ${base.lane}.`); continue; }

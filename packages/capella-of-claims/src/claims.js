@@ -1,5 +1,5 @@
 // Capella: loss, shortage and damage claims. Pure functions.
-import { readYesNo, isoDate, addDays, daysBetween, round2, str, num, canonicalCarrier } from 'lodestar-core';
+import { carrierKey, readYesNo, isoDate, addDays, daysBetween, round2, str, num } from 'lodestar-core';
 
 const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const EXCEPTION_FIELDS = Object.freeze({
@@ -55,7 +55,7 @@ export function scanExceptions(rows, claims = [], terms = {}, { asOf } = {}) {
   const filed = new Set(claims.map((c) => str(c.shipment_id).toLowerCase()));
   const items = rows.map((r) => {
     const type = typeOf(r.exception_type); const carrier = str(r.carrier);
-    const ct = (terms.carriers && Object.entries(terms.carriers).find(([k]) => canonicalCarrier({}, k).toLowerCase() === carrier.toLowerCase())?.[1]) || {};
+    const ct = (terms.carriers && Object.entries(terms.carriers).find(([k]) => carrierKey(k) === carrierKey(carrier))?.[1]) || {};
     const windowDays = ct.filing_window_days || tm.filing_window_days;
     const delivered = isoDate(r.delivery_date);
     const value = num(r.goods_value) || 0, freight = tm.include_freight_charges ? num(r.freight_charge) || 0 : 0, salvage = num(r.salvage_value) || 0;
@@ -93,7 +93,7 @@ export function trackClaims(claims, terms = {}, { asOf } = {}) {
     const age = filed ? daysBetween(filed, today) : null; const f = [];
     if (/declin|denied|reject/.test(st)) f.push({ code: 'declined', detail: `Declined${str(c.decline_reason) ? `: ${str(c.decline_reason)}` : ''}. Decide whether to appeal with more evidence.` });
     else if (paid !== null && paid > 0 && paid < amount - 0.005) f.push({ code: 'short_paid', detail: `Paid ${paid} of ${amount} (${round2(amount - paid)} short). Ask for the basis of the deduction.` });
-    else if (paid === null || paid === 0) {
+    else if ((paid === null || paid === 0) && !/closed|withdrawn/.test(st)) {
       if (!isoDate(c.acknowledged_on) && age !== null && age > tm.acknowledge_days) f.push({ code: 'ack_overdue', detail: `Filed ${age} day(s) ago with no acknowledgement (you expect one within ${tm.acknowledge_days}).` });
       if (age !== null && age > tm.resolve_days) f.push({ code: 'resolution_overdue', detail: `Open ${age} day(s), past the ${tm.resolve_days} days you expect for payment or decline.` });
     }

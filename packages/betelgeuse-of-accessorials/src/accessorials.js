@@ -28,8 +28,9 @@ export function analyse(invoices, shipments = [], contract = {}, { repeatAt = 2 
   const unordered = lines.filter((l) => l.orderable && l.ordered === false);
   const fixes = [];
   for (const [loc, ls] of groupBy(lines, (l) => l.location)) for (const [code, cs] of groupBy(ls, (l) => l.code)) {
+    // A repeat ordered on every load is already in the address book; one missed even once is worth fixing.
     const n = new Set(cs.map((c) => c.invoice_number)).size;
-    if (n >= repeatAt && FIX[code]) fixes.push({ location: loc, code, label: cs[0].label, times: n, amount: round2(cs.reduce((a, c) => a + c.amount, 0)), ordered_times: cs.filter((c) => c.ordered).length, carriers: [...new Set(cs.map((c) => c.carrier))].join(', '), fix: FIX[code] });
+    if (n >= repeatAt && cs.some((c) => !c.ordered) && FIX[code]) fixes.push({ location: loc, code, label: cs[0].label, times: n, amount: round2(cs.reduce((a, c) => a + c.amount, 0)), ordered_times: cs.filter((c) => c.ordered).length, carriers: [...new Set(cs.map((c) => c.carrier))].join(', '), fix: FIX[code] });
   }
   fixes.sort((a, b) => b.amount - a.amount);
   return {

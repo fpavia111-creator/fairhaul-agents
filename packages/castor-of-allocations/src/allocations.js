@@ -49,7 +49,9 @@ export function allocate(costs, lines, { basis = 'weight', fallback = ['cube', '
 /** Journal lines: debit freight by GL and cost center, credit the clearing account the bills were booked to. */
 export function journalLines(r, { clearing = 'freight_clearing', date, memo } = {}) {
   const m = memo || `Freight allocation (draft by castor-of-allocations)`;
-  const lines = r.by_cost_center.filter((x) => x.freight).map((x) => ({ date: date || '', account: x.gl_account, cost_center: x.cost_center, debit: x.freight, credit: '', memo: m }));
-  if (r.allocated) lines.push({ date: date || '', account: clearing, cost_center: '', debit: '', credit: r.allocated, memo: m });
+  // A credit note allocates a negative amount: it goes on the other side, never as a negative debit.
+  const side = (amt) => (amt >= 0 ? { debit: amt, credit: '' } : { debit: '', credit: round2(-amt) });
+  const lines = r.by_cost_center.filter((x) => x.freight).map((x) => ({ date: date || '', account: x.gl_account, cost_center: x.cost_center, ...side(x.freight), memo: m }));
+  if (r.allocated) { const s2 = side(-r.allocated); lines.push({ date: date || '', account: clearing, cost_center: '', ...s2, memo: m }); }
   return lines;
 }

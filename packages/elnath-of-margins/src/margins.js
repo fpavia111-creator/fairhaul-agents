@@ -18,7 +18,10 @@ export const COST_FIELDS = Object.freeze({
 /** Normalise freight terms into prepaid (we pay, free to customer), prepaid_add (we pay and bill), collect (customer pays carrier), or unknown. */
 export function termsOf(v) {
   const s = str(v).toLowerCase();
-  if (/collect|fob origin|exw|ex works|third|3rd/.test(s)) return 'collect';
+  // Parcel billing options: "bill recipient", "bill receiver", "bill consignee" and "bill third party"
+  // mean the customer pays the carrier; "bill sender" or "bill shipper" means we do.
+  if (/collect|fob origin|exw|ex works|third|3rd|recipient|receiver|consignee/.test(s)) return 'collect';
+  if (/bill (sender|shipper)/.test(s)) return 'prepaid';
   if (/add|charge|bill|ppa|pp&a/.test(s)) return 'prepaid_add';
   if (/prepaid|ppd|free|fob dest|dap|ddp|delivered/.test(s)) return 'prepaid';
   return s ? 'unknown' : 'unknown';
