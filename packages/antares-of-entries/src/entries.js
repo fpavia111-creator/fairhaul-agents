@@ -36,13 +36,16 @@ const key = (inv, sku) => `${str(inv).toUpperCase()}|${str(sku).toUpperCase()}`;
  */
 export function checkEntries(entries, invoices, { tolerancePct = 1, asOf = null, windowDays = null } = {}) {
   const invBy = groupBy(invoices, (i) => key(i.invoice_number, i.sku));
-  const findings = []; const seen = new Map();
+  const findings = [];
+  // Which entry had an invoice line first: the earliest entry date, then the lowest entry number,
+  // so the answer does not depend on the order of the rows in the file.
+  const seen = new Map();
+  for (const e of entries) { const k = key(e.invoice_number, e.sku); const at = `${isoDate(e.entry_date) || '9999'}|${str(e.entry_number)}`; if (!seen.has(k) || at < seen.get(k).at) seen.set(k, { at, entry: str(e.entry_number) }); }
   const add = (e, code, detail, duty_impact = null) => findings.push({ entry_number: str(e.entry_number), line: str(e.line), invoice_number: str(e.invoice_number), sku: str(e.sku), code, detail, duty_impact: duty_impact === null ? null : round2(duty_impact) });
   const groups = groupBy(entries, (x) => `${str(x.entry_number)}#${key(x.invoice_number, x.sku)}`);
   for (const e of entries) {
     const k = key(e.invoice_number, e.sku); const value = num(e.entered_value) || 0; const rate = rateOf(e.duty_rate);
-    if (seen.has(k) && seen.get(k) !== str(e.entry_number)) add(e, 'entered_twice', `Invoice ${e.invoice_number} ${e.sku} is also on entry ${seen.get(k)}. If both are right, ignore; if not, one may have paid duty twice.`, rate !== null ? -value * rate : null);
-    else seen.set(k, str(e.entry_number));
+    if (seen.get(k).entry !== str(e.entry_number)) add(e, 'entered_twice', `Invoice ${e.invoice_number} ${e.sku} is also on entry ${seen.get(k).entry}. If both are right, ignore; if not, one may have paid duty twice.`, rate !== null ? -value * rate : null);
     const missing = ['hts', 'origin', 'quantity'].filter((f) => !str(e[f]));
     if (missing.length) add(e, 'missing_data', `Entry line has no ${missing.join(', ')}.`);
     if (rate !== null && num(e.duty) !== null && Math.abs(value * rate - num(e.duty)) > 0.5) add(e, 'duty_math', `Entered value ${value} at ${Math.round(rate * 10000) / 100}% is ${round2(value * rate)}; the line says ${num(e.duty)}.`, value * rate - num(e.duty));
@@ -64,12 +67,12 @@ export function checkEntries(entries, invoices, { tolerancePct = 1, asOf = null,
   for (const [k, list] of invBy) if (invs.has(k.split('|')[0]) && !entered.has(k)) findings.push({ entry_number: '', line: '', invoice_number: str(list[0].invoice_number), sku: str(list[0].sku), code: 'invoice_line_not_entered', detail: `${list[0].sku} is on invoice ${list[0].invoice_number} (value ${round2(list.reduce((a, i) => a + (num(i.value) || 0), 0))}) but on no entry line here.`, duty_impact: null });
   // Consistency across entries. These say the codes differ, not which one is right.
   for (const [sku, list] of groupBy(entries.filter((e) => str(e.hts)), (e) => str(e.sku).toUpperCase())) {
-    const codes = [...new Set(list.map((e) => str(e.hts)))];
-    if (codes.length > 1) findings.push({ entry_number: [...new Set(list.map((e) => str(e.entry_number)))].join(' '), line: '', invoice_number: '', sku: str(list[0].sku), code: 'code_inconsistent', detail: `${list[0].sku} was entered under ${codes.length} tariff codes: ${codes.map((c) => `${c} (${list.filter((e) => str(e.hts) === c).map((e) => str(e.entry_number)).join(', ')})`).join('; ')}. Ask your broker or a licensed customs professional which applies.`, duty_impact: null });
+    const codes = [...new Set(list.map((e) => str(e.hts)))].sort();
+    if (codes.length > 1) findings.push({ entry_number: [...new Set(list.map((e) => str(e.entry_number)))].sort().join(' '), line: '', invoice_number: '', sku: str(list[0].sku), code: 'code_inconsistent', detail: `${list[0].sku} was entered under ${codes.length} tariff codes: ${codes.map((c) => `${c} (${list.filter((e) => str(e.hts) === c).map((e) => str(e.entry_number)).sort().join(', ')})`).join('; ')}. Ask your broker or a licensed customs professional which applies.`, duty_impact: null });
   }
   for (const [k, list] of groupBy(entries.filter((e) => str(e.hts) && rateOf(e.duty_rate) !== null), (e) => `${str(e.hts)}|${str(e.origin).toUpperCase()}`)) {
-    const rates = [...new Set(list.map((e) => rateOf(e.duty_rate)))];
-    if (rates.length > 1) { const [hts, o] = k.split('|'); findings.push({ entry_number: [...new Set(list.map((e) => str(e.entry_number)))].join(' '), line: '', invoice_number: '', sku: [...new Set(list.map((e) => str(e.sku)))].join(' '), code: 'rate_inconsistent', detail: `Tariff code ${hts} from ${o || 'unknown origin'} carries ${rates.map((r) => `${Math.round(r * 10000) / 100}%`).join(' and ')} on different lines. Dates or programs may explain it; ask your broker.`, duty_impact: null }); }
+    const rates = [...new Set(list.map((e) => rateOf(e.duty_rate)))].sort((a, b) => a - b);
+    if (rates.length > 1) { const [hts, o] = k.split('|'); findings.push({ entry_number: [...new Set(list.map((e) => str(e.entry_number)))].sort().join(' '), line: '', invoice_number: '', sku: [...new Set(list.map((e) => str(e.sku)))].sort().join(' '), code: 'rate_inconsistent', detail: `Tariff code ${hts} from ${o || 'unknown origin'} carries ${rates.map((r) => `${Math.round(r * 10000) / 100}%`).join(' and ')} on different lines. Dates or programs may explain it; ask your broker.`, duty_impact: null }); }
   }
   const fBy = new Map(); for (const x of findings) for (const n of new Set(x.entry_number.split(' '))) { if (!fBy.has(n)) fBy.set(n, []); fBy.get(n).push(x); }
   const byEntry = [...groupBy(entries, (e) => str(e.entry_number))].map(([n, ls]) => {

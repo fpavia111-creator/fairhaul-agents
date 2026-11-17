@@ -25,6 +25,12 @@ export function findDuplicates(rows, { dateWindowDays = 3, asOf, sameVendors = [
   const group = carrierGrouper(rows.map((r) => r.vendor));
   const vendorKey = (r) => { const byName = group(r.vendor); const byId = str(r.vendor_id).toLowerCase(); return alias.get(byName) || alias.get(byId) || alias.get(carrierKey(r.vendor_id)) || byName || byId; };
   const pay = rows.map((r, i) => ({ row: i + 1, vendor: str(r.vendor), vkey: vendorKey(r), vendor_id: str(r.vendor_id), invoice_number: str(r.invoice_number), inv: normInvoice(r.invoice_number), invoice_date: isoDate(r.invoice_date), amount: num(r.amount) ?? 0, paid_date: isoDate(r.paid_date), payment_ref: str(r.payment_ref), pro: normRef(r.pro), bol: normRef(r.bol), memo: str(r.memo) }));
+  // Work in a fixed order (paid date, invoice date, invoice number, payment reference), so the answer
+  // does not depend on how the export happened to be sorted. Row numbers still point at the file.
+  const ord = (p) => `${p.paid_date || '9999'}|${p.invoice_date || '9999'}|${p.inv}|${p.payment_ref}|${String(p.row).padStart(9, '0')}`;
+  pay.sort((a, b) => (ord(a) < ord(b) ? -1 : 1));
+  // One display name per vendor: the name used most, then the first in the alphabet.
+  const shown = new Map([...groupBy(pay, (p) => p.vkey)].map(([k, l]) => { const n = new Map(); for (const p of l) n.set(p.vendor, (n.get(p.vendor) || 0) + 1); return [k, [...n].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))[0][0]]; }));
   const paid = pay.filter((p) => p.amount > 0 && p.paid_date);
   const credits = pay.filter((p) => p.amount < 0);
   const groups = []; const used = new Set();
@@ -32,13 +38,13 @@ export function findDuplicates(rows, { dateWindowDays = 3, asOf, sameVendors = [
     const ids = list.map((p) => p.row).sort((a, b) => a - b); const key = ids.join(',');
     if (list.length < 2 || used.has(key) || list.every((p) => used.has(`r${p.row}`))) return;
     used.add(key); for (const p of list) used.add(`r${p.row}`);
-    const sorted = [...list].sort((a, b) => (a.paid_date < b.paid_date ? -1 : 1));
+    const sorted = [...list].sort((a, b) => (ord(a) < ord(b) ? -1 : 1));
     const overpaid = round2(sorted.slice(1).reduce((s, p) => s + p.amount, 0));
     const refs = new Set(list.flatMap((p) => [p.inv, p.pro].filter(Boolean)));
     const credited = round2(Math.abs(credits.filter((c) => c.vkey === list[0].vkey && (refs.has(c.inv) || refs.has(c.pro) || [...refs].some((r) => c.memo.toUpperCase().includes(r))))
       .reduce((s, c) => s + c.amount, 0)));
     const open = round2(Math.max(0, overpaid - credited));
-    groups.push({ rule, confidence, vendor: list[0].vendor, vendors: [...new Set(list.map((p) => p.vendor))], invoice_numbers: list.map((p) => p.invoice_number), pro: list.find((p) => p.pro)?.pro || null, amounts: list.map((p) => p.amount), paid_dates: sorted.map((p) => p.paid_date), payment_refs: sorted.map((p) => p.payment_ref).filter(Boolean), rows: ids, overpaid, credited, to_recover: open, age_days: daysBetween(sorted.at(-1).paid_date, today), why, status: open <= 0 ? 'already_credited' : 'recover' });
+    groups.push({ rule, confidence, vendor: shown.get(sorted[0].vkey), vendors: [...new Set(sorted.map((p) => p.vendor))], invoice_numbers: sorted.map((p) => p.invoice_number), pro: sorted.find((p) => p.pro)?.pro || null, amounts: sorted.map((p) => p.amount), paid_dates: sorted.map((p) => p.paid_date), payment_refs: sorted.map((p) => p.payment_ref).filter(Boolean), rows: ids, overpaid, credited, to_recover: open, age_days: daysBetween(sorted.at(-1).paid_date, today), why, status: open <= 0 ? 'already_credited' : 'recover' });
   };
   // 1. Same vendor, same normalised invoice number, same amount.
   for (const [, l] of groupBy(paid, (p) => `${p.vkey}|${p.inv}|${p.amount}`)) if (l.length > 1) { const raw = new Set(l.map((p) => p.invoice_number)); const ids = new Set(l.map((p) => p.vendor_id).filter(Boolean)); if (ids.size > 1) add('two_vendor_records', 'high', l, `Invoice ${l[0].invoice_number} for ${l[0].amount} paid under vendor records ${l.map((p) => `${p.vendor} (${p.vendor_id})`).join(' and ')}. Merge or block the duplicate vendor record.`); else add(raw.size > 1 ? 'invoice_number_variant' : 'exact_duplicate', 'high', l, raw.size > 1 ? `The same invoice written ${[...raw].map((x) => `"${x}"`).join(' and ')}, paid ${l.length} times.` : `Invoice ${l[0].invoice_number} paid ${l.length} times.`); }
@@ -48,13 +54,13 @@ export function findDuplicates(rows, { dateWindowDays = 3, asOf, sameVendors = [
   for (const [, l] of groupBy(paid.filter((p) => p.pro), (p) => `${p.vkey}|${p.pro}`)) if (l.length > 1) { const same = new Set(l.map((p) => p.amount)).size === 1; add('same_pro', same ? 'high' : 'medium', l, same ? `PRO ${l[0].pro} billed and paid ${l.length} times for the same amount under different invoice numbers.` : `PRO ${l[0].pro} paid ${l.length} times for different amounts. It may be a balance-due or corrected bill; check before asking for money back.`); }
   // 4. Same vendor and amount within a few days, no shared reference.
   for (const [, l] of groupBy(paid, (p) => `${p.vkey}|${p.amount}`)) {
-    const s = [...l].sort((a, b) => (a.invoice_date < b.invoice_date ? -1 : 1));
+    const s = [...l].sort((a, b) => ((a.invoice_date || '') < (b.invoice_date || '') ? -1 : (a.invoice_date || '') > (b.invoice_date || '') ? 1 : ord(a) < ord(b) ? -1 : 1));
     for (let i = 1; i < s.length; i++) if (s[i].invoice_date && s[i - 1].invoice_date && daysBetween(s[i - 1].invoice_date, s[i].invoice_date) <= dateWindowDays && !(s[i].pro && s[i - 1].pro && s[i].pro !== s[i - 1].pro)) add('same_amount_and_date', 'low', [s[i - 1], s[i]], `Same carrier and amount (${s[i].amount}) with invoice dates ${s[i - 1].invoice_date} and ${s[i].invoice_date}. Could be two real loads; pull both bills.`);
   }
   const rank = { high: 0, medium: 1, low: 2 };
-  groups.sort((a, b) => rank[a.confidence] - rank[b.confidence] || b.to_recover - a.to_recover);
+  groups.sort((a, b) => rank[a.confidence] - rank[b.confidence] || b.to_recover - a.to_recover || (a.rows.join() < b.rows.join() ? -1 : 1));
   const tot = (c) => round2(groups.filter((g) => g.confidence === c && g.status === 'recover').reduce((s, g) => s + g.to_recover, 0));
-  const vendors = [...groupBy(groups.filter((g) => g.status === 'recover'), (g) => g.vendor)].map(([vendor, l]) => ({ vendor, groups: l.length, to_recover: round2(l.reduce((s, g) => s + g.to_recover, 0)), high: round2(l.filter((g) => g.confidence === 'high').reduce((s, g) => s + g.to_recover, 0)) })).sort((a, b) => b.to_recover - a.to_recover);
+  const vendors = [...groupBy(groups.filter((g) => g.status === 'recover'), (g) => g.vendor)].map(([vendor, l]) => ({ vendor, groups: l.length, to_recover: round2(l.reduce((s, g) => s + g.to_recover, 0)), high: round2(l.filter((g) => g.confidence === 'high').reduce((s, g) => s + g.to_recover, 0)) })).sort((a, b) => b.to_recover - a.to_recover || (a.vendor < b.vendor ? -1 : 1));
   return { as_of: today, payments: paid.length, credits: credits.length, paid_total: round2(paid.reduce((s, p) => s + p.amount, 0)), groups: groups.length, to_recover_high: tot('high'), to_recover_medium: tot('medium'), to_recover_low: tot('low'), already_credited: groups.filter((g) => g.status === 'already_credited').length, vendors, items: groups };
 }
 

@@ -92,10 +92,10 @@ export function scorecards(rows, cfg = {}) {
     const worst = x.otd_trend.length >= 2 ? x.otd_trend.at(-1).otd_pct - x.otd_trend.at(-2).otd_pct : null;
     x.otd_change = worst === null ? null : Math.round(worst * 10) / 10;
   }
-  const order = cards.filter((x) => x.ranked && x.score !== null).sort((a, b) => b.score - a.score);
+  const order = cards.filter((x) => x.ranked && x.score !== null).sort((a, b) => b.score - a.score || b.loads - a.loads || (a.carrier < b.carrier ? -1 : 1));
   order.forEach((x, i) => { x.rank = i + 1; });
   for (const x of cards) if (!x.rank) x.rank = null;
-  cards.sort((a, b) => (a.rank ?? 1e9) - (b.rank ?? 1e9) || b.loads - a.loads);
+  cards.sort((a, b) => (a.rank ?? 1e9) - (b.rank ?? 1e9) || b.loads - a.loads || (a.carrier < b.carrier ? -1 : a.carrier > b.carrier ? 1 : 0));
   return { carriers: cards.length, ranked: order.length, loads: cards.reduce((s, x) => s + x.loads, 0), spend: round2(cards.reduce((s, x) => s + x.spend, 0)), weights: c.weights, targets: c.targets, min_loads: c.min_loads, cards };
 }
 

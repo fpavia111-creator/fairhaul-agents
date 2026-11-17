@@ -155,7 +155,7 @@
         },
         "contains": [
           "5 air waybill(s), 6164.9 billed: 4 with findings, 349 disputable",
-          "rate_over 3, weight_over 1, surcharge_over 1, charge_not_on_rate_sheet 1"
+          "rate_over 3, charge_not_on_rate_sheet 1, surcharge_over 1, weight_over 1"
         ]
       }
     },

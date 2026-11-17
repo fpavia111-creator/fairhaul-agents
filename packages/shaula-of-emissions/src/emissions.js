@@ -61,7 +61,7 @@ export function estimate(shipments, f) {
     const from = (f.shift.from || []).map(modeKey); const minKm = f.shift.min_km ?? 800; const extra = 1 + (f.shift.extra_km_pct ?? 10) / 100;
     const cand = ok.filter((r) => from.includes(r.mode) && r.km >= minKm);
     const after = cand.reduce((a, r) => a + (r.tonne_km * extra * f.modes[f.shift.to]) / 1000, 0); const before = cand.reduce((a, r) => a + r.kg_co2e, 0);
-    shift = { to: f.shift.to, from: from.join(', '), min_km: minKm, extra_km_pct: f.shift.extra_km_pct ?? 10, shipments: cand.length, kg_before: round2(before), kg_after: round2(after), kg_saved: round2(before - after), shipment_ids: cand.map((r) => r.shipment_id).join(' ') };
+    shift = { to: f.shift.to, from: from.join(', '), min_km: minKm, extra_km_pct: f.shift.extra_km_pct ?? 10, shipments: cand.length, kg_before: round2(before), kg_after: round2(after), kg_saved: round2(before - after), shipment_ids: cand.map((r) => r.shipment_id).sort().join(' ') };
   }
   return { factor_source: f.source, shipments: rows.length, estimated: ok.length, not_estimated: rows.length - ok.length, measured_distance_pct: rows.length ? Math.round((rows.filter((r) => r.quality === 'measured_distance').length / rows.length) * 100) : 0, tonne_km: Math.round(tk), kg_co2e: round2(kg), tonnes_co2e: Math.round(kg) / 1000, g_per_tonne_km: tk ? Math.round((kg * 1000) / tk) : null, by_mode: roll((r) => r.mode).map(({ key, ...x }) => ({ mode: key, ...x })), by_carrier: roll((r) => r.carrier).map(({ key, ...x }) => ({ carrier: key, ...x })), by_lane: roll((r) => r.lane).map(({ key, ...x }) => ({ lane: key, ...x })), by_customer: roll((r) => r.customer).map(({ key, ...x }) => ({ customer: key, ...x })), shift, rows };
 }

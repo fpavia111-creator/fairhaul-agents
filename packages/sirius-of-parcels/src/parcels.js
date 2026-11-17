@@ -84,8 +84,12 @@ export function auditParcels(pkgs, { terms = {}, voids = [], asOf } = {}) {
   const voided = new Set(voids.map((v) => str(v.tracking)).filter(Boolean));
   const today = isoDate(asOf) || new Date().toISOString().slice(0, 10);
   const seen = new Map(); const corrections = new Map();
-  const items = [];
-  for (const p of pkgs) {
+  // Work through the packages in invoice order (date, number, tracking) so that "the duplicate" and
+  // "the repeat correction" are the later invoice, whatever order the rows arrive in. Results keep the file's order.
+  const ord = (p) => `${isoDate(p.invoice_date) || '9999'}|${p.invoice_number}|${p.tracking}`;
+  const inOrder = pkgs.map((p, i) => ({ p, i, k: ord(p) })).sort((a, b) => (a.k < b.k ? -1 : a.k > b.k ? 1 : a.i - b.i));
+  const items = new Array(pkgs.length);
+  for (const { p, i: at } of inOrder) {
     const f = []; const add = (code, amount, detail) => f.push({ code, amount: amount === null ? null : round2(amount), detail });
     const transport = round2(Object.entries(p.by_code).filter(([c]) => TRANSPORT.has(c)).reduce((s, [, v]) => s + v, 0));
     // A later invoice for the same label is a duplicate only if it bills the transportation again;
@@ -118,7 +122,7 @@ export function auditParcels(pkgs, { terms = {}, voids = [], asOf } = {}) {
     const claimBy = p.invoice_date ? addDays(p.invoice_date, windowDays) : null;
     const refundable = round2(Math.min(p.total, f.reduce((s, x) => s + (x.amount > 0 ? x.amount : 0), 0)));
     const open = claimBy ? claimBy >= today : null;
-    items.push({ tracking: p.tracking, invoice_number: p.invoice_number, carrier: p.carrier, service: p.service, ship_date: p.ship_date, total: p.total, refundable, claim_by: claimBy, claim_window_open: open, status: refundable > 0 ? (open === false ? 'window_closed' : 'claim') : f.length ? 'review' : 'ok', findings: f });
+    items[at] = ({ tracking: p.tracking, invoice_number: p.invoice_number, carrier: p.carrier, service: p.service, ship_date: p.ship_date, total: p.total, refundable, claim_by: claimBy, claim_window_open: open, status: refundable > 0 ? (open === false ? 'window_closed' : 'claim') : f.length ? 'review' : 'ok', findings: f });
   }
   const s = (k, st) => round2(items.filter((i) => !st || i.status === st).reduce((a, i) => a + i[k], 0));
   const byCode = {}; for (const i of items) for (const x of i.findings) { byCode[x.code] = byCode[x.code] || { count: 0, amount: 0 }; byCode[x.code].count++; byCode[x.code].amount = round2(byCode[x.code].amount + (x.amount || 0)); }

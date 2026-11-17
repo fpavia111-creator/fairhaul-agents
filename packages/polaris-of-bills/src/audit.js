@@ -1,6 +1,6 @@
 // Polaris audit logic: pure functions over grouped invoices, the contract and
 // optional shipment and paid-history files. No I/O.
-import { canonicalCarrier, chargeCode, contractFor, laneFor, laneLinehaul, contractFuel, dieselFor, accessorialAllowed, CHARGE_CODES, laneLabel, round2, str, num, carrierKey, hoursBetween } from 'lodestar-core';
+import { isoDate, canonicalCarrier, chargeCode, contractFor, laneFor, laneLinehaul, contractFuel, dieselFor, accessorialAllowed, CHARGE_CODES, laneLabel, round2, str, num, carrierKey, hoursBetween } from 'lodestar-core';
 
 const LINEHAUL = new Set(['linehaul']);
 const SKIP = new Set(['linehaul', 'discount', 'fuel', 'tax']);
@@ -24,15 +24,23 @@ const orderedCodes = (s, aliases) => new Set(str(s && s.accessorials_ordered).sp
  *   linehaul_over, fuel_over, fuel_not_checked, accessorial_not_allowed, accessorial_over,
  *   accessorial_unpriced, accessorial_not_ordered, accessorial_needs_data, weight_over_bol, quote_exceeded
  */
+/** Findings come out in this order, so a report does not change when the charge lines are reordered. */
+const FINDING_ORDER = ['duplicate_invoice', 'duplicate_pro', 'already_paid', 'lines_do_not_add_up', 'no_contract', 'contract_expired', 'no_lane', 'rate_needs_data', 'linehaul_over', 'fuel_over', 'fuel_not_checked', 'accessorial_not_allowed', 'accessorial_over', 'accessorial_unpriced', 'accessorial_not_ordered', 'accessorial_needs_data', 'weight_over_bol', 'quote_exceeded'];
+const rank = (c) => { const i = FINDING_ORDER.indexOf(c); return i < 0 ? FINDING_ORDER.length : i; };
 export function auditInvoices(invoices, { contract = {}, shipments = [], paid = [], tolerance } = {}) {
   const tol = num(tolerance) ?? num(contract.tolerance) ?? 1;
   const aliases = contract.charge_aliases || {};
   const sIdx = shipmentIndex(shipments);
-  const seenInv = new Map(), seenPro = new Map();
+  const seenInv = new Map();
   // One carrier billed as its SCAC on one invoice and its name on another is one carrier: key by the contract's name.
   const cKey = (v) => carrierKey(canonicalCarrier(contract, v));
   const paidKeys = new Set(paid.map((p) => `${cKey(p.carrier)}|${str(p.invoice_number).toLowerCase()}`));
   const paidPro = new Set(paid.map((p) => `${cKey(p.carrier)}|${str(p.pro).toLowerCase()}`).filter((k) => !k.endsWith('|')));
+  // Which of two invoices for one PRO is "the duplicate" must not depend on the order of the rows:
+  // the original is the earliest by invoice date, then by invoice number.
+  const earlier = (a, b) => { const x = isoDate(a.invoice_date) || '9999', y = isoDate(b.invoice_date) || '9999'; return x !== y ? x < y : a.invoice_number.toLowerCase() < b.invoice_number.toLowerCase(); };
+  const firstPro = new Map();
+  for (const inv of invoices) { if (!inv.pro) continue; const k = `${cKey(inv.carrier)}|${inv.pro.toLowerCase()}`; const cur = firstPro.get(k); if (!cur || earlier(inv, cur)) firstPro.set(k, inv); }
   const out = [];
   for (const inv of invoices) {
     const f = []; const add = (code, amount, detail) => f.push({ code, amount: amount === null || amount === undefined ? null : round2(amount), detail });
@@ -42,10 +50,10 @@ export function auditInvoices(invoices, { contract = {}, shipments = [], paid = 
     const proKey = inv.pro ? `${ck}|${inv.pro.toLowerCase()}` : null;
     let dup = false;
     if (seenInv.has(invKey)) { add('duplicate_invoice', inv.total, `Invoice ${inv.invoice_number} appears more than once in this file (first seen on row group ${seenInv.get(invKey)}).`); dup = true; }
-    else if (proKey && seenPro.has(proKey)) { add('duplicate_pro', inv.total, `PRO ${inv.pro} was already billed on invoice ${seenPro.get(proKey)}.`); dup = true; }
+    else if (proKey && firstPro.get(proKey) !== inv && firstPro.get(proKey).invoice_number.toLowerCase() !== inv.invoice_number.toLowerCase()) { add('duplicate_pro', inv.total, `PRO ${inv.pro} was already billed on invoice ${firstPro.get(proKey).invoice_number}.`); dup = true; }
     if (!dup && paidKeys.has(invKey)) { add('already_paid', inv.total, `Invoice ${inv.invoice_number} is already in the paid history.`); dup = true; }
     else if (!dup && proKey && paidPro.has(proKey)) { add('already_paid', inv.total, `PRO ${inv.pro} is already in the paid history under another invoice.`); dup = true; }
-    seenInv.set(invKey, seenInv.get(invKey) || inv.invoice_number); if (proKey && !seenPro.has(proKey)) seenPro.set(proKey, inv.invoice_number);
+    seenInv.set(invKey, seenInv.get(invKey) || inv.invoice_number);
 
     if (inv.stated_total !== null && inv.lines_total !== null && Math.abs(inv.stated_total - inv.lines_total) > 0.005) add('lines_do_not_add_up', Math.max(0, inv.stated_total - inv.lines_total), `Charge lines add up to ${inv.lines_total}, the invoice says ${inv.stated_total}.`);
 
@@ -102,7 +110,7 @@ export function auditInvoices(invoices, { contract = {}, shipments = [], paid = 
       invoice_number: inv.invoice_number, carrier: canonicalCarrier(contract, inv.carrier), billed_as: inv.carrier, pro: inv.pro || null, bol: inv.bol || null, ship_date: date || null, lane: laneLabel(inv.origin, inv.destination),
       total: inv.total, contract_linehaul: allowedLinehaul, disputable: capped, approved_to_pay: round2(inv.total - capped),
       status: dup ? 'duplicate' : capped > 0 ? 'dispute' : review ? 'review' : 'ok',
-      matched_shipment: ship ? ship.shipment_id : null, findings: f, lines: inv.lines,
+      matched_shipment: ship ? ship.shipment_id : null, findings: f.map((x, i) => [x, i]).sort((a, b) => rank(a[0].code) - rank(b[0].code) || (a[0].detail < b[0].detail ? -1 : a[0].detail > b[0].detail ? 1 : a[1] - b[1])).map(([x]) => x), lines: inv.lines,
     });
   }
   const sumOf = (k) => round2(out.reduce((s, x) => s + x[k], 0));

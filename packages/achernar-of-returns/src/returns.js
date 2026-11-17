@@ -40,6 +40,9 @@ export function trackReturns(rmas, { receipts = [], credits = [], charges = [], 
   const today = isoDate(asOf) || new Date().toISOString().slice(0, 10);
   const rByRma = groupBy(receipts.filter((r) => str(r.rma)), (r) => k(r.rma)); const rByTrk = groupBy(receipts.filter((r) => str(r.tracking)), (r) => k(r.tracking));
   const cByRma = groupBy(credits, (c) => k(c.rma)); const chByTrk = groupBy(charges, (c) => k(c.tracking));
+  // The first bill for a label is the one with the earliest invoice date, then invoice number, whatever order the rows come in.
+  const chOrd = (c) => `${isoDate(c.invoice_date) || '9999'}|${str(c.invoice_number)}`;
+  for (const l of chByTrk.values()) l.sort((x, y) => (chOrd(x) < chOrd(y) ? -1 : chOrd(x) > chOrd(y) ? 1 : 0));
   const known = new Set(rmas.map((r) => k(r.tracking)).filter(Boolean));
   const items = []; const findings = [];
   const add = (rma, code, detail, amount = null) => findings.push({ rma, code, detail, amount: amount === null ? null : round2(amount) });
@@ -62,7 +65,7 @@ export function trackReturns(rmas, { receipts = [], credits = [], charges = [], 
     items.push({ rma: id, customer: str(r.customer) || '(none)', sku: str(r.sku) || '(none)', reason: str(r.reason) || '(none)', units, value, authorised_at: auth, received_at: recAt, units_received: rec.length ? got : null, condition: rec.map((x) => str(x.condition)).filter(Boolean).join(' '), credited, freight, freight_pct_of_value: value ? Math.round((freight / value) * 1000) / 10 : null, stage });
   }
   for (const [trk, list] of chByTrk) if (!known.has(trk)) findings.push({ rma: '', code: 'freight_without_rma', detail: `Return freight on tracking ${list[0].tracking} (${list.map((x) => `${x.invoice_number || '?'} ${num(x.amount)}`).join(', ')}) matches no RMA here.`, amount: round2(list.reduce((a, x) => a + (num(x.amount) || 0), 0)) });
-  const roll = (f) => [...groupBy(items, f)].map(([key, l]) => ({ key, returns: l.length, value: round2(l.reduce((a, x) => a + x.value, 0)), freight: round2(l.reduce((a, x) => a + x.freight, 0)) })).map((x) => ({ ...x, freight_pct_of_value: x.value ? Math.round((x.freight / x.value) * 1000) / 10 : null })).sort((a, b) => b.freight - a.freight);
+  const roll = (f) => [...groupBy(items, f)].map(([key, l]) => ({ key, returns: l.length, value: round2(l.reduce((a, x) => a + x.value, 0)), freight: round2(l.reduce((a, x) => a + x.freight, 0)) })).map((x) => ({ ...x, freight_pct_of_value: x.value ? Math.round((x.freight / x.value) * 1000) / 10 : null })).sort((a, b) => b.freight - a.freight || b.value - a.value || (a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
   const byCode = {}; for (const f of findings) byCode[f.code] = (byCode[f.code] || 0) + 1;
   const sum = (codes) => round2(findings.filter((f) => codes.includes(f.code)).reduce((a, f) => a + (f.amount || 0), 0));
   return { as_of: today, rmas: items.length, return_value: round2(items.reduce((a, x) => a + x.value, 0)), return_freight: round2(items.reduce((a, x) => a + x.freight, 0) + sum(['freight_without_rma'])), by_stage: Object.fromEntries([...groupBy(items, (x) => x.stage)].map(([s, l]) => [s, l.length])), findings: findings.length, by_code: byCode, credits_owed: sum(['received_not_credited']), credit_at_risk: sum(['credited_not_received', 'over_credited']), freight_disputable: sum(['freight_billed_twice', 'freight_without_rma']), by_reason: roll((x) => x.reason).map(({ key, ...r }) => ({ reason: key, ...r })), by_customer: roll((x) => x.customer).map(({ key, ...r }) => ({ customer: key, ...r })), by_sku: roll((x) => x.sku).map(({ key, ...r }) => ({ sku: key, ...r })), items: findings, rmas_detail: items };

@@ -50,7 +50,8 @@ export function settle(ratecons, { invoices = [], payments = [], noas = [], asOf
     const agreed = round2((num(r.rate) || 0) + (num(r.accessorials) || 0));
     const qp = r.quick_pay === true || /yes|true/i.test(str(r.quick_pay));
     const owed = round2(qp ? agreed * (1 - quickPayPct / 100) : agreed);
-    const invs = inv.get(K) || []; const pays = pay.get(K) || [];
+    const byKey = (f) => (x, y) => (f(x) < f(y) ? -1 : f(x) > f(y) ? 1 : 0);
+    const invs = [...(inv.get(K) || [])].sort(byKey((x) => `${isoDate(x.received_at) || '9999'}|${str(x.invoice_number)}`)); const pays = [...(pay.get(K) || [])].sort(byKey((x) => `${isoDate(x.paid_at) || '9999'}|${str(x.reference)}`));
     const billed = round2(invs.reduce((a, x) => a + (num(x.amount) || 0), 0)); const paid = round2(pays.reduce((a, x) => a + (num(x.amount) || 0), 0));
     const recv = invs.map((x) => isoDate(x.received_at)).filter(Boolean).sort()[0] || null;
     const pod = r.pod === true || /yes|true|received/i.test(str(r.pod));

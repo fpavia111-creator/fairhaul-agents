@@ -9,7 +9,7 @@ const files = {
   settings: { type: 'string', description: 'Optional scorecard settings JSON: weights, targets, grace minutes, billing tolerance, minimum loads to rank' },
 };
 const run = (a, ctx) => scorecards(ctx.records(a.shipments, 'shipments'), a.settings ? ctx.readJson(a.settings, 'scorecard') : {});
-const line = (r) => `${r.carriers} carrier(s), ${r.loads} load(s), ${r.spend} billed. ${r.ranked} ranked: ${r.cards.filter((c) => c.rank).map((c) => `${c.rank}. ${c.carrier} ${c.score}`).join(', ')}.${r.cards.some((c) => !c.ranked) ? ` Not ranked (under ${r.min_loads} loads): ${r.cards.filter((c) => !c.ranked).map((c) => c.carrier).join(', ')}.` : ''}`;
+const line = (r) => `${r.carriers} carrier(s), ${r.loads} load(s), ${r.spend} billed. ${r.ranked ? `${r.ranked} ranked: ${r.cards.filter((c) => c.rank).map((c) => `${c.rank}. ${c.carrier} ${c.score}`).join(', ')}.` : 'None ranked.'}${r.cards.some((c) => !c.ranked) ? ` Not ranked (under ${r.min_loads} loads): ${r.cards.filter((c) => !c.ranked).map((c) => c.carrier).join(', ')}.` : ''}`;
 const COLS = ['rank', 'carrier', 'score', 'loads', 'spend', 'otd_pct', 'otp_pct', 'acceptance_pct', 'billing_accuracy_pct', 'overbilled', 'claim_free_pct', 'tracking_pct', 'cost_per_mile', 'otd_change', 'below'];
 
 const pair = draftPair({

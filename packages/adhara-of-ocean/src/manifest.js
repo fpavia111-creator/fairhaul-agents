@@ -9,7 +9,7 @@ const files = {
   contract: { type: 'string', description: 'Ocean contract JSON: per carrier, lanes with rates per container type, allowed surcharges with amounts and validity dates, included charges' },
 };
 const run = (a, ctx) => auditOcean(ctx.records(a.invoices, 'invoices'), ctx.readJson(a.contract, 'ocean_contract'));
-const line = (r) => `${r.bills} bill(s) of lading, ${r.billed} billed: ${r.with_findings} with findings, ${r.disputable} disputable. ${Object.entries(r.by_finding).map(([k, v]) => `${k} ${v}`).join(', ') || 'No findings.'}`;
+const line = (r) => `${r.bills} bill(s) of lading, ${r.billed} billed: ${r.with_findings} with findings, ${r.disputable} disputable. ${Object.entries(r.by_finding).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1)).map(([k, v]) => `${k} ${v}`).join(', ') || 'No findings.'}`;
 
 const pair = draftPair({
   prefix: 'adhara', noun: 'dispute', verb: 'send', category: 'binding_send', outDir: OUT, actor: 'a person on your team',

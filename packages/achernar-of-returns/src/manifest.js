@@ -14,7 +14,7 @@ const files = {
   credit_days: { type: 'integer', minimum: 0, description: 'Days after receipt by which a credit is expected (default 7)' },
 };
 const run = (a, ctx) => { if (a.as_of && !isoDate(a.as_of)) throw new Error('as_of must be a date, YYYY-MM-DD'); return trackReturns(ctx.records(a.rmas, 'rmas'), { receipts: a.receipts ? ctx.records(a.receipts, 'receipts') : [], credits: a.credits ? ctx.records(a.credits, 'credits') : [], charges: a.charges ? ctx.records(a.charges, 'charges') : [], asOf: a.as_of, unusedDays: a.unused_days || 30, creditDays: a.credit_days ?? 7 }); };
-const line = (r) => `${r.rmas} return(s) worth ${r.return_value}, return freight ${r.return_freight}. ${r.findings} point(s): credits owed to customers ${r.credits_owed}, credit given without goods or over value ${r.credit_at_risk}, return freight to dispute ${r.freight_disputable}.${r.by_reason[0] ? ` Costliest reason for freight: ${r.by_reason[0].reason} (${r.by_reason[0].freight}).` : ''}`;
+const line = (r) => `${r.rmas} return(s) worth ${r.return_value}, return freight ${r.return_freight}. ${r.findings} point(s): credits owed to customers ${r.credits_owed}, credit given without goods or over value ${r.credit_at_risk}, return freight to dispute ${r.freight_disputable}.${r.by_reason[0] && r.by_reason[0].freight > 0 ? ` Costliest reason for freight: ${r.by_reason[0].reason} (${r.by_reason[0].freight}).` : ''}`;
 
 const pair = draftPair({
   prefix: 'achernar', noun: 'carrier_dispute', verb: 'send', category: 'binding_send', outDir: OUT, actor: 'your returns or freight audit person',

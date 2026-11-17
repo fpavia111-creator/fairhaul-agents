@@ -9,7 +9,7 @@ const files = {
   rates: { type: 'string', description: 'Rate sheet JSON: per forwarder, lanes with weight-break rates per kg and a minimum, surcharges per kg or flat, volumetric factor' },
 };
 const run = (a, ctx) => auditAir(ctx.records(a.invoices, 'invoices'), ctx.readJson(a.rates, 'air_rates'));
-const line = (r) => `${r.shipments} air waybill(s), ${r.billed} billed: ${r.with_findings} with findings, ${r.disputable} disputable. ${Object.entries(r.by_finding).map(([k, v]) => `${k} ${v}`).join(', ') || 'No findings.'}`;
+const line = (r) => `${r.shipments} air waybill(s), ${r.billed} billed: ${r.with_findings} with findings, ${r.disputable} disputable. ${Object.entries(r.by_finding).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1)).map(([k, v]) => `${k} ${v}`).join(', ') || 'No findings.'}`;
 
 const pair = draftPair({
   prefix: 'canopus', noun: 'dispute', verb: 'send', category: 'binding_send', outDir: OUT, actor: 'a person on your team',
