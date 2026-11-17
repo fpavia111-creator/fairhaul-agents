@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierIs } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { PAYMENT_FIELDS, PAYMENT_PROFILES, findDuplicates, recoveryText } from './duplicates.js';
 import { MEMORY, MEMORY_KINDS, vendorGroups } from './memory.js';
@@ -19,7 +19,7 @@ const pair = draftPair({
   description: 'Write drafts/recovery-<vendor>.md: a refund request listing each invoice the vendor was paid twice, with payment refs and dates. Includes only high-confidence groups unless confidence says otherwise. Marked DRAFT. Sending goes through algol_request_send (one click).',
   required: ['payments', 'vendor'],
   args: { ...files, vendor: { type: 'string', description: 'Vendor as named in the payments file' }, confidence: conf, from: { type: 'string', description: 'Your name and company' }, contact: { type: 'string', description: 'Vendor accounts receivable contact' } },
-  build: (a, ctx) => { const r = run(a, ctx); const c = a.confidence && a.confidence.length ? a.confidence : ['high']; const g = r.items.filter((x) => x.vendors.some((v) => carrierKey(v) === carrierKey(a.vendor)) && x.status === 'recover' && c.includes(x.confidence)); if (!g.length) throw new Error(`nothing to recover from "${a.vendor}" at confidence ${c.join(', ')}`); const d = recoveryText(g, { ...a, confidence: c }); return { id: g[0].vendor, to: a.contact, text: d.text, amount: d.total, extra: { groups: g.length } }; },
+  build: (a, ctx) => { const r = run(a, ctx); const c = a.confidence && a.confidence.length ? a.confidence : ['high']; const is = carrierIs(r.items.flatMap((x) => x.vendors), a.vendor); const g = r.items.filter((x) => x.vendors.some((v) => is(v)) && x.status === 'recover' && c.includes(x.confidence)); if (!g.length) throw new Error(`nothing to recover from "${a.vendor}" at confidence ${c.join(', ')}`); const d = recoveryText(g, { ...a, confidence: c }); return { id: g[0].vendor, to: a.contact, text: d.text, amount: d.total, extra: { groups: g.length } }; },
 });
 const refused = refusedTools([
   { name: 'ap_void_payment', category: 'move_money', description: 'Algol never voids, reverses or offsets payments.' },

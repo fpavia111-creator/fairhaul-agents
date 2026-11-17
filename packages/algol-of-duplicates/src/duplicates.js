@@ -1,5 +1,5 @@
 // Algol: freight invoices paid twice. Pure functions.
-import { exportProfile, carryGroup, firstRowPer, carrierKey, isoDate, daysBetween, round2, str, num, groupBy } from 'lodestar-core';
+import { exportProfile, carryGroup, firstRowPer, carrierKey, isoDate, daysBetween, round2, str, num, groupBy, carrierGrouper } from 'lodestar-core';
 
 const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const PAYMENT_FIELDS = Object.freeze({
@@ -22,7 +22,8 @@ export function findDuplicates(rows, { dateWindowDays = 3, asOf, sameVendors = [
   const today = isoDate(asOf) || new Date().toISOString().slice(0, 10);
   // Vendor records a person confirmed are one carrier (accepted domain memory) share one key.
   const alias = new Map(); for (const g of sameVendors) { const keys = g.vendors.map((v) => carrierKey(v) || str(v).toLowerCase()).filter(Boolean); for (const k of keys) alias.set(k, `same:${keys[0]}`); }
-  const vendorKey = (r) => { const byName = carrierKey(r.vendor); const byId = str(r.vendor_id).toLowerCase(); return alias.get(byName) || alias.get(byId) || alias.get(carrierKey(r.vendor_id)) || byName || byId; };
+  const group = carrierGrouper(rows.map((r) => r.vendor));
+  const vendorKey = (r) => { const byName = group(r.vendor); const byId = str(r.vendor_id).toLowerCase(); return alias.get(byName) || alias.get(byId) || alias.get(carrierKey(r.vendor_id)) || byName || byId; };
   const pay = rows.map((r, i) => ({ row: i + 1, vendor: str(r.vendor), vkey: vendorKey(r), vendor_id: str(r.vendor_id), invoice_number: str(r.invoice_number), inv: normInvoice(r.invoice_number), invoice_date: isoDate(r.invoice_date), amount: num(r.amount) ?? 0, paid_date: isoDate(r.paid_date), payment_ref: str(r.payment_ref), pro: normRef(r.pro), bol: normRef(r.bol), memo: str(r.memo) }));
   const paid = pay.filter((p) => p.amount > 0 && p.paid_date);
   const credits = pay.filter((p) => p.amount < 0);

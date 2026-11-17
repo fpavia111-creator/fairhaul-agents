@@ -1,5 +1,5 @@
 // Adhara: ocean freight invoices against the service contract. Pure functions.
-import { isoDate, round2, str, num, carrierKey, groupBy } from 'lodestar-core';
+import { isoDate, round2, str, num, carrierKey, groupBy, findCarrier } from 'lodestar-core';
 
 const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const OCEAN_LINE_FIELDS = Object.freeze({
@@ -45,7 +45,8 @@ export function auditOcean(rows, cfg) {
     const add = (code, detail, amount = 0) => findings.push({ code, detail, amount: round2(amount) });
     // An alias names the carrier, so it holds for every contract term of that carrier.
     const names = (c) => [c.carrier, ...cfg.contracts.filter((o) => carrierKey(o.carrier) === carrierKey(c.carrier)).flatMap((o) => o.aliases || [])];
-    const cands = cfg.contracts.filter((c) => names(c).some((n) => carrierKey(n) === carrierKey(r0.carrier)));
+    const one = findCarrier(cfg.contracts, r0.carrier, names);
+    const cands = one ? cfg.contracts.filter((c) => carrierKey(c.carrier) === carrierKey(one.carrier)) : [];
     const live = cands.filter((c) => !date || ((!c.effective || date >= c.effective) && (!c.expires || date <= c.expires)));
     const contract = live[0] || null;
     const equipment = eq(r0.equipment); const boxes = num(r0.containers);

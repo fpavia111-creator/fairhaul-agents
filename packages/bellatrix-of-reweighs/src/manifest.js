@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierIs } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { CORRECTION_FIELDS, REWEIGH_TERMS_SCHEMA, reviewCorrections, disputeText } from './reweighs.js';
 
@@ -16,7 +16,7 @@ const pair = draftPair({
   description: 'Write drafts/dispute-<carrier>.md listing each correction worth challenging or missing its certificate, with the reason (within scale tolerance, class not supported by density, no certificate). Marked DRAFT. Sending goes through bellatrix_request_send (one click).',
   required: ['corrections', 'carrier'],
   args: { ...files, carrier: { type: 'string', description: 'Carrier as named in the corrections file' }, from: { type: 'string', description: 'Your name and company' }, contact: { type: 'string', description: 'Carrier billing or inspection contact' } },
-  build: (a, ctx) => { const r = run(a, ctx); const items = r.items.filter((i) => carrierKey(i.carrier) === carrierKey(a.carrier) && ['challenge', 'ask_for_certificate'].includes(i.status)); if (!items.length) throw new Error(`nothing to dispute for "${a.carrier}"`); const d = disputeText(items, a); return { id: items[0].carrier, to: a.contact, text: d.text, amount: d.total, extra: { pros: d.pros } }; },
+  build: (a, ctx) => { const r = run(a, ctx); const is = carrierIs(r.items.map((i) => i.carrier), a.carrier); const items = r.items.filter((i) => is(i.carrier) && ['challenge', 'ask_for_certificate'].includes(i.status)); if (!items.length) throw new Error(`nothing to dispute for "${a.carrier}"`); const d = disputeText(items, a); return { id: items[0].carrier, to: a.contact, text: d.text, amount: d.total, extra: { pros: d.pros } }; },
 });
 const refused = refusedTools([
   { name: 'ap_pay_invoice', category: 'move_money', description: 'Bellatrix never pays or short-pays carriers.' },

@@ -51,3 +51,12 @@ test('the batch note lists holds, capped invoices and earlier payments to check'
   assert.match(text, /L1: Invoice S-L1 is 1100/); assert.match(text, /L3: Paid 1000 to Someone Else/);
   assert.match(text, /\| Summit Carriers \| L1 \| 1000 \|/);
 });
+
+test('a notice written under the carrier\'s full legal name still binds a load booked under its short name', () => {
+  const noas = [{ carrier: 'Summit Carriers Freight Lines LLC', factor: 'Apex Factoring, Inc.', effective: '2026-10-01' }];
+  const r = settle([rc('L1', { carrier: 'Summit Carriers' })], { invoices: [inv('L1', 1000)], payments: [{ load_id: 'L1', amount: 1000, payee: 'Apex Factoring', paid_at: '2026-11-12' }], noas, asOf: AS_OF });
+  assert.equal(r.rows[0].pay_to, 'Apex Factoring, Inc.');
+  assert.equal(r.items.filter((f) => f.code === 'paid_wrong_party').length, 0, 'paying the factor under its short name is right');
+  const wrong = settle([rc('L1')], { invoices: [inv('L1', 1000)], payments: [{ load_id: 'L1', amount: 1000, payee: 'Summit Carriers', paid_at: '2026-11-12' }], noas, asOf: AS_OF });
+  assert.equal(wrong.items.filter((f) => f.code === 'paid_wrong_party').length, 1);
+});

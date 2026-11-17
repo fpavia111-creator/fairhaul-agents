@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierIs } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { QUOTE_LOAD_FIELDS, QUOTE_FIELDS, QUOTE_SETTINGS_SCHEMA, compareQuotes, bookingText } from './quotes.js';
 
@@ -18,7 +18,7 @@ const pair = draftPair({
   description: 'Write drafts/booking-<load>.md: the confirmation accepting one carrier\'s quote for one load, with the all-in amount and what still needs filling in. Uses the best usable quote unless carrier is given. Marked DRAFT. Tendering goes through nunki_request_tender (one click).',
   required: ['loads', 'quotes', 'load_id'],
   args: { ...files, load_id: { type: 'string', description: 'Load to book' }, carrier: { type: 'string', description: 'Carrier to book (default the best usable quote)' }, reference: { type: 'string', description: 'Your reference for the carrier' }, from: { type: 'string', description: 'Your name and company' }, contact: { type: 'string', description: 'Carrier dispatch contact' } },
-  build: (a, ctx) => { const r = run(a, ctx); const i = r.items.find((x) => x.load_id.toLowerCase() === String(a.load_id).trim().toLowerCase()); if (!i) throw new Error(`no load "${a.load_id}"`); const q = a.carrier ? i.quotes.find((x) => carrierKey(x.carrier) === carrierKey(a.carrier)) : i.quotes.find((x) => x.usable); if (!q) throw new Error(`no usable quote for ${i.load_id}${a.carrier ? ` from ${a.carrier}` : ''}`); if (!q.usable) throw new Error(`the ${q.carrier} quote is not usable: ${q.notes.join('; ')}`); return { id: i.load_id, to: a.contact, text: bookingText(i, q, a), amount: q.all_in_cost, extra: { carrier: q.carrier } }; },
+  build: (a, ctx) => { const r = run(a, ctx); const i = r.items.find((x) => x.load_id.toLowerCase() === String(a.load_id).trim().toLowerCase()); if (!i) throw new Error(`no load "${a.load_id}"`); const q = a.carrier ? i.quotes.find((x) => carrierIs(i.quotes.map((y) => y.carrier), a.carrier)(x.carrier)) : i.quotes.find((x) => x.usable); if (!q) throw new Error(`no usable quote for ${i.load_id}${a.carrier ? ` from ${a.carrier}` : ''}`); if (!q.usable) throw new Error(`the ${q.carrier} quote is not usable: ${q.notes.join('; ')}`); return { id: i.load_id, to: a.contact, text: bookingText(i, q, a), amount: q.all_in_cost, extra: { carrier: q.carrier } }; },
 });
 const refused = refusedTools([
   { name: 'tms_tender_load', category: 'binding_send', description: 'Nunki never tenders or books loads in your TMS or a load board.' },

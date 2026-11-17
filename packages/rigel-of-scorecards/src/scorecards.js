@@ -1,5 +1,5 @@
 // Rigel: carrier scorecards from your own shipment history. Pure functions.
-import { isoDate, hoursBetween, round2, str, num, readYesNo, carrierKey, groupBy } from 'lodestar-core';
+import { isoDate, hoursBetween, round2, str, num, readYesNo, groupBy, carrierGrouper } from 'lodestar-core';
 
 const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const SCORE_FIELDS = Object.freeze({
@@ -48,8 +48,10 @@ const quarterOf = (d) => { const x = isoDate(d); return x ? `${x.slice(0, 4)}-Q$
 /** Score every carrier. */
 export function scorecards(rows, cfg = {}) {
   const c = { ...D, ...cfg, weights: { ...D.weights, ...(cfg.weights || {}) }, targets: { ...D.targets, ...(cfg.targets || {}) } };
-  // "Ridgeline Freight Inc." and "Ridgeline Freight" are one carrier, shown by the name used most.
-  const by = groupBy(rows, (r) => carrierKey(r.carrier) || '(none)');
+  // "Ridgeline Freight Inc.", "Ridgeline Freight" and plain "Ridgeline" are one carrier, shown by the name used most.
+  // Sister companies ("FedEx Freight", "FedEx Express") stay apart.
+  const group = carrierGrouper(rows.map((r) => r.carrier));
+  const by = groupBy(rows, (r) => group(r.carrier) || '(none)');
   const cards = [];
   for (const [, list] of by) {
     const counts = new Map(); for (const r of list) { const n = str(r.carrier) || '(none)'; counts.set(n, (counts.get(n) || 0) + 1); }

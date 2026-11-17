@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierIs } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { OCEAN_LINE_FIELDS, OCEAN_CONTRACT_SCHEMA, auditOcean, disputeText } from './ocean.js';
 
@@ -16,7 +16,7 @@ const pair = draftPair({
   description: 'Write drafts/dispute-<carrier>.md listing each ocean invoice charge above or outside the contract, by invoice and B/L. Marked DRAFT. Sending goes through adhara_request_send (one click).',
   required: ['invoices', 'contract', 'carrier'],
   args: { ...files, carrier: { type: 'string', description: 'Line or forwarder as named in the invoices' }, from: { type: 'string', description: 'Your name and company' }, contact: { type: 'string', description: 'Line or forwarder billing contact' } },
-  build: (a, ctx) => { const r = run(a, ctx); const items = r.items.filter((i) => carrierKey(i.carrier) === carrierKey(a.carrier) && i.disputable > 0); if (!items.length) throw new Error(`nothing to dispute for "${a.carrier}"`); const d = disputeText(items, a); return { id: items[0].carrier, to: a.contact, text: d.text, amount: d.total, extra: { bills: items.map((i) => i.bl) } }; },
+  build: (a, ctx) => { const r = run(a, ctx); const is = carrierIs(r.items.map((i) => i.carrier), a.carrier); const items = r.items.filter((i) => is(i.carrier) && i.disputable > 0); if (!items.length) throw new Error(`nothing to dispute for "${a.carrier}"`); const d = disputeText(items, a); return { id: items[0].carrier, to: a.contact, text: d.text, amount: d.total, extra: { bills: items.map((i) => i.bl) } }; },
 });
 const refused = refusedTools([
   { name: 'ap_pay_invoice', category: 'move_money', description: 'Adhara never pays lines or forwarders.' },

@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierIs } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { SCORE_FIELDS, SCORECARD_SCHEMA, METRIC_LABELS, scorecards, reviewText } from './scorecards.js';
 
@@ -17,7 +17,7 @@ const pair = draftPair({
   description: 'Write drafts/review-<carrier>.md: a review note for one carrier with its results against your targets, its rank, its late loads and any billing above the agreed amount. Marked DRAFT. Sending goes through rigel_request_send (one click).',
   required: ['shipments', 'carrier'],
   args: { ...files, carrier: { type: 'string', description: 'Carrier as named in the shipments file' }, period: { type: 'string', description: 'Period the review covers, e.g. "Q4 2026"' }, from: { type: 'string', description: 'Your name and company' }, contact: { type: 'string', description: 'Carrier account manager' } },
-  build: (a, ctx) => { const r = run(a, ctx); const c = r.cards.find((x) => carrierKey(x.carrier) === carrierKey(a.carrier)); if (!c) throw new Error(`no loads for carrier "${a.carrier}"`); return { id: c.carrier, to: a.contact, text: reviewText(c, r, a), extra: { score: c.score, rank: c.rank } }; },
+  build: (a, ctx) => { const r = run(a, ctx); const is = carrierIs(r.cards.map((x) => x.carrier), a.carrier); const c = r.cards.find((x) => is(x.carrier)); if (!c) throw new Error(`no loads for carrier "${a.carrier}"`); return { id: c.carrier, to: a.contact, text: reviewText(c, r, a), extra: { score: c.score, rank: c.rank } }; },
 });
 const refused = refusedTools([
   { name: 'email_send', category: 'binding_send', description: 'Rigel never sends email.' },

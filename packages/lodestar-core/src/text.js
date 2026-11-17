@@ -61,7 +61,9 @@ const NON_ASCII = /[^\x00-\x7f]/;
 const LSEP = '[.\\s]*';
 const spelled = (w) => w.split('').join(LSEP);
 const LATAM_CV = new RegExp(`\\s(?:${['sapi', 'sab', 'sderl', 'srl', 'sa', 'sc'].map(spelled).join('|')})${LSEP}de${LSEP}${spelled('cv')}[.\\s]*$`);
-const LATIN_TAIL = new RegExp(`\\s(?:${['slu', 'sl', 'sau', 'snc', 'sapa', 'sa', 'se', 'me', 'epp'].map(spelled).join('|')})[.\\s]*$`);
+// Also end-only: Nordic A/S, AS and AB, Dutch B.V. and N.V., Japanese K.K., Singapore Pte.
+// ("AS Trucking" and "AB Freight" keep their names).
+const LATIN_TAIL = new RegExp(`\\s(?:${['slu', 'sl', 'sau', 'snc', 'sapa', 'sa', 'se', 'me', 'epp', 'as', 'ab', 'bv', 'nv', 'kk', 'pte'].map(spelled).join('|')})[.\\s]*$`);
 
 /**
  * Remove legal forms that only count at the end of a lowercase name: S.L., S.L.U., S.A.U.,
@@ -100,7 +102,8 @@ export function normalizeName(s, { stripEntity = true } = {}) {
     if (stripEntity) t = stripLegalForms(t);
     t = t.replace(/[^\p{L}\p{N}\s.]/gu, ' ');
   }
-  if (stripEntity) t = stripLegalTail(t).replace(ENTITY, ' ');
+  // The tail is checked again after the whole-word forms go, so "Pte. Ltd." and "Co. A/S" both come off.
+  if (stripEntity) t = stripLegalTail(stripLegalTail(t).replace(ENTITY, ' '));
   return t.replace(/\./g, ' ').split(/\s+/).filter((w) => w && !STOP.has(w)).join(' ');
 }
 

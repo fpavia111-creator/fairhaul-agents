@@ -1,5 +1,5 @@
 // Fomalhaut: container demurrage and detention. Pure functions.
-import { exportProfile, carrierKey, isoDate, addDays, daysBetween, round2, str, num, groupBy } from 'lodestar-core';
+import { exportProfile, isoDate, addDays, daysBetween, round2, str, num, groupBy, findCarrier } from 'lodestar-core';
 
 const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const CONTAINER_FIELDS = Object.freeze({
@@ -46,7 +46,7 @@ const tiersFor = (c, size) => (c.tiers_by_size && size && c.tiers_by_size[String
 export function clocks(rows, terms, { asOf } = {}) {
   const today = isoDate(asOf) || new Date().toISOString().slice(0, 10);
   const off = terms.start_offset_days ?? 1, warn = terms.warn_days ?? 2, ex = terms.excluded_dates || [];
-  const lineTerms = (name) => { const k = Object.keys(terms.lines || {}).find((x) => carrierKey(x) === carrierKey(name)); return k ? terms.lines[k] : null; };
+  const lineTerms = (name) => { const k = findCarrier(Object.keys(terms.lines || {}), name); return k ? terms.lines[k] : null; };
   return rows.map((r) => {
     const lt = lineTerms(r.line); const disc = isoDate(r.discharged), out = isoDate(r.gate_out), ret = isoDate(r.empty_returned);
     const base = { container: str(r.container), line: str(r.line), bl: str(r.bl) || null, size: str(r.size) || null, discharged: disc, gate_out: out, empty_returned: ret };

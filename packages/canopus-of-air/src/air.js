@@ -1,5 +1,5 @@
 // Canopus: air freight invoices against weight-break rate sheets. Pure functions.
-import { isoDate, round2, str, num, carrierKey } from 'lodestar-core';
+import { isoDate, round2, str, num, carrierKey, findCarrier } from 'lodestar-core';
 
 const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const AIR_FIELDS = Object.freeze({
@@ -60,7 +60,8 @@ export function auditAir(rows, rates) {
     const base = { invoice_number: str(r0.invoice_number), forwarder: str(r0.forwarder), awb: str(r0.awb), lane: `${ap(r0.origin)}-${ap(r0.destination)}`, flight_date: date, actual_kg: num(r0.actual_kg), volumetric_kg, chargeable_kg, billed_kg: billedKg, billed: round2(lines.reduce((s, l) => s + l.amount, 0)) };
     // An alias names the forwarder, so it holds for every rate sheet term of that forwarder.
     const names = (f) => [f.forwarder, ...rates.forwarders.filter((o) => carrierKey(o.forwarder) === carrierKey(f.forwarder)).flatMap((o) => o.aliases || [])];
-    const fw = rates.forwarders.filter((f) => names(f).some((n) => carrierKey(n) === carrierKey(r0.forwarder))).find((f) => !date || ((!f.effective || date >= f.effective) && (!f.expires || date <= f.expires)));
+    const one = findCarrier(rates.forwarders, r0.forwarder, names);
+    const fw = (one ? rates.forwarders.filter((f) => carrierKey(f.forwarder) === carrierKey(one.forwarder)) : []).find((f) => !date || ((!f.effective || date >= f.effective) && (!f.expires || date <= f.expires)));
     if (!fw) { add('no_rate_sheet', `No rate sheet in force for ${r0.forwarder} on ${date || 'an unknown date'}.`); return { ...base, findings, disputable: 0 }; }
     if (fw.currency && lines.some((l) => l.currency && l.currency !== fw.currency.toUpperCase())) { add('currency_mismatch', `Billed in another currency than the rate sheet (${fw.currency}); not compared.`); return { ...base, findings, disputable: 0 }; }
     if (billedKg !== null && chargeable_kg !== null && billedKg - chargeable_kg > step / 2) add('weight_over', `Billed on ${billedKg} kg; actual ${base.actual_kg} kg and volumetric ${volumetric_kg} kg give ${chargeable_kg} kg chargeable.`);

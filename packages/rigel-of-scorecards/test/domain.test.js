@@ -55,3 +55,9 @@ test('the review note names the rank, the targets missed and the late loads, and
   const small = scorecards([load('Tiny', 1)]);
   assert.match(reviewText(small.cards[0], small, {}), /fewer than 5 loads you are not ranked/);
 });
+
+test('sister companies get their own scorecards; a short name joins the one longer name that fits', () => {
+  const rows = [load('FedEx Freight', 1), load('FedEx Express', 2), load('Ridgeline', 3), load('Ridgeline Freight Inc.', 4), load('Ridgeline Freight Inc.', 5)];
+  const r = scorecards(rows, { min_loads: 1 });
+  assert.deepEqual(r.cards.map((c) => [c.carrier, c.loads]).sort(), [['FedEx Express', 1], ['FedEx Freight', 1], ['Ridgeline Freight Inc.', 3]]);
+});

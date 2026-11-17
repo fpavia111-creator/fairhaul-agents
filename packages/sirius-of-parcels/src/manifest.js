@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, toIcs, carrierKey } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, toIcs, carrierIs } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { PARCEL_FIELDS, PARCEL_PROFILES, PARCEL_TERMS_SCHEMA, packagesFrom, auditParcels, refundText } from './parcels.js';
 
@@ -25,7 +25,7 @@ const pair = draftPair({
   args: { ...files, carrier: { type: 'string', description: 'Carrier as it appears in the invoice data (UPS, FedEx, DHL, USPS)' }, account: { type: 'string', description: 'Your shipper account number' }, from: { type: 'string', description: 'Your name and company' } },
   build: (a, ctx) => {
     const { r } = run(a, ctx);
-    const items = r.items.filter((i) => carrierKey(i.carrier) === carrierKey(a.carrier));
+    const is = carrierIs(r.items.map((i) => i.carrier), a.carrier); const items = r.items.filter((i) => is(i.carrier));
     if (!items.length) throw new Error(`no packages for carrier "${a.carrier}"`);
     const d = refundText(items, a);
     if (!d.tracking.length) throw new Error(`nothing to claim for ${a.carrier} inside the claim window`);

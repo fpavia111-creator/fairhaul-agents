@@ -1,5 +1,5 @@
 // Vega: detention, layover and lumper charges checked against dock times.
-import { chargeCode, carrierKey, hoursBetween, round2, str, num, groupBy } from 'lodestar-core';
+import { chargeCode, hoursBetween, round2, str, num, groupBy, findCarrier } from 'lodestar-core';
 
 const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const CHARGE_FIELDS = Object.freeze({
@@ -35,7 +35,7 @@ const RULES = { type: 'object', additionalProperties: false, properties: {
 export const DETENTION_TERMS_SCHEMA = Object.freeze({ ...RULES, properties: { ...RULES.properties, note: { type: 'string' }, tolerance: { type: 'number', minimum: 0 }, carriers: { type: 'object', additionalProperties: RULES } } });
 
 const DEFAULTS = { free_hours: 2, rate_per_hour: 50, bill_increment_minutes: 15, grace_minutes: 15, max_per_stop: null, layover_amount: null, layover_min_hours: 16, lumper_requires_receipt: true };
-export const termsFor = (terms, carrier) => ({ ...DEFAULTS, ...Object.fromEntries(Object.entries(terms || {}).filter(([k]) => k in DEFAULTS)), ...((terms && terms.carriers && Object.entries(terms.carriers).find(([k]) => carrierKey(k) === carrierKey(carrier))?.[1]) || {}) });
+export const termsFor = (terms, carrier) => ({ ...DEFAULTS, ...Object.fromEntries(Object.entries(terms || {}).filter(([k]) => k in DEFAULTS)), ...((terms && terms.carriers && terms.carriers[findCarrier(Object.keys(terms.carriers), carrier)]) || {}) });
 
 const ms = (v) => { const s = str(v); if (!s) return NaN; return Date.parse(/[zZ]|[+-]\d\d:?\d\d$/.test(s) ? s.replace(' ', 'T') : `${s.replace(' ', 'T')}Z`); };
 const key = (load, stop) => `${str(load).toLowerCase()}|${str(stop) || '1'}`;

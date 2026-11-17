@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierIs } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { LOAD_FIELDS, POD_FIELDS, matchPods, requestText } from './pods.js';
 
@@ -18,7 +18,7 @@ const pair = draftPair({
   description: 'Write drafts/pod_request-<carrier>.md asking one carrier for each missing or unsigned POD, with shipment, PRO, delivery date and invoice. Marked DRAFT. Sending goes through alcor_request_send (one click).',
   required: ['loads', 'pods', 'carrier'],
   args: { ...files, carrier: { type: 'string', description: 'Carrier as named in the loads file' }, from: { type: 'string', description: 'Your name and company' }, contact: { type: 'string', description: 'Carrier POD or billing contact' } },
-  build: (a, ctx) => { const r = run(a, ctx); const items = r.items.filter((i) => carrierKey(i.carrier) === carrierKey(a.carrier) && (i.status === 'chase' || (i.status === 'fix' && i.issues.some((x) => x.code === 'unsigned')))); if (!items.length) throw new Error(`no missing or unsigned PODs for "${a.carrier}"`); return { id: items[0].carrier, to: a.contact, text: requestText(items, a), extra: { shipments: items.map((i) => i.shipment_id) } }; },
+  build: (a, ctx) => { const r = run(a, ctx); const is = carrierIs(r.items.map((i) => i.carrier), a.carrier); const items = r.items.filter((i) => is(i.carrier) && (i.status === 'chase' || (i.status === 'fix' && i.issues.some((x) => x.code === 'unsigned')))); if (!items.length) throw new Error(`no missing or unsigned PODs for "${a.carrier}"`); return { id: items[0].carrier, to: a.contact, text: requestText(items, a), extra: { shipments: items.map((i) => i.shipment_id) } }; },
 });
 const refused = refusedTools([
   { name: 'ap_hold_invoice', category: 'move_money', description: 'Alcor never holds or releases invoices in your AP system; it lists them for a person.' },

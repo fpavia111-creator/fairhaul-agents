@@ -1,6 +1,6 @@
 // Aldebaran: warning signs in the carrier master and booked loads. Pure functions.
 // Signals, not verdicts: every one has an innocent explanation a person checks.
-import { str, groupBy, isoDate, daysBetween, carrierKey } from 'lodestar-core';
+import { str, groupBy, isoDate, daysBetween, carrierGrouper, sameCarrier } from 'lodestar-core';
 
 const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const CARRIER_FIELDS = Object.freeze({
@@ -41,6 +41,7 @@ export function vetCarriers(carriers, loads = [], { asOf, newAuthorityDays = 180
   const add = (c, code, detail) => signals.get(str(c.carrier_id)).push({ code, weight: WEIGHTS[code], detail });
   const active = carriers.filter((c) => !/inactive|blocked|do not use/i.test(str(c.status)));
   const isActive = new Set(active);
+  const groupName = carrierGrouper(carriers.map((c) => c.name));
   // Name at most five other carriers in a detail, so a value shared by hundreds stays readable (and fast).
   const others = (list, c) => { const o = list.filter((x) => x !== c); const named = o.slice(0, 5).map((x) => `${x.name} (${x.carrier_id}${isActive.has(x) ? '' : `, ${str(x.status).toLowerCase()}`})`).join(', '); return o.length > 5 ? `${named} and ${o.length - 5} more` : named; };
   const shared = (field, f, code, label) => {
@@ -48,7 +49,7 @@ export function vetCarriers(carriers, loads = [], { asOf, newAuthorityDays = 180
     // phone turning up under a new name is the sign that matters most. Only active
     // carriers get the signal.
     for (const [k, list] of groupBy(carriers.filter((c) => f(c[field])), (c) => f(c[field]))) {
-      const names = new Set(list.map((c) => carrierKey(c.name))); if (names.size < 2) continue;
+      const names = new Set(list.map((c) => groupName(c.name))); if (names.size < 2) continue;
       for (const c of list.filter((x) => isActive.has(x))) add(c, code, `${label} ${field === 'bank_last4' ? `ending ${k}` : str(c[field])} is also on ${others(list, c)}.`);
     }
   };
@@ -68,7 +69,7 @@ export function vetCarriers(carriers, loads = [], { asOf, newAuthorityDays = 180
     if (ins && ins < today) add(c, 'insurance_expired', `Insurance on file expired ${ins}.`);
     else if (ins && daysBetween(today, ins) <= expiringDays) add(c, 'insurance_expiring', `Insurance on file expires ${ins}.`);
     const bc = isoDate(c.bank_changed); if (bc && daysBetween(bc, today) <= bankChangeDays) add(c, 'bank_changed_recently', `Payment details changed ${bc}. Confirm by calling a number you already had, not one in the change request.`);
-    if (str(c.remit_to) && carrierKey(c.remit_to) !== carrierKey(c.name)) add(c, 'remit_to_other_name', `Pays to ${c.remit_to}. Often a factoring company; ask for the notice of assignment.`);
+    if (str(c.remit_to) && !sameCarrier(c.remit_to, c.name)) add(c, 'remit_to_other_name', `Pays to ${c.remit_to}. Often a factoring company; ask for the notice of assignment.`);
     if (FREE_MAIL.test(str(c.email))) add(c, 'free_email', `Contact email ${c.email} is a free mailbox.`);
     if (/unsat/i.test(str(c.safety_rating))) add(c, 'unsatisfactory_rating', `Safety rating on file: ${c.safety_rating}.`);
     else if (/condit/i.test(str(c.safety_rating))) add(c, 'conditional_rating', `Safety rating on file: ${c.safety_rating}.`);

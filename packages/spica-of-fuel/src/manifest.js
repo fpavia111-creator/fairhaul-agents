@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, FREIGHT_CONTRACT_SCHEMA, INVOICE_LINE_FIELDS, INVOICE_PROFILES, readInvoiceLines, groupInvoices, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, FREIGHT_CONTRACT_SCHEMA, INVOICE_LINE_FIELDS, INVOICE_PROFILES, readInvoiceLines, groupInvoices, writeWorklist, draftPair, refusedTools, LIMITS, carrierIs } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { checkFuel, compareTables, sensitivity, disputeText } from './fuel.js';
 
@@ -16,7 +16,7 @@ const pair = draftPair({
   description: 'Write drafts/dispute-<carrier>.md listing each invoice whose fuel surcharge is above the carrier\'s table at the diesel price for the week it shipped, including invoices priced on a later week. Marked DRAFT. Sending goes through spica_request_send (one click).',
   required: ['invoices', 'contract', 'carrier'],
   args: { ...files, carrier: { type: 'string', description: 'Carrier as named in the contract or invoices' }, from: { type: 'string', description: 'Your name and company' }, contact: { type: 'string', description: 'Carrier billing contact' } },
-  build: (a, ctx) => { const { contract, invoices } = load(a, ctx); const r = checkFuel(invoices, contract); const items = r.items.filter((i) => carrierKey(i.carrier) === carrierKey(a.carrier) && ['fuel_over', 'wrong_week'].includes(i.status)); if (!items.length) throw new Error(`no fuel over the table for "${a.carrier}"`); const d = disputeText(items, a); return { id: items[0].carrier, to: a.contact, text: d.text, amount: d.total, extra: { invoices: d.invoices } }; },
+  build: (a, ctx) => { const { contract, invoices } = load(a, ctx); const r = checkFuel(invoices, contract); const is = carrierIs(r.items.map((i) => i.carrier), a.carrier); const items = r.items.filter((i) => is(i.carrier) && ['fuel_over', 'wrong_week'].includes(i.status)); if (!items.length) throw new Error(`no fuel over the table for "${a.carrier}"`); const d = disputeText(items, a); return { id: items[0].carrier, to: a.contact, text: d.text, amount: d.total, extra: { invoices: d.invoices } }; },
 });
 const refused = refusedTools([
   { name: 'ap_pay_invoice', category: 'move_money', description: 'Spica never pays or short-pays carriers.' },

@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierIs } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { LANE_FIELDS, BID_FIELDS, AWARD_RULES_SCHEMA, award, awardText } from './bids.js';
 
@@ -17,7 +17,7 @@ const pair = draftPair({
   description: 'Write drafts/award-<carrier>.md: the award letter for one carrier listing its lanes, estimated loads and rates, and lanes where it is backup. Marked DRAFT. Sending goes through altair_request_send (one click).',
   required: ['lanes', 'bids', 'carrier'],
   args: { ...files, carrier: { type: 'string', description: 'Carrier as named in the bids' }, rfp: { type: 'string', description: 'RFP name' }, start: { type: 'string', description: 'Start date of the award' }, from: { type: 'string', description: 'Your name and company' }, contact: { type: 'string', description: 'Carrier pricing contact' } },
-  build: (a, ctx) => { const r = run(a, ctx); const c = r.carriers.find((x) => carrierKey(x.carrier) === carrierKey(a.carrier)); if (!c) throw new Error(`"${a.carrier}" wins no lanes in this scenario`); return { id: c.carrier, to: a.contact, text: awardText(c.carrier, r.results, a), amount: c.spend, extra: { lanes: c.lanes, loads: c.loads } }; },
+  build: (a, ctx) => { const r = run(a, ctx); const is = carrierIs(r.carriers.map((x) => x.carrier), a.carrier); const c = r.carriers.find((x) => is(x.carrier)); if (!c) throw new Error(`"${a.carrier}" wins no lanes in this scenario`); return { id: c.carrier, to: a.contact, text: awardText(c.carrier, r.results, a), amount: c.spend, extra: { lanes: c.lanes, loads: c.loads } }; },
 });
 const refused = refusedTools([
   { name: 'tms_load_rates', category: 'production_deploy', description: 'Altair never loads rates or routing guides into your TMS.' },

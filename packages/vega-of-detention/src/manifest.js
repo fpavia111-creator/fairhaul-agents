@@ -1,4 +1,4 @@
-import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierKey } from 'lodestar-core';
+import { defineManifest, MODEL_PIN, writeWorklist, draftPair, refusedTools, LIMITS, carrierIs } from 'lodestar-core';
 import { readFileSync } from 'node:fs';
 import { CHARGE_FIELDS, STOP_FIELDS, DETENTION_TERMS_SCHEMA, auditCharges, facilities, disputeText } from './detention.js';
 
@@ -17,7 +17,7 @@ const pair = draftPair({
   description: 'Write drafts/dispute-<carrier>.md listing every disputed detention, layover and lumper charge for one carrier with billed, allowed and the dock-time reason. Marked DRAFT. Sending goes through vega_request_send (one click).',
   required: ['charges', 'stops', 'carrier'],
   args: { ...files, carrier: { type: 'string', description: 'Carrier as named in the charges file' }, from: { type: 'string', description: 'Your name and company' }, contact: { type: 'string', description: 'Carrier billing contact' } },
-  build: (a, ctx) => { const { r } = run(a, ctx); const items = r.items.filter((i) => carrierKey(i.carrier) === carrierKey(a.carrier)); if (!items.length) throw new Error(`no charges for carrier "${a.carrier}"`); const d = disputeText(items, a); if (!d.loads.length) throw new Error(`nothing to dispute for ${a.carrier}`); return { id: a.carrier, to: a.contact, text: d.text, amount: d.total, extra: { loads: d.loads } }; },
+  build: (a, ctx) => { const { r } = run(a, ctx); const is = carrierIs(r.items.map((i) => i.carrier), a.carrier); const items = r.items.filter((i) => is(i.carrier)); if (!items.length) throw new Error(`no charges for carrier "${a.carrier}"`); const d = disputeText(items, a); if (!d.loads.length) throw new Error(`nothing to dispute for ${a.carrier}`); return { id: a.carrier, to: a.contact, text: d.text, amount: d.total, extra: { loads: d.loads } }; },
 });
 const refused = refusedTools([
   { name: 'ap_pay_invoice', category: 'move_money', description: 'Vega never pays carriers or lumper services.' },

@@ -29,7 +29,7 @@ export { foldText, readNumber, numberReader } from './intl.js';
 export { decodeText, encodingName, ENCODINGS } from './encoding.js';
 export { COLUMN_WORDS, COLUMN_LANGUAGES, FIELD_CONCEPTS, translatedNames, namesFor } from './i18n/columns.js';
 export { LANGS, LANG_NAMES, HTML_LANG, normLang, isLang, makeText, mergeCatalogs, CORE_TEXT, coreText } from './lang.js';
-export { carrierKey, sameCarrier, canonicalCarrier, zoneOf, placeMatches, laneLabel, isoDate, daysBetween, hoursBetween, addDays, inWindow, CHARGE_CODES, chargeCode, dimWeight, billableWeight, densityPcf, DENSITY_SCALES, classForDensity, FREIGHT_CONTRACT_SCHEMA, contractFor, laneFor, laneLinehaul, contractFuel, dieselFor, accessorialAllowed, groupBy, num, sum, str } from './freight.js';
+export { carrierKey, sameCarrier, findCarrier, carrierGrouper, carrierIs, canonicalCarrier, zoneOf, placeMatches, laneLabel, isoDate, daysBetween, hoursBetween, addDays, inWindow, CHARGE_CODES, chargeCode, dimWeight, billableWeight, densityPcf, DENSITY_SCALES, classForDensity, FREIGHT_CONTRACT_SCHEMA, contractFor, laneFor, laneLinehaul, contractFuel, dieselFor, accessorialAllowed, groupBy, num, sum, str } from './freight.js';
 export { parseX12, readX12, x12Segments, x12Delimiters, x12DateTime, n2, read204, read210, read214, read990, read997, STATUS_214, X12_READERS, invoicesFrom210 } from './x12.js';
 export { MODEL_PIN, OPEN_MARKER, filesHash, appendRow, htmlTable, writeWorklist, refusedTools, draftPair, LIMITS } from './kit.js';
 export { INVOICE_LINE_FIELDS, INVOICE_PROFILES, SHIPMENT_FIELDS, FREIGHT_SOURCE_FIELDS, looksX12, x12InvoiceLines, readInvoiceLines, groupInvoices } from './freight-sources.js';

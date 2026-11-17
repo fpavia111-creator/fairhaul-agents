@@ -13,23 +13,82 @@ export const str = (v) => String(v ?? '').trim();
 
 // ---------------------------------------------------------------- carriers ----
 
-// Legal forms in English and the forms ocean lines and forwarders abroad use (A/S, AG, B.V., S.p.A., K.K., Pte...).
-const CARRIER_NOISE = /\b(inc|incorporated|llc|l\.l\.c|ltd|limited|corp|corporation|co|company|lp|llp|plc|gmbh|a\/s|ag|ab|as|aps|b\.v|bv|n\.v|nv|s\.a\.s|sas|s\.a|sa|s\.p\.a|spa|s\.r\.l|srl|sarl|s\.l|sl|ltda|oy|k\.k|kk|pty|pte|kg|se|the)\b\.?/gi;
-const CARRIER_WORDS = /\b(freight|freightways|trucking|transport|transportation|logistics|lines|line|express|carriers?|systems?|services?|motor|ltl)\b/gi;
+// Words that say which part of a carrier's business a name means. They stay in the key,
+// because "FedEx Freight" and "FedEx Express" are different carriers with different
+// contracts, and are only used to match a shorter name to a longer one ("Ridgeline" and
+// "Ridgeline Freight Lines"). Plurals and "transportation" are folded.
+const DIVISION = { freight: 'freight', freightways: 'freightways', trucking: 'trucking', transport: 'transport', transportation: 'transport', logistics: 'logistics', lines: 'line', line: 'line', express: 'express', carriers: 'carrier', carrier: 'carrier', systems: 'system', system: 'system', services: 'service', service: 'service', motor: 'motor', ltl: 'ltl', ground: 'ground', air: 'air', cargo: 'cargo', ocean: 'ocean', intermodal: 'intermodal', parcel: 'parcel' };
+const DIV = new Set(Object.values(DIVISION));
+const KEYS = new Map();
 
-/** Canonical key for a carrier name or SCAC, for matching across files. "XPO Logistics, Inc." and "XPO" give "xpo". */
+/**
+ * Canonical key for a carrier name or SCAC, for matching across files. The legal form is
+ * dropped ("XPO Logistics, Inc." and "XPO Logistics" give "xpo logistics"; GmbH, A/S, B.V.,
+ * S.A. de C.V., 株式会社 and the like too). Use sameCarrier, findCarrier or carrierGrouper
+ * when a shorter name should also match ("XPO").
+ */
 export function carrierKey(v) {
   const s = str(v);
   if (!s) return '';
-  if (/^[A-Z]{2,4}$/.test(s)) return s.toLowerCase();
-  const k = normalizeName(s.replace(CARRIER_NOISE, ' ').replace(CARRIER_WORDS, ' '));
-  return k || normalizeName(s);
+  const hit = KEYS.get(s); if (hit !== undefined) return hit;
+  const k = /^[A-Z]{2,4}$/.test(s) ? s.toLowerCase() : normalizeName(s).split(' ').map((w) => DIVISION[w] || w).join(' ') || normalizeName(s, { stripEntity: false }) || s.toLowerCase();
+  if (KEYS.size > 50000) KEYS.clear();
+  KEYS.set(s, k);
+  return k;
 }
+const parts = (k) => { const w = k.split(' '); return { base: w.filter((x) => !DIV.has(x)).join(' '), div: w.filter((x) => DIV.has(x)) }; };
+const within = (a, b) => a.div.every((x) => b.div.includes(x));
 
-/** True when two carrier names or SCACs plausibly name the same carrier. */
+/**
+ * True when two carrier names or SCACs name the same carrier: the same key, or the same name
+ * where one side only leaves out business words the other has ("Ridgeline" and "Ridgeline
+ * Freight Lines"). "FedEx Freight" and "FedEx Express" are not the same.
+ */
 export function sameCarrier(a, b, aliases = {}) {
   const ka = carrierKey(aliases[str(a)] || a), kb = carrierKey(aliases[str(b)] || b);
-  return !!ka && ka === kb;
+  if (!ka || !kb) return false;
+  if (ka === kb) return true;
+  const pa = parts(ka), pb = parts(kb);
+  return !!pa.base && pa.base === pb.base && (within(pa, pb) || within(pb, pa));
+}
+
+/**
+ * The entry of a list that names this carrier, or null. An exact key wins; otherwise a
+ * looser match counts only when it points at one carrier, so "FedEx" is not guessed
+ * between "FedEx Freight" and "FedEx Express". namesOf gives every name an entry goes by.
+ */
+export function findCarrier(list, name, namesOf = (x) => [x]) {
+  const k = carrierKey(name);
+  if (!k) return null;
+  const all = (x) => namesOf(x).filter((n) => str(n));
+  const exact = list.find((x) => all(x).some((n) => carrierKey(n) === k));
+  if (exact) return exact;
+  const loose = list.filter((x) => all(x).some((n) => sameCarrier(n, name)));
+  return new Set(loose.map((x) => carrierKey(all(x)[0]))).size === 1 ? loose[0] : null;
+}
+
+/** A test for "is this the carrier the person named?" over the names in one data set: carrierIs(names, wanted)(name). Follows carrierGrouper, so "FedEx" does not pick both FedEx Freight and FedEx Express. */
+export function carrierIs(names, wanted) {
+  const g = carrierGrouper([...names, wanted]); const w = g(wanted);
+  return (name) => !!w && g(name) === w;
+}
+
+/**
+ * Group the carrier names of one data set: returns name -> group key. Names with the same
+ * key are one carrier; a shorter name joins a longer one when exactly one fits ("Ridgeline"
+ * joins "Ridgeline Freight" unless "Ridgeline Logistics" is there too).
+ */
+export function carrierGrouper(names) {
+  const keys = [...new Set([...names].map(carrierKey).filter(Boolean))];
+  const map = new Map(keys.map((k) => [k, k]));
+  const byBase = new Map();
+  for (const k of keys) { const p = parts(k); if (!p.base) continue; if (!byBase.has(p.base)) byBase.set(p.base, []); byBase.get(p.base).push({ k, ...p }); }
+  const under = (a, b) => a.div.length < b.div.length && within(a, b);
+  for (const list of byBase.values()) {
+    if (list.length < 2) continue;
+    for (const a of list) { const above = list.filter((b) => under(a, b)); const top = above.filter((b) => !above.some((c) => under(b, c))); if (top.length === 1) map.set(a.k, top[0].k); }
+  }
+  return (name) => { const k = carrierKey(name); return map.get(k) ?? k; };
 }
 
 // ------------------------------------------------------------------ places ----
@@ -244,14 +303,25 @@ export const FREIGHT_CONTRACT_SCHEMA = Object.freeze({
 
 /** Find the contract block for a carrier (by name, SCAC or alias) that is in force on `date`. */
 export function contractFor(contract, carrier, date) {
-  const list = (contract && contract.carriers) || [];
-  const k = carrierKey(carrier);
-  // A carrier's SCAC and aliases name it in every one of its contract terms, even when only one term lists them.
-  const names = (c) => list.filter((x) => carrierKey(x.carrier) === carrierKey(c.carrier)).flatMap((x) => [x.carrier, x.scac, ...(x.aliases || [])]).filter(Boolean);
-  const hits = list.filter((c) => names(c).some((n) => carrierKey(n) === k));
+  const hits = carrierBlocks(contract, carrier);
   const d = isoDate(date);
   const live = hits.filter((c) => !d || ((!c.effective || d >= c.effective) && (!c.expires || d <= c.expires)));
   return { block: live[0] || null, expired: !live.length && hits.length ? hits[0] : null };
+}
+
+const BLOCKS = new WeakMap();
+/** Every contract term of the carrier a name points at. A carrier's SCAC and aliases name it in all of its terms, even when only one term lists them. */
+function carrierBlocks(contract, carrier) {
+  const list = (contract && contract.carriers) || [];
+  if (!list.length) return [];
+  let cache = BLOCKS.get(list); if (!cache) { cache = new Map(); BLOCKS.set(list, cache); }
+  const key = str(carrier);
+  if (cache.has(key)) return cache.get(key);
+  const names = (c) => list.filter((x) => carrierKey(x.carrier) === carrierKey(c.carrier)).flatMap((x) => [x.carrier, x.scac, ...(x.aliases || [])]).filter(Boolean);
+  const one = findCarrier(list, carrier, names);
+  const hits = one ? list.filter((c) => carrierKey(c.carrier) === carrierKey(one.carrier)) : [];
+  cache.set(key, hits);
+  return hits;
 }
 
 /** Best lane for a shipment: the most specific matching origin and destination. */
@@ -325,7 +395,6 @@ export function groupBy(rows, key) {
 
 /** The contract's own name for a carrier given any of its names, SCAC or aliases; the input when no block names it. */
 export function canonicalCarrier(contract, name) {
-  const k = carrierKey(name);
-  const b = ((contract && contract.carriers) || []).find((c) => [c.carrier, c.scac, ...(c.aliases || [])].filter(Boolean).some((n) => carrierKey(n) === k));
+  const b = carrierBlocks(contract, name)[0];
   return b ? b.carrier : str(name);
 }

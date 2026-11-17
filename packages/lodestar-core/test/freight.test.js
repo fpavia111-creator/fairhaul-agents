@@ -1,13 +1,54 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { carrierKey, sameCarrier, zoneOf, placeMatches, chargeCode, dimWeight, densityPcf, classForDensity, contractFor, laneFor, laneLinehaul, contractFuel, dieselFor, accessorialAllowed, daysBetween, hoursBetween, readX12, parseX12, invoicesFrom210, n2, validate, FREIGHT_CONTRACT_SCHEMA } from '../src/index.js';
+import { carrierKey, sameCarrier, findCarrier, carrierGrouper, canonicalCarrier, zoneOf, placeMatches, chargeCode, dimWeight, densityPcf, classForDensity, contractFor, laneFor, laneLinehaul, contractFuel, dieselFor, accessorialAllowed, daysBetween, hoursBetween, readX12, parseX12, invoicesFrom210, n2, validate, FREIGHT_CONTRACT_SCHEMA } from '../src/index.js';
 
-test('carrier keys match across spellings', () => {
-  assert.equal(carrierKey('XPO Logistics, Inc.'), 'xpo');
+test('carrier keys drop the legal form and keep the business words', () => {
+  assert.equal(carrierKey('XPO Logistics, Inc.'), 'xpo logistics');
+  assert.equal(carrierKey('Old Dominion Freight Lines, Inc.'), carrierKey('Old Dominion Freight Line'));
+  assert.equal(carrierKey('Maersk A/S'), 'maersk'); assert.equal(carrierKey('Skyline Logistics B.V.'), 'skyline logistics');
+  assert.equal(carrierKey('Example Pte. Ltd.'), 'example'); assert.equal(carrierKey('Example K.K.'), 'example'); assert.equal(carrierKey('Transportes Ejemplo S.A. de C.V.'), 'transportes ejemplo');
+  // A legal form is only a legal form at the end of the name.
+  assert.equal(carrierKey('SL Green Freight'), 'sl green freight'); assert.equal(carrierKey('AS Trucking'), 'as trucking'); assert.equal(carrierKey('SE Freight Lines'), 'se freight line');
+  assert.equal(carrierKey('テスト運輸株式会社'), carrierKey('(株)テスト運輸')); assert.equal(carrierKey('示例物流有限公司'), '示例物流'); assert.equal(carrierKey('예시물류 주식회사'), '예시물류');
+  assert.equal(carrierKey('EXLT'), 'exlt'); assert.equal(carrierKey(''), '');
+});
+
+test('a shorter carrier name matches a longer one, but sister companies stay apart', () => {
   assert.ok(sameCarrier('Old Dominion Freight Line', 'old dominion'));
+  assert.ok(sameCarrier('XPO', 'XPO Logistics, Inc.'));
+  assert.ok(sameCarrier('Ridgeline Freight', 'Ridgeline Freight Lines'));
+  assert.ok(!sameCarrier('FedEx Freight', 'FedEx Express'));
+  assert.ok(!sameCarrier('Ridgeline Logistics', 'Ridgeline Trucking'));
   assert.ok(sameCarrier('ODFL', 'Old Dominion', { ODFL: 'Old Dominion' }));
   assert.ok(!sameCarrier('', ''));
+});
+
+test('findCarrier takes an exact name first and never guesses between two carriers', () => {
+  const list = [{ carrier: 'FedEx Freight', scac: 'FXFE' }, { carrier: 'FedEx Express', aliases: ['FDX Express'] }, { carrier: 'Ridgeline Freight Lines' }];
+  const names = (c) => [c.carrier, c.scac, ...(c.aliases || [])];
+  assert.equal(findCarrier(list, 'FXFE', names).carrier, 'FedEx Freight');
+  assert.equal(findCarrier(list, 'FDX Express', names).carrier, 'FedEx Express');
+  assert.equal(findCarrier(list, 'FedEx', names), null);
+  assert.equal(findCarrier(list, 'Ridgeline', names).carrier, 'Ridgeline Freight Lines');
+  assert.equal(findCarrier(list, 'Unknown Lines', names), null);
+});
+
+test('contract lookup follows the same rule, across every term of the carrier', () => {
+  const contract = { carriers: [{ carrier: 'FedEx Freight', scac: 'FXFE', effective: '2026-01-01', expires: '2026-12-31' }, { carrier: 'FedEx Freight', effective: '2027-01-01' }, { carrier: 'FedEx Express' }, { carrier: 'Ridgeline Freight Lines, Inc.' }] };
+  assert.equal(contractFor(contract, 'FXFE', '2027-03-01').block.effective, '2027-01-01');
+  assert.equal(contractFor(contract, 'FedEx', '2026-03-01').block, null);
+  assert.equal(contractFor(contract, 'Ridgeline', '2026-03-01').block.carrier, 'Ridgeline Freight Lines, Inc.');
+  assert.equal(canonicalCarrier(contract, 'ridgeline freight'), 'Ridgeline Freight Lines, Inc.');
+  assert.equal(canonicalCarrier(contract, 'FedEx'), 'FedEx');
+});
+
+test('carrierGrouper joins a short name to the one longer name that fits', () => {
+  const g = carrierGrouper(['Ridgeline', 'Ridgeline Freight Inc.', 'FedEx', 'FedEx Freight', 'FedEx Express', 'Estes', 'Estes Express', 'Estes Express Lines']);
+  assert.equal(g('Ridgeline'), g('Ridgeline Freight Inc.'));
+  assert.notEqual(g('FedEx Freight'), g('FedEx Express')); assert.notEqual(g('FedEx'), g('FedEx Freight'));
+  assert.equal(g('Estes'), g('Estes Express Lines')); assert.equal(g('Estes Express'), g('Estes Express Lines'));
+  assert.equal(g('Never Seen Trucking'), 'never seen trucking');
 });
 
 test('places and lanes', () => {

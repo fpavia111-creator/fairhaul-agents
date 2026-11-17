@@ -1,5 +1,5 @@
 // Alnilam: carrier settlements for freight brokers. Pure functions.
-import { round2, str, num, groupBy, isoDate, addDays, daysBetween, carrierKey } from 'lodestar-core';
+import { round2, str, num, groupBy, isoDate, addDays, daysBetween, carrierGrouper } from 'lodestar-core';
 
 const t = (aliases, extra = {}) => ({ aliases, ...extra });
 export const RATECON_FIELDS = Object.freeze({
@@ -38,8 +38,9 @@ export function settle(ratecons, { invoices = [], payments = [], noas = [], asOf
   const today = isoDate(asOf) || new Date().toISOString().slice(0, 10);
   const inv = groupBy(invoices, (x) => str(x.load_id).toUpperCase()); const pay = groupBy(payments, (x) => str(x.load_id).toUpperCase());
   // Notices indexed by carrier, latest first, with their dates read once.
-  const noaBy = new Map([...groupBy(noas, (n) => carrierKey(n.carrier))].map(([k, l]) => [k, l.map((n) => ({ n, from: isoDate(n.effective), to: isoDate(n.released), eff: str(n.effective) })).sort((a, b) => b.eff.localeCompare(a.eff))]));
-  const keyOf = new Map(); const ck = (c) => { if (!keyOf.has(c)) keyOf.set(c, carrierKey(c)); return keyOf.get(c); };
+  // One key per company across every file: "Ridgeline" on a rate confirmation is the "Ridgeline Freight LLC" on its notice.
+  const ck = carrierGrouper([...ratecons.map((r) => r.carrier), ...noas.flatMap((n) => [n.carrier, n.factor]), ...payments.map((p) => p.payee)]);
+  const noaBy = new Map([...groupBy(noas, (n) => ck(n.carrier))].map(([k, l]) => [k, l.map((n) => ({ n, from: isoDate(n.effective), to: isoDate(n.released), eff: str(n.effective) })).sort((a, b) => b.eff.localeCompare(a.eff))]));
   const noaFor = (carrier, date) => { const hit = (noaBy.get(ck(carrier)) || []).find((x) => (!x.from || x.from <= date) && (!x.to || x.to > date)); return hit ? hit.n : null; };
   const rows = []; const findings = [];
   const add = (load, code, detail, amount = null) => findings.push({ load_id: load, code, detail, amount: amount === null ? null : round2(amount) });
