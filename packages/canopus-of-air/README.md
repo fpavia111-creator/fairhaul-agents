@@ -29,7 +29,7 @@ Canopus of Air demo (fictional forwarder and rates, autumn 2026) in <demo folder
 
 ▶ Audit the air freight invoices
   status: executed  decision: allow
-  5 air waybill(s), 6164.9 billed: 4 with findings, 349 disputable. rate_over 3, weight_over 1, surcharge_over 1, charge_not_on_rate_sheet 1
+  5 air waybill(s), 6164.9 billed: 4 with findings, 349 disputable. rate_over 3, charge_not_on_rate_sheet 1, surcharge_over 1, weight_over 1
     176-11112222   420 kg       0  clean
     176-11113333   400 kg     200  rate_over
     176-11114444   260 kg      52  weight_over, rate_over, surcharge_over
@@ -42,7 +42,7 @@ Canopus of Air demo (fictional forwarder and rates, autumn 2026) in <demo folder
 
 ▶ Write the air audit
   status: executed  decision: allow
-  Air audit written. 5 air waybill(s), 6164.9 billed: 4 with findings, 349 disputable. rate_over 3, weight_over 1, surcharge_over 1, charge_not_on_rate_sheet 1
+  Air audit written. 5 air waybill(s), 6164.9 billed: 4 with findings, 349 disputable. rate_over 3, charge_not_on_rate_sheet 1, surcharge_over 1, weight_over 1
 
 ▶ Draft the dispute to the forwarder
   status: executed  decision: allow  (auto)

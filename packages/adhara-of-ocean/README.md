@@ -27,7 +27,7 @@ Adhara of Ocean demo (fictional lines and contracts, 2026) in <demo folder>
 
 ▶ Audit the ocean invoices against the contract
   status: executed  decision: allow
-  6 bill(s) of lading, 28566 billed: 5 with findings, 3355 disputable. rate_over 1, surcharge_out_of_window 1, surcharge_included 1, duplicate_charge 1, surcharge_not_in_contract 1, container_count 1, contract_expired 1, currency_mismatch 1
+  6 bill(s) of lading, 28566 billed: 5 with findings, 3355 disputable. container_count 1, contract_expired 1, currency_mismatch 1, duplicate_charge 1, rate_over 1, surcharge_included 1, surcharge_not_in_contract 1, surcharge_out_of_window 1
     BMLBL-7781        0  clean
     BMLBL-7790      730  rate_over, surcharge_out_of_window, surcharge_included
     BMLBL-7802      525  duplicate_charge, surcharge_not_in_contract
@@ -37,7 +37,7 @@ Adhara of Ocean demo (fictional lines and contracts, 2026) in <demo folder>
 
 ▶ Write the ocean audit
   status: executed  decision: allow
-  Ocean audit written. 6 bill(s) of lading, 28566 billed: 5 with findings, 3355 disputable. rate_over 1, surcharge_out_of_window 1, surcharge_included 1, duplicate_charge 1, surcharge_not_in_contract 1, container_count 1, contract_expired 1, currency_mismatch 1
+  Ocean audit written. 6 bill(s) of lading, 28566 billed: 5 with findings, 3355 disputable. container_count 1, contract_expired 1, currency_mismatch 1, duplicate_charge 1, rate_over 1, surcharge_included 1, surcharge_not_in_contract 1, surcharge_out_of_window 1
 
 ▶ Draft the dispute to Blue Meridian Line
   status: executed  decision: allow  (auto)

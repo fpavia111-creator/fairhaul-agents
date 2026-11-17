@@ -30,7 +30,7 @@ Hadar of Docks demo (fictional distribution center) in <demo folder>
 
 ▶ Review two weeks of past appointments
   status: executed  decision: allow
-  10 past appointment(s): 70% on time, 2 late, 1 no-show(s); average wait for a door 31 min, worst at 07:00 (54 min). Unload takes palletised 2.7 min/pallet, floor 6.5 min/pallet.
+  10 past appointment(s): 70% on time, 2 late, 1 no-show(s); average wait for a door 31 min, worst at 07:00 (54 min). Unload takes floor 6.5 min/pallet, palletised 2.7 min/pallet.
 
 ▶ Plan Wednesday's appointments
   status: executed  decision: allow
@@ -48,7 +48,7 @@ Hadar of Docks demo (fictional distribution center) in <demo folder>
 
 ▶ Write the dock report
   status: executed  decision: allow
-  Dock report written. 2026-11-18: 8 of 10 appointment(s) placed on 4 door(s), 06:00-14:00, dock use 34%. 2 could not be placed. 10 past appointment(s): 70% on time, 2 late, 1 no-show(s); average wait for a door 31 min, worst at 07:00 (54 min). Unload takes palletised 2.7 min/pallet, floor 6.5 min/pallet.
+  Dock report written. 2026-11-18: 8 of 10 appointment(s) placed on 4 door(s), 06:00-14:00, dock use 34%. 2 could not be placed. 10 past appointment(s): 70% on time, 2 late, 1 no-show(s); average wait for a door 31 min, worst at 07:00 (54 min). Unload takes floor 6.5 min/pallet, palletised 2.7 min/pallet.
 
 ▶ Draft the schedule for carriers
   status: executed  decision: allow  (auto)
