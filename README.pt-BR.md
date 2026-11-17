@@ -33,7 +33,7 @@ Cada agente tem uma `demo` com arquivos fictícios, um `eval` com seus próprios
 
 ## Como eles são testados
 
-Cada agente tem testes próprios das suas regras, os mesmos testes de contrato de todos os outros (argumentos, arquivos fora de `--root`, modo Revisão, parada de emergência, aprovação de rascunhos, resultados repetíveis) e de 14 a 22 casos de avaliação em arquivos fictícios. Cada caso com planilhas roda de novo como exportação alemã, francesa, espanhola, brasileira, italiana, japonesa, chinesa e coreana, e dados hostis são inseridos nos arquivos de cada agente. No total: 915 testes e 520 casos de avaliação, aprovados no Node 20, 22 e 24. [REVIEW-ver2.md](REVIEW-ver2.md) (em inglês) lista as mudanças da versão 2 e os bugs encontrados.
+Cada agente tem testes próprios das suas regras, os mesmos testes de contrato de todos os outros (argumentos, arquivos fora de `--root`, modo Revisão, parada de emergência, aprovação de rascunhos, resultados repetíveis) e de 14 a 22 casos de avaliação em arquivos fictícios. Cada caso com planilhas roda de novo como exportação alemã, francesa, espanhola, brasileira, italiana, japonesa, chinesa e coreana, e dados hostis são inseridos nos arquivos de cada agente. No total: 915 testes e 520 casos de avaliação, aprovados no Node 20, 22 e 24. [REVIEW-ver3.md](REVIEW-ver3.md) (em inglês) lista as mudanças da versão 2 e os bugs encontrados.
 
 ## Limites
 

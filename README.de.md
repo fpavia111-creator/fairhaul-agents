@@ -33,7 +33,7 @@ Jeder Agent hat eine `demo` mit fiktiven Dateien, ein `eval` mit eigenen Testfä
 
 ## Wie sie getestet werden
 
-Jeder Agent hat eigene Tests für seine Regeln, dieselben Vertragstests wie alle anderen (Argumente, Dateien außerhalb von `--root`, Prüfmodus, Not-Aus, Freigabe von Entwürfen, wiederholbare Ergebnisse) und 14 bis 22 Testfälle auf fiktiven Dateien. Jeder Fall mit Tabellen läuft zusätzlich als deutscher, französischer, spanischer, brasilianischer, italienischer, japanischer, chinesischer und koreanischer Export, und in die Dateien jedes Agenten werden feindliche Daten eingeschleust. Insgesamt 915 Tests und 520 Testfälle, bestanden auf Node 20, 22 und 24. [REVIEW-ver2.md](REVIEW-ver2.md) (englisch) listet die Änderungen in Version 2 und die gefundenen Fehler.
+Jeder Agent hat eigene Tests für seine Regeln, dieselben Vertragstests wie alle anderen (Argumente, Dateien außerhalb von `--root`, Prüfmodus, Not-Aus, Freigabe von Entwürfen, wiederholbare Ergebnisse) und 14 bis 22 Testfälle auf fiktiven Dateien. Jeder Fall mit Tabellen läuft zusätzlich als deutscher, französischer, spanischer, brasilianischer, italienischer, japanischer, chinesischer und koreanischer Export, und in die Dateien jedes Agenten werden feindliche Daten eingeschleust. Insgesamt 915 Tests und 520 Testfälle, bestanden auf Node 20, 22 und 24. [REVIEW-ver3.md](REVIEW-ver3.md) (englisch) listet die Änderungen in Version 2 und die gefundenen Fehler.
 
 ## Grenzen
 
