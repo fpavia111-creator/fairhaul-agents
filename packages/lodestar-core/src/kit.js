@@ -6,6 +6,7 @@ import { join, relative } from 'node:path';
 import { toCsv } from './csv.js';
 import { sha256, safePath } from './util.js';
 import { escapeHtml, htmlPage, safeMarkdown, safeFileName } from './formats.js';
+import { reportText, ENGLISH_NOTE } from './report-text.js';
 
 export const MODEL_PIN = Object.freeze({ provider: 'anthropic', id: 'claude-sonnet-5-5', note: 'Declared host-model pin. The tools are deterministic and call no model.' });
 export const OPEN_MARKER = /\[(TO CONFIRM|MISSING|CHECK|ATTACH)[^\]]*\]/g;
@@ -23,10 +24,10 @@ export function appendRow(dir, name, row, columns) {
   return f;
 }
 
-/** A small HTML table from rows. Values are escaped. */
-export function htmlTable(rows, columns, labels = {}) {
-  if (!rows.length) return '<p class="mut">None.</p>';
-  const head = columns.map((c) => `<th>${escapeHtml(labels[c] || c.replace(/_/g, ' '))}</th>`).join('');
+/** A small HTML table from rows. Values are escaped. t (from reportText) puts the column headings in the report language. */
+export function htmlTable(rows, columns, labels = {}, t = null) {
+  if (!rows.length) return `<p class="mut">${escapeHtml(t ? t.page('None.') : 'None.')}</p>`;
+  const head = columns.map((c) => `<th>${escapeHtml(t ? t.column(c, labels[c]) : labels[c] || c.replace(/_/g, ' '))}</th>`).join('');
   const body = rows.map((r) => `<tr>${columns.map((c) => { const v = r[c]; return `<td>${escapeHtml(v === null || v === undefined ? '' : Array.isArray(v) ? v.join(', ') : typeof v === 'object' ? JSON.stringify(v) : String(v))}</td>`; }).join('')}</tr>`).join('\n');
   return `<table><thead><tr>${head}</tr></thead><tbody>\n${body}\n</tbody></table>`;
 }
@@ -34,19 +35,26 @@ export function htmlTable(rows, columns, labels = {}) {
 /**
  * Write a worklist as CSV (for people to fill in) and HTML (to read), plus an
  * optional summary block. Returns { files, output_sha256 }.
+ *
+ * The page follows the report language (ctx.lang, from --lang): headings, section
+ * headings and common column names. The CSV does not change with the language, so a
+ * script reads the same columns everywhere; finding texts and limits stay in English
+ * and the page footer says so.
  */
 export function writeWorklist(ctx, dir, base, { title, intro = '', rows, columns, htmlColumns, labels = {}, sections = [], limits = [] }) {
   const out = ctx.outDir(dir);
+  const t = reportText(ctx.lang);
   const csv = ctx.writeFile(out, `${base}.csv`, toCsv(rows, columns));
   const body = [
-    `<h1>${escapeHtml(title)}</h1>`,
+    `<h1>${escapeHtml(t.title(title))}</h1>`,
     intro ? `<p class="mut">${escapeHtml(intro)}</p>` : '',
-    ...sections.map((s) => `<h2>${escapeHtml(s.title)}</h2>${s.html || htmlTable(s.rows || [], s.columns || [], labels)}`),
-    `<h2>${escapeHtml(`All rows (${rows.length})`)}</h2>`,
-    htmlTable(rows, htmlColumns || columns, labels),
-    limits.length ? `<h2>Limits</h2><ul>${limits.map((l) => `<li>${escapeHtml(l)}</li>`).join('')}</ul>` : '',
+    ...sections.map((s) => `<h2>${escapeHtml(t.section(s.title))}</h2>${s.html || htmlTable(s.rows || [], s.columns || [], labels, t)}`),
+    `<h2>${escapeHtml(t.page(`All rows (${rows.length})`))}</h2>`,
+    htmlTable(rows, htmlColumns || columns, labels, t),
+    limits.length ? `<h2>${escapeHtml(t.page('Limits'))}</h2><ul>${limits.map((l) => `<li>${escapeHtml(l)}</li>`).join('')}</ul>` : '',
   ].join('\n');
-  const html = ctx.writeFile(out, `${base}.html`, htmlPage({ title, bodyHtml: body, footer: 'Written by a Lodestar agent from your files. Nothing was sent or paid.' }));
+  const foot = 'Written by a Lodestar agent from your files. Nothing was sent or paid.';
+  const html = ctx.writeFile(out, `${base}.html`, htmlPage({ title: t.title(title), bodyHtml: body, footer: t.english ? foot : `${t.page(foot)} ${t.page(ENGLISH_NOTE)}`, lang: t.lang }));
   const files = [csv, html];
   return { files, output_sha256: filesHash(files) };
 }

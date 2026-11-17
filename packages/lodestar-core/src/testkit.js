@@ -205,6 +205,37 @@ export function agentContract({ manifest, casesFile }) {
     });
   }
 
+  // Report pages follow --lang; the CSV a script reads does not.
+  const reportCases = cases.filter((c) => { const t = manifest.tools.find((x) => x.name === c.tool); return t && t.kind === 'report' && decision(t) === 'allow' && (!c.mode || c.mode === 'assist') && (!c.expect || !c.expect.status || c.expect.status === 'executed'); });
+  if (reportCases.length) {
+    test(`${manifest.name} contract: the report page is written in the report language and the CSV stays the same`, async () => {
+      const heads = (html) => [...html.matchAll(/<h[12]>(.*?)<\/h[12]>/g)].map((m) => m[1]);
+      for (const c of reportCases) {
+        const pages = {};
+        for (const lang of ['en', 'de', 'ja']) {
+          const root = sandbox(); const r = await rtIn(root, { lang }).call(c.tool, c.args);
+          assert.equal(r.status, 'executed', `${c.id} in ${lang}: ${r.reason}`);
+          const files = (r.result.files || []).map((f) => resolve(root, f));
+          pages[lang] = { html: files.filter((f) => /\.html$/.test(f)).map((f) => readFileSync(f, 'utf8')), csv: files.filter((f) => /\.csv$/.test(f)).map((f) => readFileSync(f, 'utf8')) };
+        }
+        if (!pages.en.html.length) continue;
+        for (const lang of ['de', 'ja']) {
+          assert.deepEqual(pages[lang].csv, pages.en.csv, `${c.id}: the CSV changed with --lang ${lang}`);
+          pages[lang].html.forEach((html, i) => {
+            assert.match(html, new RegExp(`<html lang="${lang}"`), `${c.id}: page language`);
+            const en = heads(pages.en.html[i]), tr = heads(html);
+            assert.equal(tr.length, en.length, `${c.id}: same headings in ${lang}`);
+            // Every heading is translated: none is left as the English one.
+            en.forEach((h, k) => assert.notEqual(tr[k], h, `${c.id}: heading "${h}" has no ${lang} text in lodestar-core/src/report-text.js`));
+            // The numbers on the page are the same numbers.
+            const cells = (x) => [...x.matchAll(/<td>(.*?)<\/td>/g)].map((m) => m[1]);
+            assert.deepEqual(cells(html), cells(pages.en.html[i]), `${c.id}: table cells changed with --lang ${lang}`);
+          });
+        }
+      }
+    });
+  }
+
   const kinds = Object.entries(manifest.sources || {});
   if (kinds.length) {
     test(`${manifest.name} contract: a file already in the agent's own column names is read as it is`, () => {
