@@ -252,6 +252,21 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "spica_check",
+      "args": {
+        "invoices": "fixtures/missing-export.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

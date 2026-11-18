@@ -250,6 +250,21 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "regulus_rerate",
+      "args": {
+        "history": "fixtures/missing-export.csv",
+        "contracts": "fixtures/contracts.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

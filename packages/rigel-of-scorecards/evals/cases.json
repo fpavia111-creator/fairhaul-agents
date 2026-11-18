@@ -238,6 +238,21 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "rigel_score",
+      "args": {
+        "shipments": "fixtures/missing-export.csv",
+        "settings": "fixtures/scorecard.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

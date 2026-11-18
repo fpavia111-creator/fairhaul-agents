@@ -288,6 +288,22 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "vega_audit",
+      "args": {
+        "charges": "fixtures/missing-export.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

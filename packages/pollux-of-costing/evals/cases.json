@@ -244,6 +244,21 @@
       "expect": {
         "status": "executed"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "pollux_compare",
+      "args": {
+        "items": "fixtures/missing-export.csv",
+        "actuals": "fixtures/actual-freight.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

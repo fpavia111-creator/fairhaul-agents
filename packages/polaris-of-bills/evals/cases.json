@@ -359,6 +359,23 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "polaris_audit",
+      "args": {
+        "invoices": "fixtures/missing-export.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

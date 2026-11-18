@@ -270,6 +270,22 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "hadar_plan",
+      "args": {
+        "requests": "fixtures/missing-export.csv",
+        "dock": "fixtures/dock.json",
+        "date": "2026-11-18"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

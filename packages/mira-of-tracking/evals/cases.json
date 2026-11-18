@@ -258,6 +258,22 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "mira_assess",
+      "args": {
+        "loads": "fixtures/missing-export.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

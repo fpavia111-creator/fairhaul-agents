@@ -249,6 +249,21 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "deneb_check",
+      "args": {
+        "packages": "fixtures/missing-export.csv",
+        "cartons": "fixtures/cartons.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

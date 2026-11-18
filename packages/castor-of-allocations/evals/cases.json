@@ -238,6 +238,21 @@
       "expect": {
         "status": "executed"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "castor_allocate",
+      "args": {
+        "costs": "fixtures/missing-export.csv",
+        "order_lines": "fixtures/order-lines.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

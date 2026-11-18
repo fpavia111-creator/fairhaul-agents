@@ -267,6 +267,22 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "betelgeuse_analyse",
+      "args": {
+        "invoices": "fixtures/missing-export.csv",
+        "shipments": "fixtures/shipments.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

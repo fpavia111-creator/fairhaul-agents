@@ -248,6 +248,23 @@
       "expect": {
         "status": "executed"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "procyon_accrue",
+      "args": {
+        "shipments": "fixtures/missing-export.csv",
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

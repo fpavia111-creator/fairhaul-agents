@@ -250,6 +250,22 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "altair_award",
+      "args": {
+        "lanes": "fixtures/missing-export.csv",
+        "bids": "fixtures/bids.csv",
+        "rules": "fixtures/rules.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

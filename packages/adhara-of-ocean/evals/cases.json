@@ -228,6 +228,21 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "adhara_audit",
+      "args": {
+        "invoices": "fixtures/missing-export.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

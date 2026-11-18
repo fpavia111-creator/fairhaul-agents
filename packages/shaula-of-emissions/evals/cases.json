@@ -255,6 +255,21 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "shaula_estimate",
+      "args": {
+        "shipments": "fixtures/missing-export.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

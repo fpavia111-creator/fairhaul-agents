@@ -285,6 +285,24 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "achernar_track",
+      "args": {
+        "rmas": "fixtures/missing-export.csv",
+        "receipts": "fixtures/receipts.csv",
+        "credits": "fixtures/credits.csv",
+        "charges": "fixtures/return-freight.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

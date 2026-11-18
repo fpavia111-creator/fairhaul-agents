@@ -217,6 +217,38 @@
           "files"
         ]
       }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "arcturus_inspect",
+      "args": {
+        "files": [
+          "fixtures/tenders-204.edi",
+          "../../outside-root.edi"
+        ]
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside the allowed root"
+        ]
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "arcturus_inspect",
+      "args": {
+        "files": [
+          "fixtures/missing-204.edi"
+        ]
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-204.edi"
+        ]
+      }
     }
   ]
 }

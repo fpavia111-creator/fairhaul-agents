@@ -281,6 +281,23 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "antares_check",
+      "args": {
+        "entries": "fixtures/missing-export.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

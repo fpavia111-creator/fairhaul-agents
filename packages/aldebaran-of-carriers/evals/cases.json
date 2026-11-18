@@ -302,6 +302,22 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "aldebaran_vet",
+      "args": {
+        "carriers": "fixtures/missing-export.csv",
+        "loads": "fixtures/loads.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

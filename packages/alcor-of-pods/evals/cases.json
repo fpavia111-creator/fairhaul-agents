@@ -264,6 +264,22 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "alcor_match",
+      "args": {
+        "loads": "fixtures/missing-export.csv",
+        "pods": "fixtures/pods.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

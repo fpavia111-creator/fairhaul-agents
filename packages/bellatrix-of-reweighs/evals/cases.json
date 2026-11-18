@@ -242,6 +242,21 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "bellatrix_review",
+      "args": {
+        "corrections": "fixtures/missing-export.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }

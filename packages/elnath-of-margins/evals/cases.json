@@ -269,6 +269,22 @@
       "expect": {
         "status": "blocked"
       }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "elnath_margins",
+      "args": {
+        "orders": "fixtures/missing-export.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
     }
   ]
 }
