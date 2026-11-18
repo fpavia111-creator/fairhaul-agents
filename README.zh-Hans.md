@@ -1,4 +1,4 @@
-# Lodestar 货运智能体
+# Fairhaul 货运智能体
 
 *由 Claude 翻译，尚待母语人士审校。以英文 [README](README.md) 为准。*
 
@@ -9,19 +9,19 @@ MIT 许可证 · Node 20 或更高版本 · 仅本地文件 · 无需凭据 · �
 ## 试用
 
 ```bash
-npx -y polaris-of-bills demo        # 用虚构数据审核运费账单
-npx -y procyon-of-accruals demo     # 用虚构数据编制运费预提
+npx -y fairhaul-freight-bill-audit demo        # 用虚构数据审核运费账单
+npx -y fairhaul-freight-accruals demo     # 用虚构数据编制运费预提
 ```
 
 每个智能体都有基于虚构文件的 `demo`、用自身测试用例检查的 `eval`，以及供 Claude Desktop、Claude Code、Cursor 等 MCP 主机使用的 MCP 服务器（`npx -y <agent> mcp --root <文件夹>`）。目前列名和报告为英文。
 
 ## 智能体
 
-**承运商收费：** `polaris-of-bills`（整车和零担账单与合同核对）、`sirius-of-parcels`（快递）、`vega-of-detention`（压车和等待费）、`spica-of-fuel`（燃油附加费）、`betelgeuse-of-accessorials`（附加服务费的来源）、`bellatrix-of-reweighs`（复磅和等级变更）、`algol-of-duplicates`（重复付款）、`adhara-of-ocean`（海运）、`canopus-of-air`（空运）、`alcor-of-pods`（签收证明）、`fomalhaut-of-demurrage`（集装箱免费期和滞期费）、`antares-of-entries`（报关单与商业发票核对，不提供归类建议）。
+**承运商收费：** `fairhaul-freight-bill-audit`（整车和零担账单与合同核对）、`fairhaul-parcel-refunds`（快递）、`fairhaul-detention-and-lumper`（压车和等待费）、`fairhaul-fuel-surcharges`（燃油附加费）、`fairhaul-accessorial-charges`（附加服务费的来源）、`fairhaul-ltl-reweighs`（复磅和等级变更）、`fairhaul-duplicate-payments`（重复付款）、`fairhaul-ocean-freight-audit`（海运）、`fairhaul-air-freight-audit`（空运）、`fairhaul-proof-of-delivery`（签收证明）、`fairhaul-container-demurrage`（集装箱免费期和滞期费）、`fairhaul-customs-entries`（报关单与商业发票核对，不提供归类建议）。
 
-**规划、采购和运营：** `altair-of-bids`（招标）、`regulus-of-tariffs`（用每份合同重算历史）、`nunki-of-quotes`（即期报价）、`mizar-of-lanes`（线路支出和拼载）、`rigel-of-scorecards`（承运商记分卡）、`aldebaran-of-carriers`（欺诈警示信号）、`mira-of-tracking`（延误货物）、`hadar-of-docks`（月台预约）、`deneb-of-cartons`（纸箱尺寸）、`arcturus-of-edi`（读取并核对 X12 文件）。
+**规划、采购和运营：** `fairhaul-rfp-bid-scoring`（招标）、`fairhaul-contract-rerating`（用每份合同重算历史）、`fairhaul-spot-quotes`（即期报价）、`fairhaul-lane-spend`（线路支出和拼载）、`fairhaul-carrier-scorecards`（承运商记分卡）、`fairhaul-carrier-vetting`（欺诈警示信号）、`fairhaul-load-tracking`（延误货物）、`fairhaul-dock-scheduling`（月台预约）、`fairhaul-carton-sizing`（纸箱尺寸）、`fairhaul-edi-files`（读取并核对 X12 文件）。
 
-**结账与成本：** `procyon-of-accruals`（运费预提）、`castor-of-allocations`（按订单和成本中心分摊运费）、`pollux-of-costing`（物料成本中的运费标准）、`elnath-of-margins`（按客户比较收取运费与实际运费）、`alnilam-of-settlements`（经纪商承运商付款）、`capella-of-claims`（货损索赔）、`achernar-of-returns`（退货到退款）、`shaula-of-emissions`（按您选择的系数估算排放）。
+**结账与成本：** `fairhaul-freight-accruals`（运费预提）、`fairhaul-freight-allocation`（按订单和成本中心分摊运费）、`fairhaul-standard-freight-cost`（物料成本中的运费标准）、`fairhaul-freight-margins`（按客户比较收取运费与实际运费）、`fairhaul-broker-settlements`（经纪商承运商付款）、`fairhaul-freight-claims`（货损索赔）、`fairhaul-returns-tracking`（退货到退款）、`fairhaul-freight-emissions`（按您选择的系数估算排放）。
 
 ## 如何保持安全
 

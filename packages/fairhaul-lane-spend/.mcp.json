@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-lane-spend": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-lane-spend@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

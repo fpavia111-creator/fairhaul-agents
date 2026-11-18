@@ -1,4 +1,4 @@
-# Lodestar freight agents: ver 3 review
+# Fairhaul freight agents: ver 3 review
 
 Date: 2026-11-17. Goal: go through all 30 freight agents again against the bar the Mythos agents reached in ver 6, and go past it where that was possible.
 Status: unpublished. Nothing has been pushed, published or sent.
@@ -80,7 +80,7 @@ Translations are Claude's. A native speaker has not reviewed them.
 
 ## Not done, and why
 
-- **Export layouts are still unchecked against vendor documentation.** I tried to read the vendors' own pages for the FedEx Billing Online download, the UPS billing data file and the Shopify order export. This build environment blocks those sites, so all 13 named layouts stay marked "written from knowledge, not checked", and each report says so. Mythos ver 6 has 2 of 39 checked. This is the one place Lodestar is behind.
+- **Export layouts are still unchecked against vendor documentation.** I tried to read the vendors' own pages for the FedEx Billing Online download, the UPS billing data file and the Shopify order export. This build environment blocks those sites, so all 13 named layouts stay marked "written from knowledge, not checked", and each report says so. Mythos ver 6 has 2 of 39 checked. This is the one place Fairhaul is behind.
 - **The finding sentences are not translated.** Each agent builds them from the data; translating them means rewriting each agent's wording in nine languages. It is the natural next round.
 - **Real-model evaluations** (a model calling the tools) need an API key and were not run.
 - **The CI matrix** (Linux and Windows) has not run, because there is no GitHub repository yet. Tests were run here on Linux only.

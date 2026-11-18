@@ -8,7 +8,7 @@ import { join } from 'node:path';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const check = process.argv.includes('--check');
-const pkgs = readdirSync(join(root, 'packages')).filter((n) => n !== 'lodestar-core' && existsSync(join(root, 'packages', n, 'package.json'))).sort();
+const pkgs = readdirSync(join(root, 'packages')).filter((n) => n !== 'fairhaul-core' && existsSync(join(root, 'packages', n, 'package.json'))).sort();
 const want = new Map();
 const plugins = [];
 for (const n of pkgs) {
@@ -18,7 +18,7 @@ for (const n of pkgs) {
   want.set(join('packages', n, '.mcp.json'), { mcpServers: { [n]: { command: 'npx', args: ['-y', `${n}@${p.version}`, 'mcp'] } } });
   plugins.push({ name: n, source: `./packages/${n}`, description: desc, version: p.version, category: 'freight', keywords: [...new Set(p.keywords.filter((k) => !['mcp', 'mcp-server', 'lodestar'].includes(k)))] });
 }
-want.set(join('.claude-plugin', 'marketplace.json'), { name: 'lodestar-freight', owner: { name: 'Lodestar' }, metadata: { description: 'Thirty freight and shipping cost agents. Each reads your exported files, writes reports locally and waits for a named person before anything that moves money, sends a message or changes a live system.' }, plugins });
+want.set(join('.claude-plugin', 'marketplace.json'), { name: 'lodestar-freight', owner: { name: 'Fairhaul' }, metadata: { description: 'Thirty freight and shipping cost agents. Each reads your exported files, writes reports locally and waits for a named person before anything that moves money, sends a message or changes a live system.' }, plugins });
 let stale = 0;
 for (const [rel, obj] of want) {
   const f = join(root, rel); const text = JSON.stringify(obj, null, 2) + '\n';

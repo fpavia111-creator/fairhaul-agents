@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-freight-accruals": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-freight-accruals@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

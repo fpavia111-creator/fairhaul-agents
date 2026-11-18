@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-edi-files": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-edi-files@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

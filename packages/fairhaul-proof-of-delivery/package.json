@@ -1,0 +1,59 @@
+{
+  "name": "fairhaul-proof-of-delivery",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-proof-of-delivery",
+  "description": "Fairhaul Proof of Delivery: matches every delivered or invoiced shipment to its proof of delivery, flags missing, unsigned, short or exception-noted PODs and delivery dates that disagree with the invoice, holds the matching invoices for review, and drafts POD requests to carriers. Never releases or holds a payment itself.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-proof-of-delivery": "bin/fairhaul-proof-of-delivery.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-proof-of-delivery.js demo",
+    "eval": "node bin/fairhaul-proof-of-delivery.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-proof-of-delivery"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-proof-of-delivery#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "proof-of-delivery",
+    "pod",
+    "delivery-receipt",
+    "invoice-hold"
+  ]
+}

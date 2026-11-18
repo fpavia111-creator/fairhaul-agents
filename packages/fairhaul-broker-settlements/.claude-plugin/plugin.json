@@ -1,0 +1,23 @@
+{
+  "name": "fairhaul-broker-settlements",
+  "version": "0.1.0",
+  "description": "For freight brokers: settles every carrier payment against its rate confirmation, approved accessorials, quick-pay terms and notice of assignment, finds overpayments, double payments and payments to the wrong party, and drafts the next payment batch for a person to release.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-broker-settlements#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "broker",
+    "carrier-pay",
+    "settlements",
+    "quick-pay",
+    "factoring"
+  ]
+}

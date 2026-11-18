@@ -1,0 +1,309 @@
+{
+  "suite": "fairhaul-detention-and-lumper",
+  "root": "..",
+  "data_note": "Fictional charges, dock log and terms in ../fixtures. No model is called.",
+  "cases": [
+    {
+      "id": "audit-totals",
+      "tool": "detention_audit",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "equals": {
+          "result.charges": 9,
+          "result.disputable": 712.5,
+          "result.dispute": 7,
+          "result.review": 1
+        }
+      }
+    },
+    {
+      "id": "every-situation",
+      "tool": "detention_audit",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "contains": [
+          "detention_over",
+          "hours_over_record",
+          "arrived_late",
+          "no_timestamps",
+          "layover_not_earned",
+          "lumper_over_receipt",
+          "lumper_no_receipt",
+          "layover_over"
+        ]
+      }
+    },
+    {
+      "id": "carrier-override-rate",
+      "tool": "detention_explain",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json",
+        "load_id": "L-107"
+      },
+      "expect": {
+        "contains": [
+          "1.25 h at 60"
+        ]
+      }
+    },
+    {
+      "id": "default-terms",
+      "tool": "detention_audit",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.charges": 9
+        }
+      }
+    },
+    {
+      "id": "yard-system-columns",
+      "tool": "detention_audit",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/yard-log.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "equals": {
+          "result.disputable": 712.5
+        }
+      }
+    },
+    {
+      "id": "facility-ranking",
+      "tool": "detention_facilities",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.facilities.0.facility": "Example DC Dallas",
+          "result.facilities.0.detention_billed": 600
+        }
+      }
+    },
+    {
+      "id": "send-stays-one-click",
+      "tool": "detention_request_send",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-pays",
+      "tool": "ap_pay_invoice",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-audit-totals",
+      "tool": "detention_audit",
+      "args": {
+        "charges": "fixtures/intl/de/charges.csv",
+        "stops": "fixtures/intl/de/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "equals": {
+          "result.charges": 9,
+          "result.disputable": 712.5,
+          "result.dispute": 7,
+          "result.review": 1
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"audit-totals\"."
+    },
+    {
+      "id": "intl-ja-audit-totals",
+      "tool": "detention_audit",
+      "args": {
+        "charges": "fixtures/intl/ja/charges.csv",
+        "stops": "fixtures/intl/ja/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "equals": {
+          "result.charges": 9,
+          "result.disputable": 712.5,
+          "result.dispute": 7,
+          "result.review": 1
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"audit-totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "detention_write_report",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json",
+        "out_dir": "lodestar-out/evals/detention_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "Detention worklist written: 9 charge(s), 1525 billed: 7 to dispute (712.5), 1 need dock times, 1 supported"
+        ]
+      }
+    },
+    {
+      "id": "draft-dispute-waits-for-a-person",
+      "tool": "detention_draft_dispute",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json",
+        "carrier": "Example Linehaul",
+        "out_dir": "lodestar-out/evals/detention_draft_dispute"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "draft-dispute-after-approval",
+      "tool": "detention_draft_dispute",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json",
+        "carrier": "Example Linehaul",
+        "out_dir": "lodestar-out/evals/detention_draft_dispute"
+      },
+      "approve": "Pat Example",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.amount": 187.5,
+          "result.open_markers": 3
+        },
+        "contains": [
+          "dispute Example Linehaul drafted for 187.5 with 3 open marker(s) ([TO CONFIRM carrier billing contact], [TO CONFIRM your name and company], [ATTACH gate or dock log extract for each stop])"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "detention_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "detention_audit",
+      "args": {
+        "charges": "../../outside.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "detention_audit",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.charges": 9,
+          "result.disputable": 712.5,
+          "result.dispute": 7,
+          "result.review": 1
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "detention_audit",
+      "args": {
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "charges"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "detention_draft_dispute",
+      "args": {
+        "charges": "fixtures/charges.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json",
+        "carrier": "Example Linehaul",
+        "out_dir": "lodestar-out/evals/detention_draft_dispute"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "detention_audit",
+      "args": {
+        "charges": "fixtures/missing-export.csv",
+        "stops": "fixtures/stops.csv",
+        "terms": "fixtures/terms.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
+    }
+  ]
+}

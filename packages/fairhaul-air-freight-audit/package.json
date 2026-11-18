@@ -1,0 +1,59 @@
+{
+  "name": "fairhaul-air-freight-audit",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-air-freight-audit",
+  "description": "Fairhaul Air Freight Audit: audits air freight invoices: chargeable weight from actual and volumetric weight, the rate for the right weight break, the minimum charge, fuel and security surcharges per kilo, and other charges your rate sheet does not allow; drafts disputes to the forwarder. Never pays or sends.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-air-freight-audit": "bin/fairhaul-air-freight-audit.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-air-freight-audit.js demo",
+    "eval": "node bin/fairhaul-air-freight-audit.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-air-freight-audit"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-air-freight-audit#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "air-freight",
+    "chargeable-weight",
+    "weight-break",
+    "forwarder"
+  ]
+}

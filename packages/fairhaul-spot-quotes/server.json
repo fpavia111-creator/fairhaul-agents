@@ -1,0 +1,37 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.fpavia111-creator/fairhaul-spot-quotes",
+  "title": "Fairhaul Spot Quotes",
+  "description": "Fairhaul Spot Quotes: lines up the spot quotes you collected for each load on one all-in basis (adding…",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents",
+    "source": "github",
+    "subfolder": "packages/fairhaul-spot-quotes"
+  },
+  "websiteUrl": "https://fair-agents.com/fairhaul.html",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "fairhaul-spot-quotes",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        },
+        {
+          "type": "named",
+          "name": "--root",
+          "description": "Folder holding the exports this agent may read and write (it cannot reach outside it)",
+          "isRequired": true,
+          "format": "filepath",
+          "valueHint": "exports_folder"
+        }
+      ]
+    }
+  ]
+}

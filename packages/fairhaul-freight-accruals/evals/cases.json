@@ -1,0 +1,270 @@
+{
+  "suite": "fairhaul-freight-accruals",
+  "root": "..",
+  "data_note": "Fictional shipments and invoices in ../fixtures, period ending 2026-10-31. No model is called.",
+  "cases": [
+    {
+      "id": "accrual-total",
+      "tool": "accruals_accrue",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.accrued": 6,
+          "result.total": 2970.5,
+          "result.billed_in_period": 1,
+          "result.without_estimate": 1,
+          "result.skipped.cancelled": 1,
+          "result.skipped.after_period": 1
+        }
+      }
+    },
+    {
+      "id": "every-basis",
+      "tool": "accruals_accrue",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "contains": [
+          "quote",
+          "invoice_after_period_end",
+          "contract_with_fuel",
+          "no_estimate"
+        ]
+      }
+    },
+    {
+      "id": "lane-history-without-contract",
+      "tool": "accruals_accrue",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "2026-10-31"
+      },
+      "expect": {
+        "contains": [
+          "lane_average_of_4"
+        ]
+      }
+    },
+    {
+      "id": "prior-accuracy",
+      "tool": "accruals_accrue",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json",
+        "prior": "fixtures/prior-accrual.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.accuracy.variance": 64,
+          "result.accuracy.mean_abs_error_pct": 3.4
+        },
+        "contains": [
+          "still_unbilled"
+        ]
+      }
+    },
+    {
+      "id": "bad-date",
+      "tool": "accruals_accrue",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "Oct 31"
+      },
+      "expect": {
+        "status": "error"
+      }
+    },
+    {
+      "id": "post-stays-a-click-in-auto",
+      "tool": "accruals_request_post",
+      "mode": "auto",
+      "args": {
+        "journal": "fixtures/README.md",
+        "journal_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-posts",
+      "tool": "erp_post_journal",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-accrual-total",
+      "tool": "accruals_accrue",
+      "args": {
+        "shipments": "fixtures/intl/de/shipments.csv",
+        "invoices": "fixtures/intl/de/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.accrued": 6,
+          "result.total": 2970.5,
+          "result.billed_in_period": 1,
+          "result.without_estimate": 1,
+          "result.skipped.cancelled": 1,
+          "result.skipped.after_period": 1
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"accrual-total\"."
+    },
+    {
+      "id": "intl-ja-accrual-total",
+      "tool": "accruals_accrue",
+      "args": {
+        "shipments": "fixtures/intl/ja/shipments.csv",
+        "invoices": "fixtures/intl/ja/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.accrued": 6,
+          "result.total": 2970.5,
+          "result.billed_in_period": 1,
+          "result.without_estimate": 1,
+          "result.skipped.cancelled": 1,
+          "result.skipped.after_period": 1
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"accrual-total\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "accruals_write_report",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json",
+        "prior": "fixtures/prior-accrual.csv",
+        "out_dir": "lodestar-out/evals/accruals_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 3
+        },
+        "contains": [
+          "Accrual written: Period ending 2026-10-31: 7 shipment(s) shipped, 1 billed in period, 6 to accrue for 2970.5 (1 with no estimate), 1 older than 60 days",
+          "Last accrual: 2066 accrued vs 2130 billed (mean error 3.4%)"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "accruals_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "accruals_accrue",
+      "args": {
+        "shipments": "../../outside.csv",
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "accruals_accrue",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.accrued": 6,
+          "result.total": 2970.5,
+          "result.billed_in_period": 1,
+          "result.without_estimate": 1,
+          "result.skipped.cancelled": 1,
+          "result.skipped.after_period": 1
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "accruals_accrue",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "shipments"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "accruals_write_report",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json",
+        "prior": "fixtures/prior-accrual.csv",
+        "out_dir": "lodestar-out/evals/accruals_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "accruals_accrue",
+      "args": {
+        "shipments": "fixtures/missing-export.csv",
+        "invoices": "fixtures/invoices.csv",
+        "period_end": "2026-10-31",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
+    }
+  ]
+}

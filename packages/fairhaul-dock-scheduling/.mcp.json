@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-dock-scheduling": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-dock-scheduling@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

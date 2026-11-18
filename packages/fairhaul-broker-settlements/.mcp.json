@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-broker-settlements": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-broker-settlements@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-freight-emissions": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-freight-emissions@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

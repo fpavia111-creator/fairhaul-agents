@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-customs-entries": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-customs-entries@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

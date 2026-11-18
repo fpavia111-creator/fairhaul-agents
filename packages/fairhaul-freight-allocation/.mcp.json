@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-freight-allocation": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-freight-allocation@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

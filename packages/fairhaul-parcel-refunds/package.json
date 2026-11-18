@@ -1,0 +1,61 @@
+{
+  "name": "fairhaul-parcel-refunds",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-parcel-refunds",
+  "description": "Fairhaul Parcel Refunds: audits UPS, FedEx, DHL and USPS invoice data for late deliveries, duplicate tracking numbers, voided labels billed, residential charges on business addresses, repeat address corrections and dimensional-weight overbilling, with claim-by dates and refund request drafts. Never files claims itself.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-parcel-refunds": "bin/fairhaul-parcel-refunds.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-parcel-refunds.js demo",
+    "eval": "node bin/fairhaul-parcel-refunds.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-parcel-refunds"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-parcel-refunds#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "parcel-audit",
+    "ups",
+    "fedex",
+    "dhl",
+    "late-delivery-refund",
+    "dim-weight"
+  ]
+}

@@ -7,7 +7,7 @@
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { kindsByArg } from '../packages/lodestar-core/src/index.js';
+import { kindsByArg } from '../packages/fairhaul-core/src/index.js';
 import { MARKETS, localise, argFiles } from './lib/localise.mjs';
 import { encodeText } from './lib/encode.mjs';
 
@@ -28,7 +28,7 @@ folder up. The same fictional data, written the way a local export writes it:
 Values (names, codes, charge wording) stay in English. The eval cases
 \`intl-de-*\` and \`intl-ja-*\` expect exactly the same results as the English case.
 `;
-for (const n of readdirSync(PK).filter((x) => /-of-/.test(x) && (!only.length || only.includes(x))).sort()) {
+for (const n of readdirSync(PK).filter((x) => /^fair[a-z]+-(?!core$)/.test(x) && (!only.length || only.includes(x))).sort()) {
   const { manifest } = await import(pathToFileURL(join(PK, n, 'src', 'manifest.js')).href);
   const casesFile = join(PK, n, 'evals', 'cases.json');
   const data = JSON.parse(readFileSync(casesFile, 'utf8')); const cases = data.cases || data;

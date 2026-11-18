@@ -1,0 +1,22 @@
+{
+  "name": "fairhaul-returns-tracking",
+  "version": "0.1.0",
+  "description": "Follows every return from authorisation to credit: return labels never used, returns received but not credited, carriers charging return freight twice, and which customers, SKUs and reasons cost the most freight to bring back.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-returns-tracking#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "returns",
+    "reverse-logistics",
+    "rma",
+    "credits"
+  ]
+}

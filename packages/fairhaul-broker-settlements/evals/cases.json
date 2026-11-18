@@ -1,0 +1,304 @@
+{
+  "suite": "fairhaul-broker-settlements",
+  "root": "..",
+  "data_note": "Fictional broker loads in ../fixtures, as of 2026-11-16. No model is called.",
+  "cases": [
+    {
+      "id": "totals",
+      "tool": "settlements_settle",
+      "args": {
+        "ratecons": "fixtures/ratecons.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "equals": {
+          "result.batch_total": 6833,
+          "result.batch_loads": 3,
+          "result.recoverable": 1750,
+          "result.wrong_party_exposure": 1890,
+          "result.held_back": 100,
+          "result.past_due": 2328
+        }
+      }
+    },
+    {
+      "id": "every-check",
+      "tool": "settlements_settle",
+      "args": {
+        "ratecons": "fixtures/ratecons.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "contains": [
+          "invoice_over_ratecon",
+          "past_due",
+          "no_pod",
+          "paid_wrong_party",
+          "paid_twice",
+          "invoice_without_ratecon"
+        ]
+      }
+    },
+    {
+      "id": "factor-paid",
+      "tool": "settlements_settle",
+      "args": {
+        "ratecons": "fixtures/ratecons.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "contains": [
+          "\"pay_to\":\"Bluewater Factoring\""
+        ],
+        "not_contains": [
+          "Peakline Capital\",\"loads"
+        ]
+      }
+    },
+    {
+      "id": "quick-pay-net",
+      "tool": "settlements_settle",
+      "args": {
+        "ratecons": "fixtures/ratecons.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "as_of": "2026-11-16",
+        "quick_pay_pct": 5
+      },
+      "expect": {
+        "contains": [
+          "\"load_id\":\"L-5103\",\"carrier\":\"Coastal Line Haul\",\"pay_to\":\"Coastal Line Haul\",\"noa\":\"\",\"agreed\":2400,\"quick_pay\":true,\"owed\":2280"
+        ]
+      }
+    },
+    {
+      "id": "draft",
+      "tool": "settlements_draft_payment_batch",
+      "mode": "auto",
+      "auto_actions": [
+        "settlements_draft_payment_batch"
+      ],
+      "args": {
+        "ratecons": "fixtures/ratecons.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "equals": {
+          "result.amount": 6833
+        }
+      }
+    },
+    {
+      "id": "release-stays-a-click-in-auto",
+      "tool": "settlements_request_release",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-pays",
+      "tool": "ap_release_payment",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "never-transfers",
+      "tool": "bank_transfer",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-totals",
+      "tool": "settlements_settle",
+      "args": {
+        "ratecons": "fixtures/intl/de/ratecons.csv",
+        "invoices": "fixtures/intl/de/carrier-invoices.csv",
+        "payments": "fixtures/intl/de/payments.csv",
+        "noas": "fixtures/intl/de/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "equals": {
+          "result.batch_total": 6833,
+          "result.batch_loads": 3,
+          "result.recoverable": 1750,
+          "result.wrong_party_exposure": 1890,
+          "result.held_back": 100,
+          "result.past_due": 2328
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"totals\"."
+    },
+    {
+      "id": "intl-ja-totals",
+      "tool": "settlements_settle",
+      "args": {
+        "ratecons": "fixtures/intl/ja/ratecons.csv",
+        "invoices": "fixtures/intl/ja/carrier-invoices.csv",
+        "payments": "fixtures/intl/ja/payments.csv",
+        "noas": "fixtures/intl/ja/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "equals": {
+          "result.batch_total": 6833,
+          "result.batch_loads": 3,
+          "result.recoverable": 1750,
+          "result.wrong_party_exposure": 1890,
+          "result.held_back": 100,
+          "result.past_due": 2328
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "settlements_write_report",
+      "args": {
+        "ratecons": "fixtures/ratecons.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/settlements_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "8 load(s) as of 2026-11-16",
+          "Next batch: 3 load(s), 6833"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "settlements_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "settlements_settle",
+      "args": {
+        "ratecons": "../../outside.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "settlements_settle",
+      "args": {
+        "ratecons": "fixtures/ratecons.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.batch_total": 6833,
+          "result.batch_loads": 3,
+          "result.recoverable": 1750,
+          "result.wrong_party_exposure": 1890,
+          "result.held_back": 100,
+          "result.past_due": 2328
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "settlements_settle",
+      "args": {
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "ratecons"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "settlements_write_report",
+      "args": {
+        "ratecons": "fixtures/ratecons.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16",
+        "out_dir": "lodestar-out/evals/settlements_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-tms-update-carrier-pay",
+      "tool": "tms_update_carrier_pay",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "settlements_settle",
+      "args": {
+        "ratecons": "fixtures/missing-export.csv",
+        "invoices": "fixtures/carrier-invoices.csv",
+        "payments": "fixtures/payments.csv",
+        "noas": "fixtures/noas.csv",
+        "as_of": "2026-11-16"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
+    }
+  ]
+}

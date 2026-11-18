@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-carton-sizing": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-carton-sizing@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

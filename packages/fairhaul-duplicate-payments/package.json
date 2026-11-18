@@ -1,0 +1,59 @@
+{
+  "name": "fairhaul-duplicate-payments",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-duplicate-payments",
+  "description": "Fairhaul Duplicate Payments: searches years of freight payments for invoices paid twice: the same invoice under another number format, the same PRO billed twice, a carrier paid under two vendor names, and same-amount look-alikes, nets off credits already received, and drafts recovery requests. Never moves money.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-duplicate-payments": "bin/fairhaul-duplicate-payments.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-duplicate-payments.js demo",
+    "eval": "node bin/fairhaul-duplicate-payments.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-duplicate-payments"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-duplicate-payments#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "duplicate-payments",
+    "recovery-audit",
+    "overpayment",
+    "accounts-payable"
+  ]
+}

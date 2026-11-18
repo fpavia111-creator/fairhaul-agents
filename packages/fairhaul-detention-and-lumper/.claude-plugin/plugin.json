@@ -1,0 +1,23 @@
+{
+  "name": "fairhaul-detention-and-lumper",
+  "version": "0.1.0",
+  "description": "Checks detention, layover and lumper charges against your dock times, appointments, free time and receipts, ranks facilities by dwell and detention cost, and drafts disputes. Never pays and never sends.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-detention-and-lumper#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "detention",
+    "dwell",
+    "lumper",
+    "layover",
+    "dock"
+  ]
+}

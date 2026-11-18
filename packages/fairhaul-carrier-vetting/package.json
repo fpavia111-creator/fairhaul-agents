@@ -1,0 +1,60 @@
+{
+  "name": "fairhaul-carrier-vetting",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-carrier-vetting",
+  "description": "Checks your carrier master and booked loads for warning signs of fraud and double brokering: shared phones, emails or bank accounts, new authority, lapsed insurance, recent remit-to changes. It flags; a person verifies and decides.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-carrier-vetting": "bin/fairhaul-carrier-vetting.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-carrier-vetting.js demo",
+    "eval": "node bin/fairhaul-carrier-vetting.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-carrier-vetting"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-carrier-vetting#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "carrier-vetting",
+    "fraud",
+    "double-brokering",
+    "onboarding",
+    "insurance"
+  ]
+}

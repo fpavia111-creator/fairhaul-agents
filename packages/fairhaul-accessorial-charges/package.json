@@ -1,0 +1,60 @@
+{
+  "name": "fairhaul-accessorial-charges",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-accessorial-charges",
+  "description": "Fairhaul Accessorial Charges: finds where your accessorial charges come from (liftgate, residential, appointment, redelivery, detention and more) by location, carrier and lane, flags charges nobody ordered and charges above your contract, and drafts the address-book fixes that stop the repeat surprises. Never changes your TMS.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-accessorial-charges": "bin/fairhaul-accessorial-charges.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-accessorial-charges.js demo",
+    "eval": "node bin/fairhaul-accessorial-charges.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-accessorial-charges"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-accessorial-charges#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "accessorials",
+    "liftgate",
+    "residential",
+    "redelivery",
+    "accessorial-charges"
+  ]
+}

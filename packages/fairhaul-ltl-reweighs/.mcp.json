@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-ltl-reweighs": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-ltl-reweighs@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

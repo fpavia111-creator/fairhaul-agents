@@ -1,0 +1,60 @@
+{
+  "name": "fairhaul-container-demurrage",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-container-demurrage",
+  "description": "Fairhaul Container Demurrage: tracks every import container's free time at the port and with the line, counts the days left before demurrage and detention start, prices what is accruing from your tariff tiers, checks the line's demurrage and detention invoices and drafts disputes. Never pays or books anything.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-container-demurrage": "bin/fairhaul-container-demurrage.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-container-demurrage.js demo",
+    "eval": "node bin/fairhaul-container-demurrage.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-container-demurrage"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-container-demurrage#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "demurrage",
+    "detention",
+    "per-diem",
+    "containers",
+    "ocean"
+  ]
+}

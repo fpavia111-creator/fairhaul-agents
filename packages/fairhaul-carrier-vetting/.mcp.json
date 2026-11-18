@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-carrier-vetting": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-carrier-vetting@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

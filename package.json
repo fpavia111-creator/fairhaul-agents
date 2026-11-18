@@ -1,10 +1,10 @@
 {
-  "name": "lodestar-agents",
+  "name": "fairhaul-agents",
   "private": true,
-  "description": "Lodestar freight and shipping cost agents monorepo.",
+  "description": "Fairhaul freight and shipping cost agents monorepo.",
   "license": "MIT",
   "workspaces": [
-    "packages/lodestar-core",
+    "packages/fairhaul-core",
     "packages/*"
   ],
   "scripts": {

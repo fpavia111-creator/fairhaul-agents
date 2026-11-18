@@ -1,0 +1,59 @@
+{
+  "name": "fairhaul-fuel-surcharges",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-fuel-surcharges",
+  "description": "Fairhaul Fuel Surcharges: checks every fuel surcharge against your carriers' fuel tables and the diesel index for the week each load moved, spots carriers billing on the wrong week, compares fuel tables side by side and shows what a diesel move would cost you. Never pays or sends.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-fuel-surcharges": "bin/fairhaul-fuel-surcharges.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-fuel-surcharges.js demo",
+    "eval": "node bin/fairhaul-fuel-surcharges.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-fuel-surcharges"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-fuel-surcharges#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "fuel-surcharge",
+    "fuel",
+    "diesel",
+    "fsc"
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "suite": "fairhaul-freight-margins",
+  "root": "..",
+  "data_note": "Fictional orders and freight costs in ../fixtures. No model is called.",
+  "cases": [
+    {
+      "id": "totals",
+      "tool": "margins_margins",
+      "args": {
+        "orders": "fixtures/orders.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000
+      },
+      "expect": {
+        "equals": {
+          "result.freight_cost": 2215.92,
+          "result.freight_billed": 213,
+          "result.recovery_pct": 9.6,
+          "result.collect_but_we_paid": 210,
+          "result.prepaid_add_not_billed": 88,
+          "result.free_below_threshold": 213.52
+        }
+      }
+    },
+    {
+      "id": "shared-shipment-split",
+      "tool": "margins_margins",
+      "args": {
+        "orders": "fixtures/orders.csv",
+        "costs": "fixtures/freight-costs.csv"
+      },
+      "expect": {
+        "contains": [
+          "\"order_id\":\"SO-6001\",\"customer\":\"Hill Country Home\",\"shipment_id\":\"S-901\",\"terms\":\"prepaid\",\"order_value\":1850,\"freight_billed\":0,\"freight_cost\":233.08"
+        ]
+      }
+    },
+    {
+      "id": "worst-customer",
+      "tool": "margins_margins",
+      "args": {
+        "orders": "fixtures/orders.csv",
+        "costs": "fixtures/freight-costs.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.by_customer.0.customer": "Front Range Supply",
+          "result.by_customer.0.gap": -1457.52
+        }
+      }
+    },
+    {
+      "id": "thresholds",
+      "tool": "margins_margins",
+      "args": {
+        "orders": "fixtures/orders.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000,
+        "alternatives": [
+          2500
+        ]
+      },
+      "expect": {
+        "equals": {
+          "result.scenarios.0.extra_recovery_estimate": 85.2,
+          "result.scenarios.1.orders_paying": 4,
+          "result.scenarios.1.extra_recovery_estimate": 175.79
+        }
+      }
+    },
+    {
+      "id": "no-cost-flagged",
+      "tool": "margins_margins",
+      "args": {
+        "orders": "fixtures/orders.csv",
+        "costs": "fixtures/freight-costs.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.with_cost": 9
+        },
+        "contains": [
+          "no_cost"
+        ]
+      }
+    },
+    {
+      "id": "draft",
+      "tool": "margins_draft_terms_change",
+      "mode": "auto",
+      "auto_actions": [
+        "margins_draft_terms_change"
+      ],
+      "args": {
+        "orders": "fixtures/orders.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000
+      },
+      "expect": {
+        "contains": [
+          "terms_change",
+          "Nothing was sent"
+        ]
+      }
+    },
+    {
+      "id": "apply-stays-a-click-in-auto",
+      "tool": "margins_request_apply",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-bills",
+      "tool": "ar_rebill_freight",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-totals",
+      "tool": "margins_margins",
+      "args": {
+        "orders": "fixtures/intl/de/orders.csv",
+        "costs": "fixtures/intl/de/freight-costs.csv",
+        "threshold": 1000
+      },
+      "expect": {
+        "equals": {
+          "result.freight_cost": 2215.92,
+          "result.freight_billed": 213,
+          "result.recovery_pct": 9.6,
+          "result.collect_but_we_paid": 210,
+          "result.prepaid_add_not_billed": 88,
+          "result.free_below_threshold": 213.52
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"totals\"."
+    },
+    {
+      "id": "intl-ja-totals",
+      "tool": "margins_margins",
+      "args": {
+        "orders": "fixtures/intl/ja/orders.csv",
+        "costs": "fixtures/intl/ja/freight-costs.csv",
+        "threshold": 1000
+      },
+      "expect": {
+        "equals": {
+          "result.freight_cost": 2215.92,
+          "result.freight_billed": 213,
+          "result.recovery_pct": 9.6,
+          "result.collect_but_we_paid": 210,
+          "result.prepaid_add_not_billed": 88,
+          "result.free_below_threshold": 213.52
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "margins_write_report",
+      "args": {
+        "orders": "fixtures/orders.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000,
+        "alternatives": [
+          2500
+        ],
+        "out_dir": "lodestar-out/evals/margins_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "10 order(s): freight cost 2215.92, charged 213, 9.6% recovered (gap -2002.92)",
+          "Collect orders we paid: 210"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "margins_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "margins_margins",
+      "args": {
+        "orders": "../../outside.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "margins_margins",
+      "args": {
+        "orders": "fixtures/orders.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.freight_cost": 2215.92,
+          "result.freight_billed": 213,
+          "result.recovery_pct": 9.6,
+          "result.collect_but_we_paid": 210,
+          "result.prepaid_add_not_billed": 88,
+          "result.free_below_threshold": 213.52
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "margins_margins",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "orders"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "margins_write_report",
+      "args": {
+        "orders": "fixtures/orders.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000,
+        "alternatives": [
+          2500
+        ],
+        "out_dir": "lodestar-out/evals/margins_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-erp-update-customer-terms",
+      "tool": "erp_update_customer_terms",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "margins_margins",
+      "args": {
+        "orders": "fixtures/missing-export.csv",
+        "costs": "fixtures/freight-costs.csv",
+        "threshold": 1000
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
+    }
+  ]
+}

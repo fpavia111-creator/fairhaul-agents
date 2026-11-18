@@ -1,0 +1,37 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.fpavia111-creator/fairhaul-air-freight-audit",
+  "title": "Fairhaul Air Freight Audit",
+  "description": "Fairhaul Air Freight Audit: audits air freight invoices: chargeable weight from actual and volumetric weight…",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents",
+    "source": "github",
+    "subfolder": "packages/fairhaul-air-freight-audit"
+  },
+  "websiteUrl": "https://fair-agents.com/fairhaul.html",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "fairhaul-air-freight-audit",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        },
+        {
+          "type": "named",
+          "name": "--root",
+          "description": "Folder holding the exports this agent may read and write (it cannot reach outside it)",
+          "isRequired": true,
+          "format": "filepath",
+          "valueHint": "exports_folder"
+        }
+      ]
+    }
+  ]
+}

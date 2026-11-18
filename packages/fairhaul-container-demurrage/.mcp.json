@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-container-demurrage": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-container-demurrage@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

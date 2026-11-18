@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 //
 //   npm i --no-save @modelcontextprotocol/sdk ajv ajv-formats
 //   npm run mcp:check                 # all agents
-//   npm run mcp:check -- polaris-of-bills spica-of-fuel
+//   npm run mcp:check -- fairhaul-freight-bill-audit fairhaul-fuel-surcharges
 //
 // Exit code 1 when any agent has a hard issue. Writes mcp-conformance.json.
 import { readdirSync, readFileSync, mkdtempSync, writeFileSync } from 'node:fs';
@@ -29,7 +29,7 @@ try {
 const root = fileURLToPath(new URL('..', import.meta.url));
 const only = process.argv.slice(2);
 const pk = join(root, 'packages');
-const agents = readdirSync(pk).filter((d) => d !== 'lodestar-core' && (!only.length || only.includes(d)));
+const agents = readdirSync(pk).filter((d) => d !== 'fairhaul-core' && (!only.length || only.includes(d)));
 const NAME_RE = /^[A-Za-z0-9_.-]{1,128}$/;
 const report = [];
 

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-parcel-refunds": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-parcel-refunds@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

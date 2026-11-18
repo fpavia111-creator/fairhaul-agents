@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-freight-bill-audit": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-freight-bill-audit@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

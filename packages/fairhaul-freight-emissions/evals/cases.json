@@ -1,0 +1,275 @@
+{
+  "suite": "fairhaul-freight-emissions",
+  "root": "..",
+  "data_note": "Fictional shipments and example factors (not from any framework) in ../fixtures. No model is called.",
+  "cases": [
+    {
+      "id": "totals",
+      "tool": "emissions_estimate",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "equals": {
+          "result.estimated": 7,
+          "result.not_estimated": 2,
+          "result.kg_co2e": 10292.1,
+          "result.measured_distance_pct": 22,
+          "result.by_mode.0.mode": "ftl"
+        }
+      }
+    },
+    {
+      "id": "units-converted",
+      "tool": "emissions_estimate",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "contains": [
+          "\"shipment_id\":\"S-806\",\"mode\":\"ocean\"",
+          "\"tonnes\":9.8,\"km\":10400"
+        ]
+      }
+    },
+    {
+      "id": "gaps-named",
+      "tool": "emissions_estimate",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "contains": [
+          "no distance",
+          "no factor for mode \\\"Courier\\\""
+        ]
+      }
+    },
+    {
+      "id": "mode-shift",
+      "tool": "emissions_estimate",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "equals": {
+          "result.shift.shipments": 3,
+          "result.shift.kg_saved": 4759.95
+        }
+      }
+    },
+    {
+      "id": "source-on-summary",
+      "tool": "emissions_estimate",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "contains": [
+          "EXAMPLE VALUES FOR THE DEMO ONLY"
+        ]
+      }
+    },
+    {
+      "id": "factors-must-name-source",
+      "tool": "emissions_estimate",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/README.md"
+      },
+      "expect": {
+        "status": "error"
+      }
+    },
+    {
+      "id": "statement",
+      "tool": "emissions_draft_emissions_statement",
+      "mode": "auto",
+      "auto_actions": [
+        "emissions_draft_emissions_statement"
+      ],
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/factors.json",
+        "customer": "Front Range Supply"
+      },
+      "expect": {
+        "contains": [
+          "emissions_statement",
+          "Nothing was sent"
+        ]
+      }
+    },
+    {
+      "id": "send-stays-a-click-in-auto",
+      "tool": "emissions_request_send",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-submits",
+      "tool": "esg_portal_submit",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-totals",
+      "tool": "emissions_estimate",
+      "args": {
+        "shipments": "fixtures/intl/de/shipments.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "equals": {
+          "result.estimated": 7,
+          "result.not_estimated": 2,
+          "result.kg_co2e": 10292.1,
+          "result.measured_distance_pct": 22,
+          "result.by_mode.0.mode": "ftl"
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"totals\"."
+    },
+    {
+      "id": "intl-ja-totals",
+      "tool": "emissions_estimate",
+      "args": {
+        "shipments": "fixtures/intl/ja/shipments.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "equals": {
+          "result.estimated": 7,
+          "result.not_estimated": 2,
+          "result.kg_co2e": 10292.1,
+          "result.measured_distance_pct": 22,
+          "result.by_mode.0.mode": "ftl"
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "emissions_write_report",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/factors.json",
+        "out_dir": "lodestar-out/evals/emissions_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "Estimate: 10.292 t CO2e for 7 of 9 shipment(s) (207313 tonne-km, 50 g per tonne-km); 2 not estimated; 22% with measured distance",
+          "Largest: ftl (8369.14 kg)"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "emissions_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "emissions_estimate",
+      "args": {
+        "shipments": "../../outside.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "emissions_estimate",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.estimated": 7,
+          "result.not_estimated": 2,
+          "result.kg_co2e": 10292.1,
+          "result.measured_distance_pct": 22,
+          "result.by_mode.0.mode": "ftl"
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "emissions_estimate",
+      "args": {
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "shipments"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "emissions_write_report",
+      "args": {
+        "shipments": "fixtures/shipments.csv",
+        "factors": "fixtures/factors.json",
+        "out_dir": "lodestar-out/evals/emissions_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "emissions_estimate",
+      "args": {
+        "shipments": "fixtures/missing-export.csv",
+        "factors": "fixtures/factors.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
+    }
+  ]
+}

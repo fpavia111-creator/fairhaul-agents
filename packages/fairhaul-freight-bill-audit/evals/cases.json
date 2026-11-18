@@ -1,0 +1,381 @@
+{
+  "suite": "fairhaul-freight-bill-audit",
+  "root": "..",
+  "data_note": "Fictional carriers, contract and invoices in ../fixtures. Deterministic checks; no model is called.",
+  "cases": [
+    {
+      "id": "audit-totals",
+      "tool": "bills_audit",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv"
+      },
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.invoices": 11,
+          "result.disputable": 1065.8,
+          "result.by_carrier.Example Linehaul.invoices": 7,
+          "result.duplicate": 2,
+          "result.ok": 1,
+          "result.review": 4
+        }
+      }
+    },
+    {
+      "id": "every-planted-issue-found",
+      "tool": "bills_audit",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv"
+      },
+      "expect": {
+        "contains": [
+          "fuel_over",
+          "accessorial_over",
+          "accessorial_not_allowed",
+          "duplicate_pro",
+          "already_paid",
+          "lines_do_not_add_up",
+          "weight_over_bol",
+          "linehaul_over",
+          "rate_needs_data",
+          "contract_expired",
+          "no_contract",
+          "quote_exceeded"
+        ]
+      }
+    },
+    {
+      "id": "detention-from-dock-times",
+      "tool": "bills_explain",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "invoice_number": "INV-8101"
+      },
+      "expect": {
+        "contains": [
+          "Detention / waiting time billed 200, contract allows 150",
+          "Lumper / unloading billed 175, contract allows 150"
+        ],
+        "equals": {
+          "result.invoice.disputable": 131
+        }
+      }
+    },
+    {
+      "id": "x12-210-reads",
+      "tool": "bills_audit",
+      "args": {
+        "invoices": "fixtures/invoices-210.edi",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.invoices": 2,
+          "result.disputable": 12.2
+        }
+      }
+    },
+    {
+      "id": "tms-export-columns",
+      "tool": "bills_audit",
+      "args": {
+        "invoices": "fixtures/exports/tms-freight-bills.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.invoices": 3,
+          "result.disputable": 100.8
+        }
+      }
+    },
+    {
+      "id": "bad-contract-refused",
+      "tool": "bills_audit",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract-typo.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "/carriers/0/lanes/0/basis"
+        ]
+      }
+    },
+    {
+      "id": "send-stays-one-click-in-auto",
+      "tool": "bills_request_send",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "pay-stays-one-click-in-auto",
+      "tool": "bills_request_pay",
+      "mode": "auto",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "invoice_number": "INV-7001",
+        "amount": 439
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "never-pays",
+      "tool": "ap_pay_invoice",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "never-emails",
+      "tool": "email_send",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-audit-totals",
+      "tool": "bills_audit",
+      "args": {
+        "invoices": "fixtures/intl/de/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/intl/de/shipments.csv",
+        "paid": "fixtures/intl/de/paid.csv"
+      },
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.invoices": 11,
+          "result.disputable": 1065.8,
+          "result.by_carrier.Example Linehaul.invoices": 7,
+          "result.duplicate": 2,
+          "result.ok": 1,
+          "result.review": 4
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"audit-totals\"."
+    },
+    {
+      "id": "intl-ja-audit-totals",
+      "tool": "bills_audit",
+      "args": {
+        "invoices": "fixtures/intl/ja/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/intl/ja/shipments.csv",
+        "paid": "fixtures/intl/ja/paid.csv"
+      },
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.invoices": 11,
+          "result.disputable": 1065.8,
+          "result.by_carrier.Example Linehaul.invoices": 7,
+          "result.duplicate": 2,
+          "result.ok": 1,
+          "result.review": 4
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"audit-totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "bills_write_report",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv",
+        "out_dir": "lodestar-out/evals/bills_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "Audit worklist written: 11 invoice(s), 7046.3 billed: 4 to dispute, 2 duplicate(s), 4 need review, 1 clean",
+          "Disputable 1065.8 (15.13% of billed)"
+        ]
+      }
+    },
+    {
+      "id": "draft-dispute-waits-for-a-person",
+      "tool": "bills_draft_dispute",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv",
+        "carrier": "EXLT",
+        "out_dir": "lodestar-out/evals/bills_draft_dispute"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "draft-dispute-after-approval",
+      "tool": "bills_draft_dispute",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv",
+        "carrier": "EXLT",
+        "out_dir": "lodestar-out/evals/bills_draft_dispute"
+      },
+      "approve": "Pat Example",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.amount": 934.8,
+          "result.open_markers": 4
+        },
+        "contains": [
+          "dispute Example Linehaul drafted for 934.8 with 4 open marker(s) ([TO CONFIRM carrier billing contact], [TO CONFIRM your name and company], [TO CONFIRM your account number with the carrier], [ATTACH contract pages or rate confirmation that apply])"
+        ]
+      }
+    },
+    {
+      "id": "recall-empty-memory",
+      "tool": "bills_recall",
+      "args": {},
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.total": 0
+        },
+        "contains": [
+          "0 fact(s) found (memory is empty)"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "bills_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "bills_audit",
+      "args": {
+        "invoices": "../../outside.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "bills_audit",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.invoices": 11,
+          "result.disputable": 1065.8,
+          "result.by_carrier.Example Linehaul.invoices": 7,
+          "result.duplicate": 2,
+          "result.ok": 1,
+          "result.review": 4
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "bills_audit",
+      "args": {
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "invoices"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "bills_draft_dispute",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv",
+        "carrier": "EXLT",
+        "out_dir": "lodestar-out/evals/bills_draft_dispute"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-carrier-portal-submit",
+      "tool": "carrier_portal_submit",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "bills_audit",
+      "args": {
+        "invoices": "fixtures/missing-export.csv",
+        "contract": "fixtures/contract.json",
+        "shipments": "fixtures/shipments.csv",
+        "paid": "fixtures/paid.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
+    }
+  ]
+}

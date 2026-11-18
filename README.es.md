@@ -1,4 +1,4 @@
-# Agentes de flete Lodestar
+# Agentes de flete Fairhaul
 
 *Traducido por Claude; revisión por hablante nativo pendiente. El [README](README.md) en inglés es la referencia.*
 
@@ -9,19 +9,19 @@ Licencia MIT · Node 20 o posterior · solo archivos locales · sin credenciales
 ## Probar
 
 ```bash
-npx -y polaris-of-bills demo        # auditoría de facturas de flete con datos ficticios
-npx -y procyon-of-accruals demo     # provisión de fletes con datos ficticios
+npx -y fairhaul-freight-bill-audit demo        # auditoría de facturas de flete con datos ficticios
+npx -y fairhaul-freight-accruals demo     # provisión de fletes con datos ficticios
 ```
 
 Cada agente tiene una `demo` con archivos ficticios, un `eval` con sus propios casos de prueba y un servidor MCP (`npx -y <agent> mcp --root <carpeta>`) para Claude Desktop, Claude Code, Cursor y otros hosts MCP. Por ahora, los nombres de columna y los informes están en inglés.
 
 ## Los agentes
 
-**Lo que facturan los transportistas:** `polaris-of-bills` (carga completa y consolidada contra contratos), `sirius-of-parcels` (paquetería), `vega-of-detention` (estadías y esperas), `spica-of-fuel` (recargos por combustible), `betelgeuse-of-accessorials` (origen de los servicios adicionales), `bellatrix-of-reweighs` (repesajes y cambios de clase), `algol-of-duplicates` (pagos dobles), `adhara-of-ocean` (marítimo), `canopus-of-air` (aéreo), `alcor-of-pods` (comprobantes de entrega), `fomalhaut-of-demurrage` (días libres de contenedores y demoras), `antares-of-entries` (declaraciones aduaneras contra facturas comerciales, sin asesoría de clasificación).
+**Lo que facturan los transportistas:** `fairhaul-freight-bill-audit` (carga completa y consolidada contra contratos), `fairhaul-parcel-refunds` (paquetería), `fairhaul-detention-and-lumper` (estadías y esperas), `fairhaul-fuel-surcharges` (recargos por combustible), `fairhaul-accessorial-charges` (origen de los servicios adicionales), `fairhaul-ltl-reweighs` (repesajes y cambios de clase), `fairhaul-duplicate-payments` (pagos dobles), `fairhaul-ocean-freight-audit` (marítimo), `fairhaul-air-freight-audit` (aéreo), `fairhaul-proof-of-delivery` (comprobantes de entrega), `fairhaul-container-demurrage` (días libres de contenedores y demoras), `fairhaul-customs-entries` (declaraciones aduaneras contra facturas comerciales, sin asesoría de clasificación).
 
-**Planificar, comprar y operar el flete:** `altair-of-bids` (licitaciones), `regulus-of-tariffs` (historial revalorizado con cada contrato), `nunki-of-quotes` (cotizaciones spot), `mizar-of-lanes` (gasto por ruta y consolidación), `rigel-of-scorecards` (cuadros de mando de transportistas), `aldebaran-of-carriers` (señales de fraude), `mira-of-tracking` (envíos retrasados), `hadar-of-docks` (citas en andén), `deneb-of-cartons` (tamaños de caja), `arcturus-of-edi` (lectura y conciliación de archivos X12).
+**Planificar, comprar y operar el flete:** `fairhaul-rfp-bid-scoring` (licitaciones), `fairhaul-contract-rerating` (historial revalorizado con cada contrato), `fairhaul-spot-quotes` (cotizaciones spot), `fairhaul-lane-spend` (gasto por ruta y consolidación), `fairhaul-carrier-scorecards` (cuadros de mando de transportistas), `fairhaul-carrier-vetting` (señales de fraude), `fairhaul-load-tracking` (envíos retrasados), `fairhaul-dock-scheduling` (citas en andén), `fairhaul-carton-sizing` (tamaños de caja), `fairhaul-edi-files` (lectura y conciliación de archivos X12).
 
-**Cierre y costes:** `procyon-of-accruals` (provisión de fletes), `castor-of-allocations` (flete repartido por pedido y centro de costes), `pollux-of-costing` (estándares de flete en el coste de artículos), `elnath-of-margins` (flete cobrado contra flete real por cliente), `alnilam-of-settlements` (pagos a transportistas para brókeres), `capella-of-claims` (reclamaciones por daños), `achernar-of-returns` (devoluciones hasta la nota de crédito), `shaula-of-emissions` (estimaciones de emisiones con los factores que usted elija).
+**Cierre y costes:** `fairhaul-freight-accruals` (provisión de fletes), `fairhaul-freight-allocation` (flete repartido por pedido y centro de costes), `fairhaul-standard-freight-cost` (estándares de flete en el coste de artículos), `fairhaul-freight-margins` (flete cobrado contra flete real por cliente), `fairhaul-broker-settlements` (pagos a transportistas para brókeres), `fairhaul-freight-claims` (reclamaciones por daños), `fairhaul-returns-tracking` (devoluciones hasta la nota de crédito), `fairhaul-freight-emissions` (estimaciones de emisiones con los factores que usted elija).
 
 ## Cómo se mantienen seguros
 

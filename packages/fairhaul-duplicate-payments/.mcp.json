@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-duplicate-payments": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-duplicate-payments@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

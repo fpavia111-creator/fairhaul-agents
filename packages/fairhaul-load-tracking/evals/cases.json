@@ -1,0 +1,279 @@
+{
+  "suite": "fairhaul-load-tracking",
+  "root": "..",
+  "data_note": "Fictional loads and events in ../fixtures, as of 2026-11-16 10:00. No model is called.",
+  "cases": [
+    {
+      "id": "board",
+      "tool": "tracking_assess",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "expect": {
+        "equals": {
+          "result.open": 8,
+          "result.late": 2,
+          "result.at_risk": 1,
+          "result.blind": 1,
+          "result.on_track": 3,
+          "result.delivered_not_closed": 1
+        }
+      }
+    },
+    {
+      "id": "every-issue",
+      "tool": "tracking_assess",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "expect": {
+        "contains": [
+          "missed_pickup",
+          "no_tracking",
+          "stale",
+          "eta_past_appointment",
+          "past_appointment",
+          "delay_reported",
+          "close it in the TMS"
+        ]
+      }
+    },
+    {
+      "id": "worst-first",
+      "tool": "tracking_assess",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "expect": {
+        "equals": {
+          "result.items.0.shipment_id": "T-604",
+          "result.items.1.shipment_id": "T-603"
+        }
+      }
+    },
+    {
+      "id": "stale-threshold",
+      "tool": "tracking_assess",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00",
+        "stale_hours": 24
+      },
+      "expect": {
+        "equals": {
+          "result.blind": 0
+        }
+      }
+    },
+    {
+      "id": "nothing-late-for-customer",
+      "tool": "tracking_draft_delay_notice",
+      "mode": "auto",
+      "auto_actions": [
+        "tracking_draft_delay_notice"
+      ],
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00",
+        "customer": "Lakeside Outfitters"
+      },
+      "expect": {
+        "status": "error"
+      }
+    },
+    {
+      "id": "send-stays-a-click-in-auto",
+      "tool": "tracking_request_send",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-texts",
+      "tool": "sms_send",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-board",
+      "tool": "tracking_assess",
+      "args": {
+        "loads": "fixtures/intl/de/loads.csv",
+        "events": "fixtures/intl/de/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "expect": {
+        "equals": {
+          "result.open": 8,
+          "result.late": 2,
+          "result.at_risk": 1,
+          "result.blind": 1,
+          "result.on_track": 3,
+          "result.delivered_not_closed": 1
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"board\"."
+    },
+    {
+      "id": "intl-ja-board",
+      "tool": "tracking_assess",
+      "args": {
+        "loads": "fixtures/intl/ja/loads.csv",
+        "events": "fixtures/intl/ja/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "expect": {
+        "equals": {
+          "result.open": 8,
+          "result.late": 2,
+          "result.at_risk": 1,
+          "result.blind": 1,
+          "result.on_track": 3,
+          "result.delivered_not_closed": 1
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"board\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "tracking_write_report",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00",
+        "stale_hours": 24,
+        "out_dir": "lodestar-out/evals/tracking_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "8 open load(s) at 2026-11-16 10:00: 2 late, 1 at risk, 0 with stale or no tracking, 4 on track, 1 delivered but still open"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "tracking_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "tracking_assess",
+      "args": {
+        "loads": "../../outside.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "tracking_assess",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.open": 8,
+          "result.late": 2,
+          "result.at_risk": 1,
+          "result.blind": 1,
+          "result.on_track": 3,
+          "result.delivered_not_closed": 1
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "tracking_assess",
+      "args": {
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "loads"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "tracking_write_report",
+      "args": {
+        "loads": "fixtures/loads.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00",
+        "stale_hours": 24,
+        "out_dir": "lodestar-out/evals/tracking_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-tms-update-status",
+      "tool": "tms_update_status",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "tracking_assess",
+      "args": {
+        "loads": "fixtures/missing-export.csv",
+        "events": "fixtures/events.csv",
+        "as_of": "2026-11-16 10:00"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
+    }
+  ]
+}

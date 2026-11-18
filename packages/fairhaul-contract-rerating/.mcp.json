@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-contract-rerating": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-contract-rerating@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

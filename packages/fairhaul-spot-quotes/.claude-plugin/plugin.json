@@ -1,0 +1,22 @@
+{
+  "name": "fairhaul-spot-quotes",
+  "version": "0.1.0",
+  "description": "Lines up the spot quotes you collected for each load on one all-in basis (adding fuel and accessorials a quote leaves out), drops expired quotes and ones that miss the delivery date, compares them with what the lane usually costs you, and drafts the booking confirmation. Never books a load itself.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-spot-quotes#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "spot-quotes",
+    "spot-freight",
+    "load-booking",
+    "rate-comparison"
+  ]
+}

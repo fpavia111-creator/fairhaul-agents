@@ -1,0 +1,23 @@
+{
+  "name": "fairhaul-carrier-vetting",
+  "version": "0.1.0",
+  "description": "Checks your carrier master and booked loads for warning signs of fraud and double brokering: shared phones, emails or bank accounts, new authority, lapsed insurance, recent remit-to changes. It flags; a person verifies and decides.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-carrier-vetting#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "carrier-vetting",
+    "fraud",
+    "double-brokering",
+    "onboarding",
+    "insurance"
+  ]
+}

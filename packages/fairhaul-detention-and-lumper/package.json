@@ -1,0 +1,60 @@
+{
+  "name": "fairhaul-detention-and-lumper",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-detention-and-lumper",
+  "description": "Fairhaul Detention and Lumper: checks detention, layover and lumper charges against your dock times, appointments, free time and receipts, ranks facilities by dwell and detention cost, and drafts disputes. Never pays and never sends.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-detention-and-lumper": "bin/fairhaul-detention-and-lumper.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-detention-and-lumper.js demo",
+    "eval": "node bin/fairhaul-detention-and-lumper.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-detention-and-lumper"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-detention-and-lumper#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "detention",
+    "dwell",
+    "lumper",
+    "layover",
+    "dock"
+  ]
+}

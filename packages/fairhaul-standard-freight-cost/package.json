@@ -1,0 +1,59 @@
+{
+  "name": "fairhaul-standard-freight-cost",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-standard-freight-cost",
+  "description": "Compares the standard freight built into item costs with what freight actually cost per unit, finds the SKUs and lanes where the standard is stale, and drafts new standards for a person to load.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-standard-freight-cost": "bin/fairhaul-standard-freight-cost.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-standard-freight-cost.js demo",
+    "eval": "node bin/fairhaul-standard-freight-cost.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-standard-freight-cost"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-standard-freight-cost#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "standard-cost",
+    "landed-cost",
+    "variance",
+    "cost-accounting"
+  ]
+}

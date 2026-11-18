@@ -1,4 +1,4 @@
-# Agenti per i trasporti Lodestar
+# Agenti per i trasporti Fairhaul
 
 *Tradotto da Claude; revisione di un madrelingua in attesa. Il [README](README.md) inglese fa fede.*
 
@@ -9,19 +9,19 @@ Licenza MIT · Node 20 o successivo · solo file locali · nessuna credenziale �
 ## Provare
 
 ```bash
-npx -y polaris-of-bills demo        # controllo fatture di trasporto su dati fittizi
-npx -y procyon-of-accruals demo     # rateo dei trasporti su dati fittizi
+npx -y fairhaul-freight-bill-audit demo        # controllo fatture di trasporto su dati fittizi
+npx -y fairhaul-freight-accruals demo     # rateo dei trasporti su dati fittizi
 ```
 
 Ogni agente ha una `demo` su file fittizi, un `eval` con i propri casi di prova e un server MCP (`npx -y <agent> mcp --root <cartella>`) per Claude Desktop, Claude Code, Cursor e altri host MCP. Per ora i nomi delle colonne e i report sono in inglese.
 
 ## Gli agenti
 
-**Cosa fatturano i vettori:** `polaris-of-bills` (carico completo e groupage rispetto ai contratti), `sirius-of-parcels` (corrieri), `vega-of-detention` (soste e attese), `spica-of-fuel` (supplementi carburante), `betelgeuse-of-accessorials` (origine dei servizi accessori), `bellatrix-of-reweighs` (ripesature e cambi di classe), `algol-of-duplicates` (pagamenti doppi), `adhara-of-ocean` (marittimo), `canopus-of-air` (aereo), `alcor-of-pods` (prove di consegna), `fomalhaut-of-demurrage` (franchigia container e controstallie), `antares-of-entries` (dichiarazioni doganali rispetto alle fatture commerciali, senza consulenza sulla classificazione).
+**Cosa fatturano i vettori:** `fairhaul-freight-bill-audit` (carico completo e groupage rispetto ai contratti), `fairhaul-parcel-refunds` (corrieri), `fairhaul-detention-and-lumper` (soste e attese), `fairhaul-fuel-surcharges` (supplementi carburante), `fairhaul-accessorial-charges` (origine dei servizi accessori), `fairhaul-ltl-reweighs` (ripesature e cambi di classe), `fairhaul-duplicate-payments` (pagamenti doppi), `fairhaul-ocean-freight-audit` (marittimo), `fairhaul-air-freight-audit` (aereo), `fairhaul-proof-of-delivery` (prove di consegna), `fairhaul-container-demurrage` (franchigia container e controstallie), `fairhaul-customs-entries` (dichiarazioni doganali rispetto alle fatture commerciali, senza consulenza sulla classificazione).
 
-**Pianificare, acquistare e gestire i trasporti:** `altair-of-bids` (gare), `regulus-of-tariffs` (storico ricalcolato con ogni contratto), `nunki-of-quotes` (quotazioni spot), `mizar-of-lanes` (spesa per tratta e consolidamento), `rigel-of-scorecards` (scorecard dei vettori), `aldebaran-of-carriers` (segnali di frode), `mira-of-tracking` (spedizioni in ritardo), `hadar-of-docks` (appuntamenti alle baie), `deneb-of-cartons` (dimensioni degli imballi), `arcturus-of-edi` (lettura e riconciliazione dei file X12).
+**Pianificare, acquistare e gestire i trasporti:** `fairhaul-rfp-bid-scoring` (gare), `fairhaul-contract-rerating` (storico ricalcolato con ogni contratto), `fairhaul-spot-quotes` (quotazioni spot), `fairhaul-lane-spend` (spesa per tratta e consolidamento), `fairhaul-carrier-scorecards` (scorecard dei vettori), `fairhaul-carrier-vetting` (segnali di frode), `fairhaul-load-tracking` (spedizioni in ritardo), `fairhaul-dock-scheduling` (appuntamenti alle baie), `fairhaul-carton-sizing` (dimensioni degli imballi), `fairhaul-edi-files` (lettura e riconciliazione dei file X12).
 
-**Chiusura e costi:** `procyon-of-accruals` (rateo dei trasporti), `castor-of-allocations` (trasporto ripartito per ordine e centro di costo), `pollux-of-costing` (standard di trasporto nel costo degli articoli), `elnath-of-margins` (trasporto addebitato rispetto al costo reale per cliente), `alnilam-of-settlements` (pagamenti ai vettori per broker), `capella-of-claims` (reclami per danni), `achernar-of-returns` (resi fino alla nota di credito), `shaula-of-emissions` (stime delle emissioni con i fattori che scegliete voi).
+**Chiusura e costi:** `fairhaul-freight-accruals` (rateo dei trasporti), `fairhaul-freight-allocation` (trasporto ripartito per ordine e centro di costo), `fairhaul-standard-freight-cost` (standard di trasporto nel costo degli articoli), `fairhaul-freight-margins` (trasporto addebitato rispetto al costo reale per cliente), `fairhaul-broker-settlements` (pagamenti ai vettori per broker), `fairhaul-freight-claims` (reclami per danni), `fairhaul-returns-tracking` (resi fino alla nota di credito), `fairhaul-freight-emissions` (stime delle emissioni con i fattori che scegliete voi).
 
 ## Come restano sicuri
 

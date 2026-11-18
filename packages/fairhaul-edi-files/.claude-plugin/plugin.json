@@ -1,0 +1,25 @@
+{
+  "name": "fairhaul-edi-files",
+  "version": "0.1.0",
+  "description": "Reads X12 transport files (204 load tenders, 210 invoices, 214 status, 990 responses, 997/999 acknowledgements), checks envelopes and counts, converts them to spreadsheets, and reconciles invoices against tenders, status and acknowledgements. Never transmits EDI.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-edi-files#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "edi",
+    "x12",
+    "204",
+    "210",
+    "214",
+    "990",
+    "997"
+  ]
+}

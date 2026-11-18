@@ -1,0 +1,272 @@
+{
+  "suite": "fairhaul-fuel-surcharges",
+  "root": "..",
+  "data_note": "Fictional invoices, fuel tables and diesel prices in ../fixtures. No model is called.",
+  "cases": [
+    {
+      "id": "check-totals",
+      "tool": "fuel_check",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.invoices": 11,
+          "result.disputable": 130,
+          "result.over": 3,
+          "result.wrong_week": 2,
+          "result.not_checked": 2
+        }
+      }
+    },
+    {
+      "id": "wrong-week-found",
+      "tool": "fuel_check",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.items.3.status": "wrong_week",
+          "result.items.3.week_billed": "2026-10-26",
+          "result.items.4.week_billed": "2026-10-26"
+        }
+      }
+    },
+    {
+      "id": "every-status",
+      "tool": "fuel_check",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "contains": [
+          "index_stale",
+          "fuel_under",
+          "fuel_not_in_contract",
+          "not_checked",
+          "no_contract",
+          "fuel_over"
+        ]
+      }
+    },
+    {
+      "id": "compare-tables",
+      "tool": "fuel_compare",
+      "args": {
+        "contract": "fixtures/contract.json",
+        "prices": [
+          3.6,
+          3.9,
+          4.1
+        ]
+      },
+      "expect": {
+        "equals": {
+          "result.highest_at_middle_price": "Coastal Line Haul",
+          "result.lowest_at_middle_price": "Ridgeline Freight",
+          "result.carriers.1.cells.1.fuel": 250
+        }
+      }
+    },
+    {
+      "id": "sensitivity",
+      "tool": "fuel_sensitivity",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.invoices": 8,
+          "result.change": 75
+        }
+      }
+    },
+    {
+      "id": "nothing-to-dispute",
+      "tool": "fuel_draft_dispute",
+      "mode": "auto",
+      "auto_actions": [
+        "fuel_draft_dispute"
+      ],
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "carrier": "Ridgeline Freight"
+      },
+      "expect": {
+        "status": "error"
+      }
+    },
+    {
+      "id": "send-stays-a-click-in-auto",
+      "tool": "fuel_request_send",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-pays",
+      "tool": "ap_pay_invoice",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-check-totals",
+      "tool": "fuel_check",
+      "args": {
+        "invoices": "fixtures/intl/de/invoices.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.invoices": 11,
+          "result.disputable": 130,
+          "result.over": 3,
+          "result.wrong_week": 2,
+          "result.not_checked": 2
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"check-totals\"."
+    },
+    {
+      "id": "intl-ja-check-totals",
+      "tool": "fuel_check",
+      "args": {
+        "invoices": "fixtures/intl/ja/invoices.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "equals": {
+          "result.invoices": 11,
+          "result.disputable": 130,
+          "result.over": 3,
+          "result.wrong_week": 2,
+          "result.not_checked": 2
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"check-totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "fuel_write_report",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "out_dir": "lodestar-out/evals/fuel_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "11 invoice(s), 2721 fuel billed: 3 over the table for 130 (2 priced on the wrong diesel week); 2 could not be checked",
+          "Latest index week 2026-11-02 (4.08)"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "fuel_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "fuel_check",
+      "args": {
+        "invoices": "../../outside.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "fuel_check",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.invoices": 11,
+          "result.disputable": 130,
+          "result.over": 3,
+          "result.wrong_week": 2,
+          "result.not_checked": 2
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "fuel_check",
+      "args": {
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "invoices"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "fuel_write_report",
+      "args": {
+        "invoices": "fixtures/invoices.csv",
+        "contract": "fixtures/contract.json",
+        "out_dir": "lodestar-out/evals/fuel_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "fuel_check",
+      "args": {
+        "invoices": "fixtures/missing-export.csv",
+        "contract": "fixtures/contract.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
+    }
+  ]
+}

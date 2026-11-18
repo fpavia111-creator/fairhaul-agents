@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-standard-freight-cost": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-standard-freight-cost@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

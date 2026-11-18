@@ -1,0 +1,60 @@
+{
+  "name": "fairhaul-ltl-reweighs",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-ltl-reweighs",
+  "description": "Fairhaul LTL Reweighs: checks LTL weight and class corrections against your declared dimensions, the density scale and the inspection certificate, separates the corrections worth challenging from the ones that mean your own product data is wrong, and drafts the disputes and item-master fixes. Never pays or sends.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-ltl-reweighs": "bin/fairhaul-ltl-reweighs.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-ltl-reweighs.js demo",
+    "eval": "node bin/fairhaul-ltl-reweighs.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-ltl-reweighs"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-ltl-reweighs#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "reweigh",
+    "reclass",
+    "ltl",
+    "weight-and-inspection",
+    "nmfc"
+  ]
+}

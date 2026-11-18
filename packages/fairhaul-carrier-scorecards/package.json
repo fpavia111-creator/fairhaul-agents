@@ -1,0 +1,60 @@
+{
+  "name": "fairhaul-carrier-scorecards",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-carrier-scorecards",
+  "description": "Fairhaul Carrier Scorecards: scores each carrier on on-time pickup and delivery, tender acceptance, billing accuracy, claims, tracking and cost per mile from your own shipment history, with your weights, ranks them and drafts the quarterly review note. Never sends it.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-carrier-scorecards": "bin/fairhaul-carrier-scorecards.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-carrier-scorecards.js demo",
+    "eval": "node bin/fairhaul-carrier-scorecards.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-carrier-scorecards"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-carrier-scorecards#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "carrier-scorecard",
+    "carrier-performance",
+    "on-time",
+    "otd",
+    "qbr"
+  ]
+}

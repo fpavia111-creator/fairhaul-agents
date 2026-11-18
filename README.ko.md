@@ -1,4 +1,4 @@
-# Lodestar 물류 에이전트
+# Fairhaul 물류 에이전트
 
 *Claude가 번역했으며 원어민 검토가 남아 있습니다. 영어 [README](README.md)가 기준입니다.*
 
@@ -9,19 +9,19 @@ MIT 라이선스 · Node 20 이상 · 로컬 파일만 · 자격 증명 불필�
 ## 사용해 보기
 
 ```bash
-npx -y polaris-of-bills demo        # 가상 데이터로 운임 청구 감사
-npx -y procyon-of-accruals demo     # 가상 데이터로 운임 미지급 계상
+npx -y fairhaul-freight-bill-audit demo        # 가상 데이터로 운임 청구 감사
+npx -y fairhaul-freight-accruals demo     # 가상 데이터로 운임 미지급 계상
 ```
 
 각 에이전트에는 가상 파일로 실행하는 `demo`, 자체 테스트 케이스로 확인하는 `eval`, Claude Desktop, Claude Code, Cursor 등 MCP 호스트용 MCP 서버(`npx -y <agent> mcp --root <폴더>`)가 있습니다. 현재 열 이름과 보고서는 영어입니다.
 
 ## 에이전트
 
-**운송사 청구:** `polaris-of-bills`(FTL·LTL 청구서와 계약 대조), `sirius-of-parcels`(택배), `vega-of-detention`(대기 요금), `spica-of-fuel`(유류할증료), `betelgeuse-of-accessorials`(부대 비용의 원인), `bellatrix-of-reweighs`(재계량과 등급 변경), `algol-of-duplicates`(이중 지급), `adhara-of-ocean`(해상), `canopus-of-air`(항공), `alcor-of-pods`(배송 증빙), `fomalhaut-of-demurrage`(컨테이너 프리타임과 체선료), `antares-of-entries`(수입 신고와 상업 송장 대조, 품목 분류 자문 없음).
+**운송사 청구:** `fairhaul-freight-bill-audit`(FTL·LTL 청구서와 계약 대조), `fairhaul-parcel-refunds`(택배), `fairhaul-detention-and-lumper`(대기 요금), `fairhaul-fuel-surcharges`(유류할증료), `fairhaul-accessorial-charges`(부대 비용의 원인), `fairhaul-ltl-reweighs`(재계량과 등급 변경), `fairhaul-duplicate-payments`(이중 지급), `fairhaul-ocean-freight-audit`(해상), `fairhaul-air-freight-audit`(항공), `fairhaul-proof-of-delivery`(배송 증빙), `fairhaul-container-demurrage`(컨테이너 프리타임과 체선료), `fairhaul-customs-entries`(수입 신고와 상업 송장 대조, 품목 분류 자문 없음).
 
-**계획, 구매, 운영:** `altair-of-bids`(입찰), `regulus-of-tariffs`(계약별 과거 실적 재계산), `nunki-of-quotes`(스팟 견적), `mizar-of-lanes`(노선별 지출과 합적), `rigel-of-scorecards`(운송사 성과표), `aldebaran-of-carriers`(사기 경고 신호), `mira-of-tracking`(지연 화물), `hadar-of-docks`(도크 예약), `deneb-of-cartons`(상자 크기), `arcturus-of-edi`(X12 파일 읽기와 대사).
+**계획, 구매, 운영:** `fairhaul-rfp-bid-scoring`(입찰), `fairhaul-contract-rerating`(계약별 과거 실적 재계산), `fairhaul-spot-quotes`(스팟 견적), `fairhaul-lane-spend`(노선별 지출과 합적), `fairhaul-carrier-scorecards`(운송사 성과표), `fairhaul-carrier-vetting`(사기 경고 신호), `fairhaul-load-tracking`(지연 화물), `fairhaul-dock-scheduling`(도크 예약), `fairhaul-carton-sizing`(상자 크기), `fairhaul-edi-files`(X12 파일 읽기와 대사).
 
-**결산과 원가:** `procyon-of-accruals`(운임 미지급 계상), `castor-of-allocations`(주문·코스트센터별 운임 배부), `pollux-of-costing`(품목 원가의 운임 표준), `elnath-of-margins`(고객별 청구 운임과 실제 운임), `alnilam-of-settlements`(브로커용 운송사 지급), `capella-of-claims`(화물 사고 청구), `achernar-of-returns`(반품부터 환불까지), `shaula-of-emissions`(고객이 고른 계수로 배출량 추정).
+**결산과 원가:** `fairhaul-freight-accruals`(운임 미지급 계상), `fairhaul-freight-allocation`(주문·코스트센터별 운임 배부), `fairhaul-standard-freight-cost`(품목 원가의 운임 표준), `fairhaul-freight-margins`(고객별 청구 운임과 실제 운임), `fairhaul-broker-settlements`(브로커용 운송사 지급), `fairhaul-freight-claims`(화물 사고 청구), `fairhaul-returns-tracking`(반품부터 환불까지), `fairhaul-freight-emissions`(고객이 고른 계수로 배출량 추정).
 
 ## 안전 장치
 

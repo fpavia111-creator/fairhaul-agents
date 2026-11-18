@@ -1,6 +1,6 @@
 // Rewrite an English fixture the way an export from another market writes it
 // (shared by intl-check.mjs and make-intl-fixtures.mjs).
-import { parseCsv, normHeader, namesFor, conceptOf, DEFAULT_UNITS } from '../../packages/lodestar-core/src/index.js';
+import { parseCsv, normHeader, namesFor, conceptOf, DEFAULT_UNITS } from '../../packages/fairhaul-core/src/index.js';
 
 // How each market writes a file. Dates: d = day-first with the separator, y = year-first.
 export const MARKETS = {

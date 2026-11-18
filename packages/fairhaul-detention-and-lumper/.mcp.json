@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-detention-and-lumper": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-detention-and-lumper@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

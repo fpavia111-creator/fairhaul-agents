@@ -1,0 +1,59 @@
+{
+  "name": "fairhaul-returns-tracking",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-returns-tracking",
+  "description": "Follows every return from authorisation to credit: return labels never used, returns received but not credited, carriers charging return freight twice, and which customers, SKUs and reasons cost the most freight to bring back.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-returns-tracking": "bin/fairhaul-returns-tracking.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-returns-tracking.js demo",
+    "eval": "node bin/fairhaul-returns-tracking.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-returns-tracking"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-returns-tracking#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "returns",
+    "reverse-logistics",
+    "rma",
+    "credits"
+  ]
+}

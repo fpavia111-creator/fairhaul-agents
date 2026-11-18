@@ -1,0 +1,60 @@
+{
+  "name": "fairhaul-freight-margins",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-freight-margins",
+  "description": "Compares the freight you charged each customer with what the freight actually cost: recovery by customer and freight terms, orders shipped free that should not have been, collect orders you paid for, and how a different free-shipping threshold would have changed the result.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-freight-margins": "bin/fairhaul-freight-margins.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-freight-margins.js demo",
+    "eval": "node bin/fairhaul-freight-margins.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-freight-margins"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-freight-margins#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "freight-recovery",
+    "margin",
+    "pricing",
+    "free-shipping",
+    "customers"
+  ]
+}

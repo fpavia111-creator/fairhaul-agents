@@ -1,4 +1,4 @@
-# Lodestar 物流エージェント
+# Fairhaul 物流エージェント
 
 *Claude による翻訳で、ネイティブによる確認は未実施です。英語の [README](README.md) が正本です。*
 
@@ -9,19 +9,19 @@ MIT ライセンス · Node 20 以降 · ローカルファイルのみ · 認�
 ## 試す
 
 ```bash
-npx -y polaris-of-bills demo        # 架空データでの運賃請求監査
-npx -y procyon-of-accruals demo     # 架空データでの運賃未払計上
+npx -y fairhaul-freight-bill-audit demo        # 架空データでの運賃請求監査
+npx -y fairhaul-freight-accruals demo     # 架空データでの運賃未払計上
 ```
 
 各エージェントには架空のファイルで動く `demo`、自身のテストケースで確認する `eval`、Claude Desktop、Claude Code、Cursor などの MCP ホスト向けの MCP サーバー (`npx -y <agent> mcp --root <フォルダー>`) があります。現時点では、列名とレポートは英語です。
 
 ## エージェント一覧
 
-**運送会社の請求:** `polaris-of-bills` (貸切・混載の請求と契約の照合)、`sirius-of-parcels` (宅配便)、`vega-of-detention` (待機料金)、`spica-of-fuel` (燃料サーチャージ)、`betelgeuse-of-accessorials` (付帯料金の発生源)、`bellatrix-of-reweighs` (再計量と等級変更)、`algol-of-duplicates` (二重払い)、`adhara-of-ocean` (海上輸送)、`canopus-of-air` (航空輸送)、`alcor-of-pods` (配達証明)、`fomalhaut-of-demurrage` (コンテナのフリータイムとデマレージ)、`antares-of-entries` (輸入申告と商業インボイスの照合、関税分類の助言なし)。
+**運送会社の請求:** `fairhaul-freight-bill-audit` (貸切・混載の請求と契約の照合)、`fairhaul-parcel-refunds` (宅配便)、`fairhaul-detention-and-lumper` (待機料金)、`fairhaul-fuel-surcharges` (燃料サーチャージ)、`fairhaul-accessorial-charges` (付帯料金の発生源)、`fairhaul-ltl-reweighs` (再計量と等級変更)、`fairhaul-duplicate-payments` (二重払い)、`fairhaul-ocean-freight-audit` (海上輸送)、`fairhaul-air-freight-audit` (航空輸送)、`fairhaul-proof-of-delivery` (配達証明)、`fairhaul-container-demurrage` (コンテナのフリータイムとデマレージ)、`fairhaul-customs-entries` (輸入申告と商業インボイスの照合、関税分類の助言なし)。
 
-**計画・調達・運用:** `altair-of-bids` (入札)、`regulus-of-tariffs` (各契約での過去実績の再計算)、`nunki-of-quotes` (スポット見積)、`mizar-of-lanes` (レーン別支出と混載)、`rigel-of-scorecards` (運送会社スコアカード)、`aldebaran-of-carriers` (不正の兆候)、`mira-of-tracking` (遅延貨物)、`hadar-of-docks` (荷受けバースの予約)、`deneb-of-cartons` (箱のサイズ)、`arcturus-of-edi` (X12 ファイルの読み取りと照合)。
+**計画・調達・運用:** `fairhaul-rfp-bid-scoring` (入札)、`fairhaul-contract-rerating` (各契約での過去実績の再計算)、`fairhaul-spot-quotes` (スポット見積)、`fairhaul-lane-spend` (レーン別支出と混載)、`fairhaul-carrier-scorecards` (運送会社スコアカード)、`fairhaul-carrier-vetting` (不正の兆候)、`fairhaul-load-tracking` (遅延貨物)、`fairhaul-dock-scheduling` (荷受けバースの予約)、`fairhaul-carton-sizing` (箱のサイズ)、`fairhaul-edi-files` (X12 ファイルの読み取りと照合)。
 
-**決算とコスト:** `procyon-of-accruals` (運賃未払計上)、`castor-of-allocations` (受注・コストセンター別の運賃配賦)、`pollux-of-costing` (品目原価の運賃標準)、`elnath-of-margins` (顧客別の請求運賃と実運賃)、`alnilam-of-settlements` (ブローカー向け運送会社支払)、`capella-of-claims` (貨物事故の請求)、`achernar-of-returns` (返品から返金まで)、`shaula-of-emissions` (お客様が選んだ係数による排出量の見積)。
+**決算とコスト:** `fairhaul-freight-accruals` (運賃未払計上)、`fairhaul-freight-allocation` (受注・コストセンター別の運賃配賦)、`fairhaul-standard-freight-cost` (品目原価の運賃標準)、`fairhaul-freight-margins` (顧客別の請求運賃と実運賃)、`fairhaul-broker-settlements` (ブローカー向け運送会社支払)、`fairhaul-freight-claims` (貨物事故の請求)、`fairhaul-returns-tracking` (返品から返金まで)、`fairhaul-freight-emissions` (お客様が選んだ係数による排出量の見積)。
 
 ## 安全のしくみ
 

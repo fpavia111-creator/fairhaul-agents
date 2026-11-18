@@ -1,0 +1,269 @@
+{
+  "suite": "fairhaul-carton-sizing",
+  "root": "..",
+  "data_note": "Fictional parcels and carton catalog in ../fixtures. No model is called.",
+  "cases": [
+    {
+      "id": "totals",
+      "tool": "cartons_check",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json"
+      },
+      "expect": {
+        "equals": {
+          "result.packages": 9,
+          "result.smaller_carton": 4,
+          "result.billable_lbs_saved": 36,
+          "result.est_saving": 39.6,
+          "result.no_fit": 2,
+          "result.oversize_risk": 1
+        }
+      }
+    },
+    {
+      "id": "lamp-shades",
+      "tool": "cartons_check",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json"
+      },
+      "expect": {
+        "equals": {
+          "result.items.0.billable_now": 22,
+          "result.items.0.best_carton": "M1",
+          "result.items.0.billable_best": 12,
+          "result.by_sku.0.sku": "LAMP-SHADE"
+        }
+      }
+    },
+    {
+      "id": "new-sizes",
+      "tool": "cartons_check",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json"
+      },
+      "expect": {
+        "equals": {
+          "result.suggested_new_cartons.0": "48x10x10"
+        },
+        "contains": [
+          "likely an additional handling or oversize charge"
+        ]
+      }
+    },
+    {
+      "id": "missing-catalog",
+      "tool": "cartons_check",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/README.md"
+      },
+      "expect": {
+        "status": "error"
+      }
+    },
+    {
+      "id": "change-is-production",
+      "tool": "cartons_request_apply",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-changes-wms",
+      "tool": "wms_update_cartonization",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-totals",
+      "tool": "cartons_check",
+      "args": {
+        "packages": "fixtures/intl/de/packages.csv",
+        "cartons": "fixtures/cartons.json"
+      },
+      "expect": {
+        "equals": {
+          "result.packages": 9,
+          "result.smaller_carton": 4,
+          "result.billable_lbs_saved": 36,
+          "result.est_saving": 39.6,
+          "result.no_fit": 2,
+          "result.oversize_risk": 1
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"totals\"."
+    },
+    {
+      "id": "intl-ja-totals",
+      "tool": "cartons_check",
+      "args": {
+        "packages": "fixtures/intl/ja/packages.csv",
+        "cartons": "fixtures/cartons.json"
+      },
+      "expect": {
+        "equals": {
+          "result.packages": 9,
+          "result.smaller_carton": 4,
+          "result.billable_lbs_saved": 36,
+          "result.est_saving": 39.6,
+          "result.no_fit": 2,
+          "result.oversize_risk": 1
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "cartons_write_report",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json",
+        "out_dir": "lodestar-out/evals/cartons_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "9 package(s), average fill 55.1%: 4 could use a smaller carton (36 billable lb, about 39.6); 2 fit no carton in the catalog; 1 at risk of an oversize charge"
+        ]
+      }
+    },
+    {
+      "id": "draft-carton-change-waits-for-a-person",
+      "tool": "cartons_draft_carton_change",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json",
+        "out_dir": "lodestar-out/evals/cartons_draft_carton_change"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "draft-carton-change-after-approval",
+      "tool": "cartons_draft_carton_change",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json",
+        "out_dir": "lodestar-out/evals/cartons_draft_carton_change"
+      },
+      "approve": "Pat Example",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.amount": 39.6,
+          "result.open_markers": 3
+        },
+        "contains": [
+          "carton change cartons drafted for 39.6 with 3 open marker(s) ([TO CONFIRM warehouse or WMS owner], [TO CONFIRM your name], [TO CONFIRM drop test or trial week])"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "cartons_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "cartons_check",
+      "args": {
+        "packages": "../../outside.csv",
+        "cartons": "fixtures/cartons.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "cartons_check",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.packages": 9,
+          "result.smaller_carton": 4,
+          "result.billable_lbs_saved": 36,
+          "result.est_saving": 39.6,
+          "result.no_fit": 2,
+          "result.oversize_risk": 1
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "cartons_check",
+      "args": {
+        "cartons": "fixtures/cartons.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "packages"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "cartons_draft_carton_change",
+      "args": {
+        "packages": "fixtures/packages.csv",
+        "cartons": "fixtures/cartons.json",
+        "out_dir": "lodestar-out/evals/cartons_draft_carton_change"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-purchase-order-create",
+      "tool": "purchase_order_create",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "cartons_check",
+      "args": {
+        "packages": "fixtures/missing-export.csv",
+        "cartons": "fixtures/cartons.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
+    }
+  ]
+}

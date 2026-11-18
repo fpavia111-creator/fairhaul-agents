@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-load-tracking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-load-tracking@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

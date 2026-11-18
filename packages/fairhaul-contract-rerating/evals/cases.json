@@ -1,0 +1,270 @@
+{
+  "suite": "fairhaul-contract-rerating",
+  "root": "..",
+  "data_note": "Fictional contracts and history in ../fixtures. No model is called.",
+  "cases": [
+    {
+      "id": "totals",
+      "tool": "rerate_rerate",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json"
+      },
+      "expect": {
+        "equals": {
+          "result.shipments": 7,
+          "result.left_on_table": 281.51,
+          "result.not_rateable": 1,
+          "result.lanes_to_change": 2,
+          "result.lane_savings": 281.51
+        }
+      }
+    },
+    {
+      "id": "lane-ranking",
+      "tool": "rerate_rerate",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json"
+      },
+      "expect": {
+        "equals": {
+          "result.lanes.0.lane": "IL → TX",
+          "result.lanes.0.best_carrier": "Prairie Express",
+          "result.lanes.0.savings": 149.04,
+          "result.lanes.1.best_carrier": "Coastal Line Haul"
+        }
+      }
+    },
+    {
+      "id": "unpriced-accessorial-excluded",
+      "tool": "rerate_rerate",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json"
+      },
+      "expect": {
+        "equals": {
+          "result.items.4.best_carrier": "Coastal Line Haul"
+        },
+        "contains": [
+          "accessorial(s) not priced in this contract: residential"
+        ]
+      }
+    },
+    {
+      "id": "fuel-by-week",
+      "tool": "rerate_rerate",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json"
+      },
+      "expect": {
+        "equals": {
+          "result.items.0.quotes.0.fuel": 53.76,
+          "result.items.2.quotes.0.fuel": 89.6
+        }
+      }
+    },
+    {
+      "id": "change-is-production",
+      "tool": "rerate_request_apply",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-changes-routing",
+      "tool": "tms_update_routing_guide",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-totals",
+      "tool": "rerate_rerate",
+      "args": {
+        "history": "fixtures/intl/de/history.csv",
+        "contracts": "fixtures/contracts.json"
+      },
+      "expect": {
+        "equals": {
+          "result.shipments": 7,
+          "result.left_on_table": 281.51,
+          "result.not_rateable": 1,
+          "result.lanes_to_change": 2,
+          "result.lane_savings": 281.51
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"totals\"."
+    },
+    {
+      "id": "intl-ja-totals",
+      "tool": "rerate_rerate",
+      "args": {
+        "history": "fixtures/intl/ja/history.csv",
+        "contracts": "fixtures/contracts.json"
+      },
+      "expect": {
+        "equals": {
+          "result.shipments": 7,
+          "result.left_on_table": 281.51,
+          "result.not_rateable": 1,
+          "result.lanes_to_change": 2,
+          "result.lane_savings": 281.51
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "rerate_write_report",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json",
+        "out_dir": "lodestar-out/evals/rerate_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "7 shipment(s), 2743.01 paid",
+          "Re-rated under every contract: 281.51 more than the cheapest contract on the day"
+        ]
+      }
+    },
+    {
+      "id": "draft-routing-change-waits-for-a-person",
+      "tool": "rerate_draft_routing_change",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json",
+        "out_dir": "lodestar-out/evals/rerate_draft_routing_change"
+      },
+      "expect": {
+        "status": "needs_approval",
+        "decision": "ask"
+      }
+    },
+    {
+      "id": "draft-routing-change-after-approval",
+      "tool": "rerate_draft_routing_change",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json",
+        "out_dir": "lodestar-out/evals/rerate_draft_routing_change"
+      },
+      "approve": "Pat Example",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.amount": 281.51,
+          "result.open_markers": 3,
+          "result.lanes": 2
+        },
+        "contains": [
+          "routing change routing-guide drafted for 281.51 with 3 open marker(s) ([TO CONFIRM routing guide owner], [TO CONFIRM your name], [TO CONFIRM who approves routing changes])"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "rerate_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "rerate_rerate",
+      "args": {
+        "history": "../../outside.csv",
+        "contracts": "fixtures/contracts.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "rerate_rerate",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.shipments": 7,
+          "result.left_on_table": 281.51,
+          "result.not_rateable": 1,
+          "result.lanes_to_change": 2,
+          "result.lane_savings": 281.51
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "rerate_rerate",
+      "args": {
+        "contracts": "fixtures/contracts.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "history"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-drafts-nothing",
+      "tool": "rerate_draft_routing_change",
+      "args": {
+        "history": "fixtures/history.csv",
+        "contracts": "fixtures/contracts.json",
+        "out_dir": "lodestar-out/evals/rerate_draft_routing_change"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "refuses-email-send",
+      "tool": "email_send",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "rerate_rerate",
+      "args": {
+        "history": "fixtures/missing-export.csv",
+        "contracts": "fixtures/contracts.json"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
+    }
+  ]
+}

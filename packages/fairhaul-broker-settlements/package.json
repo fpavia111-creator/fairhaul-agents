@@ -1,0 +1,60 @@
+{
+  "name": "fairhaul-broker-settlements",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-broker-settlements",
+  "description": "For freight brokers: settles every carrier payment against its rate confirmation, approved accessorials, quick-pay terms and notice of assignment, finds overpayments, double payments and payments to the wrong party, and drafts the next payment batch for a person to release.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-broker-settlements": "bin/fairhaul-broker-settlements.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-broker-settlements.js demo",
+    "eval": "node bin/fairhaul-broker-settlements.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-broker-settlements"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-broker-settlements#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "broker",
+    "carrier-pay",
+    "settlements",
+    "quick-pay",
+    "factoring"
+  ]
+}

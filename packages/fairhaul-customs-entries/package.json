@@ -1,0 +1,60 @@
+{
+  "name": "fairhaul-customs-entries",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-customs-entries",
+  "description": "Checks your customs broker's entry lines against your commercial invoices: value, quantity, origin, duty arithmetic and consistency of codes and rates across entries, with the days left to correct each entry. It gives no classification advice and files nothing.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-customs-entries": "bin/fairhaul-customs-entries.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-customs-entries.js demo",
+    "eval": "node bin/fairhaul-customs-entries.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-customs-entries"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-customs-entries#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "customs",
+    "entry-review",
+    "import",
+    "broker",
+    "duty"
+  ]
+}

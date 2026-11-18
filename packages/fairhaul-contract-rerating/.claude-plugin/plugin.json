@@ -1,0 +1,23 @@
+{
+  "name": "fairhaul-contract-rerating",
+  "version": "0.1.0",
+  "description": "Re-rates your shipment history under every carrier contract you hold (linehaul, minimums, discounts, fuel and accessorials), shows what each carrier would have cost, the cheapest carrier by lane and what you left on the table, and drafts routing guide changes. Never changes your routing guide.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-contract-rerating#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "rate-shopping",
+    "routing-guide",
+    "tariff",
+    "what-if",
+    "ltl"
+  ]
+}

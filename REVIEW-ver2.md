@@ -1,4 +1,4 @@
-# Lodestar freight agents: ver 2 review
+# Fairhaul freight agents: ver 2 review
 
 Date: 2026-11-16. Goal: bring the 30 freight agents up to the bar the 30 Mythos agents reached in their ver 6.
 Status: unpublished. Nothing has been pushed, published or sent.
@@ -12,7 +12,7 @@ Status: unpublished. Nothing has been pushed, published or sent.
 | Eval cases | 231 | 520 |
 | Eval cases per agent | 6 to 10 | 14 to 22 (median 17) |
 | Tools that run with no eval case | 39 of 128 | 0 (the memory tools are covered by the core's memory tests) |
-| Shared contract tests | none | 7 to 8 per agent, from `lodestar-core/testkit` |
+| Shared contract tests | none | 7 to 8 per agent, from `fairhaul-core/testkit` |
 | Bugs found and fixed | | 42: 38 wrong results and 4 slow tools, listed below |
 | International files | English only | 8 markets, 13 named export layouts, kg and km |
 | Memory | none | Polaris, Aldebaran and Algol learn facts, accepted by a named person |
@@ -21,7 +21,7 @@ Mythos ver 6 for comparison: about 15 to 40 tests per agent (median about 20) an
 
 ## How each agent is now tested
 
-1. **Contract tests** (`packages/lodestar-core/src/testkit.js`), the same for every agent:
+1. **Contract tests** (`packages/fairhaul-core/src/testkit.js`), the same for every agent:
    - every tool that runs has an eval case;
    - a missing or wrongly typed argument gives a readable error that names it;
    - a file outside `--root` is refused before it is read (`../`, absolute paths, `fixtures/../../`);
@@ -112,7 +112,7 @@ Every other tool runs in under 2 seconds at 10,000 rows. The speed test (`npm ru
 ## Housekeeping
 
 - Leftover Mythos names were removed from scripts, the core README and error messages.
-- The MCP checklist was rewritten with the Lodestar results.
+- The MCP checklist was rewritten with the Fairhaul results.
 - CI now also runs the README check and MCP conformance.
 - The international check no longer re-translates cases that already read German or Japanese files.
 

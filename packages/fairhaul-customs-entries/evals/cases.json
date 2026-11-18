@@ -1,0 +1,303 @@
+{
+  "suite": "fairhaul-customs-entries",
+  "root": "..",
+  "data_note": "Fictional entries and commercial invoices in ../fixtures, as of 2026-11-16. No model is called.",
+  "cases": [
+    {
+      "id": "totals",
+      "tool": "entries_check",
+      "args": {
+        "entries": "fixtures/entries.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300
+      },
+      "expect": {
+        "equals": {
+          "result.findings": 9,
+          "result.duty_overpaid_estimate": 196.5,
+          "result.duty_underpaid_estimate": 32.4,
+          "result.urgent": 1,
+          "result.by_entry.0.entry_number": "ABC-1001001-1",
+          "result.by_entry.0.days_left": 8
+        }
+      }
+    },
+    {
+      "id": "every-check",
+      "tool": "entries_check",
+      "args": {
+        "entries": "fixtures/entries.csv",
+        "invoices": "fixtures/commercial-invoices.csv"
+      },
+      "expect": {
+        "contains": [
+          "value_below_invoice",
+          "duty_math",
+          "quantity_mismatch",
+          "origin_mismatch",
+          "entered_twice",
+          "invoice_line_not_entered",
+          "code_inconsistent",
+          "rate_inconsistent"
+        ]
+      }
+    },
+    {
+      "id": "fx-used",
+      "tool": "entries_check",
+      "args": {
+        "entries": "fixtures/entries.csv",
+        "invoices": "fixtures/commercial-invoices.csv"
+      },
+      "expect": {
+        "contains": [
+          "the invoice says 9720 (EUR at 1.08)"
+        ]
+      }
+    },
+    {
+      "id": "no-countdown-unless-asked",
+      "tool": "entries_check",
+      "args": {
+        "entries": "fixtures/entries.csv",
+        "invoices": "fixtures/commercial-invoices.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.urgent": 0,
+          "result.by_entry.0.days_left": null
+        }
+      }
+    },
+    {
+      "id": "never-names-a-code",
+      "tool": "entries_draft_correction_request",
+      "mode": "auto",
+      "auto_actions": [
+        "entries_draft_correction_request"
+      ],
+      "args": {
+        "entries": "fixtures/entries.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "entry_number": "ABC-1001001-1"
+      },
+      "expect": {
+        "contains": [
+          "correction_request",
+          "Nothing was sent"
+        ]
+      }
+    },
+    {
+      "id": "unknown-entry",
+      "tool": "entries_draft_correction_request",
+      "mode": "auto",
+      "auto_actions": [
+        "entries_draft_correction_request"
+      ],
+      "args": {
+        "entries": "fixtures/entries.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "entry_number": "XYZ"
+      },
+      "expect": {
+        "status": "error"
+      }
+    },
+    {
+      "id": "send-stays-a-click-in-auto",
+      "tool": "entries_request_send",
+      "mode": "auto",
+      "args": {
+        "draft": "fixtures/README.md",
+        "draft_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-classifies",
+      "tool": "customs_classify_item",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "never-files",
+      "tool": "customs_file_correction",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-totals",
+      "tool": "entries_check",
+      "args": {
+        "entries": "fixtures/intl/de/entries.csv",
+        "invoices": "fixtures/intl/de/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300
+      },
+      "expect": {
+        "equals": {
+          "result.findings": 9,
+          "result.duty_overpaid_estimate": 196.5,
+          "result.duty_underpaid_estimate": 32.4,
+          "result.urgent": 1,
+          "result.by_entry.0.entry_number": "ABC-1001001-1",
+          "result.by_entry.0.days_left": 8
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"totals\"."
+    },
+    {
+      "id": "intl-ja-totals",
+      "tool": "entries_check",
+      "args": {
+        "entries": "fixtures/intl/ja/entries.csv",
+        "invoices": "fixtures/intl/ja/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300
+      },
+      "expect": {
+        "equals": {
+          "result.findings": 9,
+          "result.duty_overpaid_estimate": 196.5,
+          "result.duty_underpaid_estimate": 32.4,
+          "result.urgent": 1,
+          "result.by_entry.0.entry_number": "ABC-1001001-1",
+          "result.by_entry.0.days_left": 8
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "entries_write_report",
+      "args": {
+        "entries": "fixtures/entries.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300,
+        "out_dir": "lodestar-out/evals/entries_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 2
+        },
+        "contains": [
+          "3 entries, 8 line(s): 9 point(s) to check",
+          "Estimated duty possibly overpaid 196.5, possibly underpaid 32.4"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "entries_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "entries_check",
+      "args": {
+        "entries": "../../outside.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "entries_check",
+      "args": {
+        "entries": "fixtures/entries.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.findings": 9,
+          "result.duty_overpaid_estimate": 196.5,
+          "result.duty_underpaid_estimate": 32.4,
+          "result.urgent": 1,
+          "result.by_entry.0.entry_number": "ABC-1001001-1",
+          "result.by_entry.0.days_left": 8
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "entries_check",
+      "args": {
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "entries"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "entries_write_report",
+      "args": {
+        "entries": "fixtures/entries.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300,
+        "out_dir": "lodestar-out/evals/entries_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "refuses-ap-pay-duty",
+      "tool": "ap_pay_duty",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "entries_check",
+      "args": {
+        "entries": "fixtures/missing-export.csv",
+        "invoices": "fixtures/commercial-invoices.csv",
+        "as_of": "2026-11-16",
+        "correction_window_days": 300
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
+    }
+  ]
+}

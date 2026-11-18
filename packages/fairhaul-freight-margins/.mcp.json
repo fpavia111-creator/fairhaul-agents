@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-freight-margins": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-freight-margins@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "fairhaul-ltl-reweighs",
+  "version": "0.1.0",
+  "description": "Checks LTL weight and class corrections against your declared dimensions, the density scale and the inspection certificate, separates the corrections worth challenging from the ones that mean your own product data is wrong, and drafts the disputes and item-master fixes. Never pays or sends.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-ltl-reweighs#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "reweigh",
+    "reclass",
+    "ltl",
+    "weight-and-inspection",
+    "nmfc"
+  ]
+}

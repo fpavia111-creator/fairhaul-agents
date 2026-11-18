@@ -1,0 +1,23 @@
+{
+  "name": "fairhaul-carton-sizing",
+  "version": "0.1.0",
+  "description": "Checks every parcel's carton against what was inside, finds the smallest carton in your catalog that fits, works out the dimensional weight and freight you would save, flags packages heading for oversize charges, and drafts the carton set and packing rule changes. Never changes your WMS.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-carton-sizing#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "packaging",
+    "dim-weight",
+    "cartonization",
+    "parcel",
+    "box-size"
+  ]
+}

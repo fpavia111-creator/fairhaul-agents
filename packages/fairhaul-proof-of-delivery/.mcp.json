@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-proof-of-delivery": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-proof-of-delivery@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

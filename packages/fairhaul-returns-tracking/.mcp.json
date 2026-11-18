@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-returns-tracking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-returns-tracking@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-carrier-scorecards": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-carrier-scorecards@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

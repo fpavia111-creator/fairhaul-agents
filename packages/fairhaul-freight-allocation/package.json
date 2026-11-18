@@ -1,0 +1,60 @@
+{
+  "name": "fairhaul-freight-allocation",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-freight-allocation",
+  "description": "Fairhaul Freight Allocation: splits each freight bill across the orders, customers, SKUs and cost centers on the shipment by weight, volume, value, pallets or units, gives freight cost per unit by SKU and customer, and drafts the allocation journal for review. Never posts to your ledger.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-freight-allocation": "bin/fairhaul-freight-allocation.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-freight-allocation.js demo",
+    "eval": "node bin/fairhaul-freight-allocation.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-freight-allocation"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-freight-allocation#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "freight-allocation",
+    "cost-allocation",
+    "landed-cost",
+    "cost-to-serve",
+    "journal"
+  ]
+}

@@ -1,9 +1,9 @@
-# MCP quality checklist for Lodestar agents
+# MCP quality checklist for Fairhaul agents
 
 The rules below were first written for the Mythos family and are applied here to the
-30 Lodestar freight agents built on `lodestar-core`.
+30 Fairhaul freight agents built on `fairhaul-core`.
 
-## What the check found on the 30 Lodestar agents (2026-11-16, ver 2)
+## What the check found on the 30 Fairhaul agents (2026-11-16, ver 2)
 
 `npm run mcp:check` drives every agent through the official MCP SDK client over real stdio.
 

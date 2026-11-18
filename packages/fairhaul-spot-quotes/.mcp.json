@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-spot-quotes": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-spot-quotes@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

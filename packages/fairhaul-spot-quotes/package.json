@@ -1,0 +1,59 @@
+{
+  "name": "fairhaul-spot-quotes",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-spot-quotes",
+  "description": "Fairhaul Spot Quotes: lines up the spot quotes you collected for each load on one all-in basis (adding fuel and accessorials a quote leaves out), drops expired quotes and ones that miss the delivery date, compares them with what the lane usually costs you, and drafts the booking confirmation. Never books a load itself.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-spot-quotes": "bin/fairhaul-spot-quotes.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-spot-quotes.js demo",
+    "eval": "node bin/fairhaul-spot-quotes.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-spot-quotes"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-spot-quotes#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "spot-quotes",
+    "spot-freight",
+    "load-booking",
+    "rate-comparison"
+  ]
+}

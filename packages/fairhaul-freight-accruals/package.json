@@ -1,0 +1,59 @@
+{
+  "name": "fairhaul-freight-accruals",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-freight-accruals",
+  "description": "Fairhaul Freight Accruals: builds the month-end freight accrual from your shipments and carrier invoices: shipped but not billed, estimated from the quote, your contract or lane history, by cost center, with a draft journal entry and an accuracy check on last month. Never posts to your ledger.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-freight-accruals": "bin/fairhaul-freight-accruals.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-freight-accruals.js demo",
+    "eval": "node bin/fairhaul-freight-accruals.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-freight-accruals"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-freight-accruals#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "accruals",
+    "month-end",
+    "close",
+    "freight-accrual"
+  ]
+}

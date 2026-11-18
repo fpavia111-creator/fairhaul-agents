@@ -1,0 +1,23 @@
+{
+  "name": "fairhaul-accessorial-charges",
+  "version": "0.1.0",
+  "description": "Finds where your accessorial charges come from (liftgate, residential, appointment, redelivery, detention and more) by location, carrier and lane, flags charges nobody ordered and charges above your contract, and drafts the address-book fixes that stop the repeat surprises. Never changes your TMS.",
+  "author": {
+    "name": "Kurt Francisco"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-accessorial-charges#readme",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "accessorials",
+    "liftgate",
+    "residential",
+    "redelivery",
+    "accessorial-charges"
+  ]
+}

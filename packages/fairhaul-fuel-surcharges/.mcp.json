@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-fuel-surcharges": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-fuel-surcharges@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

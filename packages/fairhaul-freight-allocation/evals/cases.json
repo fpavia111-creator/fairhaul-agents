@@ -1,0 +1,258 @@
+{
+  "suite": "fairhaul-freight-allocation",
+  "root": "..",
+  "data_note": "Fictional October shipments and order lines in ../fixtures. No model is called.",
+  "cases": [
+    {
+      "id": "totals",
+      "tool": "allocation_allocate",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "order_lines": "fixtures/order-lines.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.billed": 5225.5,
+          "result.allocated": 4325.5,
+          "result.unallocated": 900,
+          "result.lines": 9
+        }
+      }
+    },
+    {
+      "id": "top-customer",
+      "tool": "allocation_allocate",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "order_lines": "fixtures/order-lines.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.by_customer.0.customer": "Front Range Supply",
+          "result.by_customer.0.freight": 1912.87,
+          "result.by_sku.0.sku": "FLOOR-RUG"
+        }
+      }
+    },
+    {
+      "id": "fallback-and-orphan",
+      "tool": "allocation_allocate",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "order_lines": "fixtures/order-lines.csv"
+      },
+      "expect": {
+        "contains": [
+          "split by cube instead",
+          "no order lines for this shipment"
+        ]
+      }
+    },
+    {
+      "id": "pallets-falls-back",
+      "tool": "allocation_allocate",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "order_lines": "fixtures/order-lines.csv",
+        "basis": "pallets"
+      },
+      "expect": {
+        "contains": [
+          "not every line has pallets"
+        ]
+      }
+    },
+    {
+      "id": "by-cost-center",
+      "tool": "allocation_allocate",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "order_lines": "fixtures/order-lines.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.by_cost_center.0.cost_center": "CC-WHOLESALE",
+          "result.by_cost_center.0.freight": 3564.2
+        }
+      }
+    },
+    {
+      "id": "bad-basis",
+      "tool": "allocation_allocate",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "order_lines": "fixtures/order-lines.csv",
+        "basis": "colour"
+      },
+      "expect": {
+        "status": "error"
+      }
+    },
+    {
+      "id": "post-stays-a-click-in-auto",
+      "tool": "allocation_request_post",
+      "mode": "auto",
+      "args": {
+        "journal": "fixtures/README.md",
+        "journal_sha256": "0"
+      },
+      "expect": {
+        "status": "needs_approval"
+      }
+    },
+    {
+      "id": "never-posts",
+      "tool": "erp_post_journal",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "never-writes-orders",
+      "tool": "erp_update_order_cost",
+      "mode": "auto",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "intl-de-totals",
+      "tool": "allocation_allocate",
+      "args": {
+        "costs": "fixtures/intl/de/freight-costs.csv",
+        "order_lines": "fixtures/intl/de/order-lines.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.billed": 5225.5,
+          "result.allocated": 4325.5,
+          "result.unallocated": 900,
+          "result.lines": 9
+        }
+      },
+      "note": "German export of the same data (fixtures/intl/de); must match the English case \"totals\"."
+    },
+    {
+      "id": "intl-ja-totals",
+      "tool": "allocation_allocate",
+      "args": {
+        "costs": "fixtures/intl/ja/freight-costs.csv",
+        "order_lines": "fixtures/intl/ja/order-lines.csv"
+      },
+      "expect": {
+        "equals": {
+          "result.billed": 5225.5,
+          "result.allocated": 4325.5,
+          "result.unallocated": 900,
+          "result.lines": 9
+        }
+      },
+      "note": "Japanese export of the same data (fixtures/intl/ja); must match the English case \"totals\"."
+    },
+    {
+      "id": "write-report-writes-files",
+      "tool": "allocation_write_report",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "order_lines": "fixtures/order-lines.csv",
+        "basis": "pallets",
+        "out_dir": "lodestar-out/evals/allocation_write_report"
+      },
+      "expect": {
+        "status": "executed",
+        "length": {
+          "result.files": 3
+        },
+        "contains": [
+          "Allocation written: 5 shipment(s) billed 5225.5; 4325.5 split across 9 order line(s) by pallets, 900 not allocated",
+          "2 problem(s) to look at"
+        ]
+      }
+    },
+    {
+      "id": "invented-tool-name-refused",
+      "tool": "allocation_pay_all_invoices_now",
+      "args": {},
+      "expect": {
+        "status": "blocked"
+      }
+    },
+    {
+      "id": "file-outside-root-refused",
+      "tool": "allocation_allocate",
+      "args": {
+        "costs": "../../outside.csv",
+        "order_lines": "fixtures/order-lines.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "outside"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reads",
+      "tool": "allocation_allocate",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "order_lines": "fixtures/order-lines.csv"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed",
+        "equals": {
+          "result.billed": 5225.5,
+          "result.allocated": 4325.5,
+          "result.unallocated": 900,
+          "result.lines": 9
+        }
+      }
+    },
+    {
+      "id": "missing-argument-named",
+      "tool": "allocation_allocate",
+      "args": {
+        "order_lines": "fixtures/order-lines.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "costs"
+        ]
+      }
+    },
+    {
+      "id": "review-mode-still-reports",
+      "tool": "allocation_write_report",
+      "args": {
+        "costs": "fixtures/freight-costs.csv",
+        "order_lines": "fixtures/order-lines.csv",
+        "basis": "pallets",
+        "out_dir": "lodestar-out/evals/allocation_write_report"
+      },
+      "mode": "review",
+      "expect": {
+        "status": "executed"
+      }
+    },
+    {
+      "id": "missing-file-named",
+      "tool": "allocation_allocate",
+      "args": {
+        "costs": "fixtures/missing-export.csv",
+        "order_lines": "fixtures/order-lines.csv"
+      },
+      "expect": {
+        "status": "error",
+        "contains": [
+          "not found",
+          "missing-export.csv"
+        ]
+      }
+    }
+  ]
+}

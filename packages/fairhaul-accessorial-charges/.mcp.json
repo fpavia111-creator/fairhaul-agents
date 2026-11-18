@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-accessorial-charges": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-accessorial-charges@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

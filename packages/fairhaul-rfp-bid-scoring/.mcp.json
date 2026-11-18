@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "fairhaul-rfp-bid-scoring": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "fairhaul-rfp-bid-scoring@0.1.0",
+        "mcp"
+      ]
+    }
+  }
+}

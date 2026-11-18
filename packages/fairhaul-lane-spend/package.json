@@ -1,0 +1,60 @@
+{
+  "name": "fairhaul-lane-spend",
+  "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fairhaul-lane-spend",
+  "description": "Fairhaul Lane Spend: maps your freight spend by lane and mode, tracks cost per hundredweight and per mile month by month, finds LTL shipments on the same lane and day that could ride together and heavy LTL that should be quoted as truckload, and drafts the consolidation plan for your shipping team. Never changes orders or bookings.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Kurt Francisco",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fairhaul-lane-spend": "bin/fairhaul-lane-spend.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "fixtures",
+    "evals",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "test": "node scripts/run-tests.cjs",
+    "demo": "node bin/fairhaul-lane-spend.js demo",
+    "eval": "node bin/fairhaul-lane-spend.js eval"
+  },
+  "dependencies": {
+    "fairhaul-core": "^0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fpavia111-creator/fairhaul-agents.git",
+    "directory": "packages/fairhaul-lane-spend"
+  },
+  "homepage": "https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/fairhaul-lane-spend#readme",
+  "bugs": {
+    "url": "https://github.com/fpavia111-creator/fairhaul-agents/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "freight",
+    "logistics",
+    "freight-audit",
+    "lodestar",
+    "lane-analysis",
+    "consolidation",
+    "ltl-to-truckload",
+    "freight-spend",
+    "network"
+  ]
+}
