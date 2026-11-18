@@ -1,6 +1,7 @@
 {
   "name": "alnilam-of-settlements",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/alnilam-of-settlements",
   "description": "For freight brokers: settles every carrier payment against its rate confirmation, approved accessorials, quick-pay terms and notice of assignment, finds overpayments, double payments and payments to the wrong party, and drafts the next payment batch for a person to release.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

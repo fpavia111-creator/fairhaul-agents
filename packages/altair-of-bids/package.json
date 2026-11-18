@@ -1,6 +1,7 @@
 {
   "name": "altair-of-bids",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/altair-of-bids",
   "description": "Altair of Bids: scores carrier bids from a freight RFP lane by lane against your incumbent rates and volumes, builds award scenarios with your rules (share caps, incumbent preference, backup carriers, capacity), shows the savings and the lanes nobody covered, and drafts award letters. Never loads rates or sends awards.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

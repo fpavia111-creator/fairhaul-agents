@@ -1,6 +1,7 @@
 {
   "name": "capella-of-claims",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/capella-of-claims",
   "description": "Capella of Claims: finds loss, shortage and damage on delivered shipments, works out the claim amount and the filing deadline from your terms, tracks open claims for carrier acknowledgement, payment and short payment, and drafts claim letters. Never files a claim itself.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

@@ -1,6 +1,7 @@
 {
   "name": "sirius-of-parcels",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/sirius-of-parcels",
   "description": "Sirius of Parcels: audits UPS, FedEx, DHL and USPS invoice data for late deliveries, duplicate tracking numbers, voided labels billed, residential charges on business addresses, repeat address corrections and dimensional-weight overbilling, with claim-by dates and refund request drafts. Never files claims itself.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

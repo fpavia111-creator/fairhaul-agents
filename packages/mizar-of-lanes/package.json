@@ -1,6 +1,7 @@
 {
   "name": "mizar-of-lanes",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/mizar-of-lanes",
   "description": "Mizar of Lanes: maps your freight spend by lane and mode, tracks cost per hundredweight and per mile month by month, finds LTL shipments on the same lane and day that could ride together and heavy LTL that should be quoted as truckload, and drafts the consolidation plan for your shipping team. Never changes orders or bookings.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

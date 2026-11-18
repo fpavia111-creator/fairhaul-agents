@@ -1,6 +1,7 @@
 {
   "name": "regulus-of-tariffs",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/regulus-of-tariffs",
   "description": "Regulus of Tariffs: re-rates your shipment history under every carrier contract you hold (linehaul, minimums, discounts, fuel and accessorials), shows what each carrier would have cost, the cheapest carrier by lane and what you left on the table, and drafts routing guide changes. Never changes your routing guide.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

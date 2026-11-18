@@ -1,6 +1,7 @@
 {
   "name": "procyon-of-accruals",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/procyon-of-accruals",
   "description": "Procyon of Accruals: builds the month-end freight accrual from your shipments and carrier invoices: shipped but not billed, estimated from the quote, your contract or lane history, by cost center, with a draft journal entry and an accuracy check on last month. Never posts to your ledger.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

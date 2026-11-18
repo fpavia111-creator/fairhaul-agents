@@ -1,6 +1,7 @@
 {
   "name": "pollux-of-costing",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/pollux-of-costing",
   "description": "Compares the standard freight built into item costs with what freight actually cost per unit, finds the SKUs and lanes where the standard is stale, and drafts new standards for a person to load.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

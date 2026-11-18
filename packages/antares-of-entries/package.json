@@ -1,6 +1,7 @@
 {
   "name": "antares-of-entries",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/antares-of-entries",
   "description": "Checks your customs broker's entry lines against your commercial invoices: value, quantity, origin, duty arithmetic and consistency of codes and rates across entries, with the days left to correct each entry. It gives no classification advice and files nothing.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

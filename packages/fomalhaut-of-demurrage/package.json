@@ -1,6 +1,7 @@
 {
   "name": "fomalhaut-of-demurrage",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/fomalhaut-of-demurrage",
   "description": "Fomalhaut of Demurrage: tracks every import container's free time at the port and with the line, counts the days left before demurrage and detention start, prices what is accruing from your tariff tiers, checks the line's demurrage and detention invoices and drafts disputes. Never pays or books anything.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

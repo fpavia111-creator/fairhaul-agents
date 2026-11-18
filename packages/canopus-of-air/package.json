@@ -1,6 +1,7 @@
 {
   "name": "canopus-of-air",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/canopus-of-air",
   "description": "Canopus of Air: audits air freight invoices: chargeable weight from actual and volumetric weight, the rate for the right weight break, the minimum charge, fuel and security surcharges per kilo, and other charges your rate sheet does not allow; drafts disputes to the forwarder. Never pays or sends.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

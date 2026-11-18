@@ -1,6 +1,7 @@
 {
   "name": "hadar-of-docks",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/hadar-of-docks",
   "description": "Plans a day of dock appointments across your doors, crews and hours, lists requests that do not fit, and reviews past appointments for no-shows, late arrivals, waits and how long each kind of load really takes. It never books or confirms an appointment.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

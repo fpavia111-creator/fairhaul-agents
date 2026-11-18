@@ -1,6 +1,7 @@
 {
   "name": "adhara-of-ocean",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/adhara-of-ocean",
   "description": "Adhara of Ocean: audits ocean freight invoices line by line against your service contract: base rate per container by port pair, BAF, peak season and other surcharges with their validity dates, charges the contract does not allow, duplicates and container counts, and drafts disputes to the line or forwarder. Never pays or sends.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

@@ -1,6 +1,7 @@
 {
   "name": "bellatrix-of-reweighs",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/bellatrix-of-reweighs",
   "description": "Bellatrix of Reweighs: checks LTL weight and class corrections against your declared dimensions, the density scale and the inspection certificate, separates the corrections worth challenging from the ones that mean your own product data is wrong, and drafts the disputes and item-master fixes. Never pays or sends.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

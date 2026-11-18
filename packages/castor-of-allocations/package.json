@@ -1,6 +1,7 @@
 {
   "name": "castor-of-allocations",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/castor-of-allocations",
   "description": "Castor of Allocations: splits each freight bill across the orders, customers, SKUs and cost centers on the shipment by weight, volume, value, pallets or units, gives freight cost per unit by SKU and customer, and drafts the allocation journal for review. Never posts to your ledger.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

@@ -1,6 +1,7 @@
 {
   "name": "spica-of-fuel",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/spica-of-fuel",
   "description": "Spica of Fuel: checks every fuel surcharge against your carriers' fuel tables and the diesel index for the week each load moved, spots carriers billing on the wrong week, compares fuel tables side by side and shows what a diesel move would cost you. Never pays or sends.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

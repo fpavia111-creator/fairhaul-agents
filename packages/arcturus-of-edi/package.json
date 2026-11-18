@@ -1,6 +1,7 @@
 {
   "name": "arcturus-of-edi",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/arcturus-of-edi",
   "description": "Arcturus of EDI: reads X12 transport files (204 load tenders, 210 invoices, 214 status, 990 responses, 997/999 acknowledgements), checks envelopes and counts, converts them to spreadsheets, and reconciles invoices against tenders, status and acknowledgements. Never transmits EDI.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

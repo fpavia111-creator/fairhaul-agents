@@ -1,6 +1,7 @@
 {
   "name": "elnath-of-margins",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/elnath-of-margins",
   "description": "Compares the freight you charged each customer with what the freight actually cost: recovery by customer and freight terms, orders shipped free that should not have been, collect orders you paid for, and how a different free-shipping threshold would have changed the result.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

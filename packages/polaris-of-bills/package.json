@@ -1,6 +1,7 @@
 {
   "name": "polaris-of-bills",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/polaris-of-bills",
   "description": "Polaris of Bills: audits truckload and LTL freight bills (CSV, Excel or X12 210) against your own contract rates, fuel table and accessorial terms, finds duplicates and math errors, and drafts carrier disputes. Never pays and never sends.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

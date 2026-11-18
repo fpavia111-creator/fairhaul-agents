@@ -1,0 +1,37 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.fpavia111-creator/alnilam-of-settlements",
+  "title": "Alnilam of Settlements",
+  "description": "For freight brokers: settles every carrier payment against its rate confirmation, approved…",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents",
+    "source": "github",
+    "subfolder": "packages/alnilam-of-settlements"
+  },
+  "websiteUrl": "https://fair-agents.com/fairhaul.html",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "alnilam-of-settlements",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        },
+        {
+          "type": "named",
+          "name": "--root",
+          "description": "Folder holding the exports this agent may read and write (it cannot reach outside it)",
+          "isRequired": true,
+          "format": "filepath",
+          "valueHint": "exports_folder"
+        }
+      ]
+    }
+  ]
+}

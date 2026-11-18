@@ -1,6 +1,7 @@
 {
   "name": "shaula-of-emissions",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/shaula-of-emissions",
   "description": "Estimates the greenhouse gas emissions of your shipments from weight, distance and mode, using emission factors you choose, with totals by mode, carrier, lane and customer, a data quality score and labelled mode-shift what-ifs. Every figure is an estimate; nothing is submitted anywhere.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

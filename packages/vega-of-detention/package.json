@@ -1,6 +1,7 @@
 {
   "name": "vega-of-detention",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/vega-of-detention",
   "description": "Vega of Detention: checks detention, layover and lumper charges against your dock times, appointments, free time and receipts, ranks facilities by dwell and detention cost, and drafts disputes. Never pays and never sends.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

@@ -1,6 +1,7 @@
 {
   "name": "alcor-of-pods",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/alcor-of-pods",
   "description": "Alcor of PODs: matches every delivered or invoiced shipment to its proof of delivery, flags missing, unsigned, short or exception-noted PODs and delivery dates that disagree with the invoice, holds the matching invoices for review, and drafts POD requests to carriers. Never releases or holds a payment itself.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

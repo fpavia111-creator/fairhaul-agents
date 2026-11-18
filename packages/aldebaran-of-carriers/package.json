@@ -1,6 +1,7 @@
 {
   "name": "aldebaran-of-carriers",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/aldebaran-of-carriers",
   "description": "Checks your carrier master and booked loads for warning signs of fraud and double brokering: shared phones, emails or bank accounts, new authority, lapsed insurance, recent remit-to changes. It flags; a person verifies and decides.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

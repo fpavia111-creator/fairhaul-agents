@@ -1,6 +1,7 @@
 {
   "name": "achernar-of-returns",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/achernar-of-returns",
   "description": "Follows every return from authorisation to credit: return labels never used, returns received but not credited, carriers charging return freight twice, and which customers, SKUs and reasons cost the most freight to bring back.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

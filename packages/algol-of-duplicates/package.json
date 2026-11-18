@@ -1,6 +1,7 @@
 {
   "name": "algol-of-duplicates",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/algol-of-duplicates",
   "description": "Algol of Duplicates: searches years of freight payments for invoices paid twice: the same invoice under another number format, the same PRO billed twice, a carrier paid under two vendor names, and same-amount look-alikes, nets off credits already received, and drafts recovery requests. Never moves money.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

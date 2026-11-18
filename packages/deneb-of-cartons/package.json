@@ -1,6 +1,7 @@
 {
   "name": "deneb-of-cartons",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/deneb-of-cartons",
   "description": "Deneb of Cartons: checks every parcel's carton against what was inside, finds the smallest carton in your catalog that fits, works out the dimensional weight and freight you would save, flags packages heading for oversize charges, and drafts the carton set and packing rule changes. Never changes your WMS.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

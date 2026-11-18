@@ -1,6 +1,7 @@
 {
   "name": "nunki-of-quotes",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/nunki-of-quotes",
   "description": "Nunki of Quotes: lines up the spot quotes you collected for each load on one all-in basis (adding fuel and accessorials a quote leaves out), drops expired quotes and ones that miss the delivery date, compares them with what the lane usually costs you, and drafts the booking confirmation. Never books a load itself.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",

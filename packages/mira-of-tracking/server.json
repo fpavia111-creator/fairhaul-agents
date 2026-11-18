@@ -1,0 +1,37 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.fpavia111-creator/mira-of-tracking",
+  "title": "Mira of Tracking",
+  "description": "Mira of Tracking: reads your open loads and their tracking events, finds loads with stale or no…",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents",
+    "source": "github",
+    "subfolder": "packages/mira-of-tracking"
+  },
+  "websiteUrl": "https://fair-agents.com/fairhaul.html",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "mira-of-tracking",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        },
+        {
+          "type": "named",
+          "name": "--root",
+          "description": "Folder holding the exports this agent may read and write (it cannot reach outside it)",
+          "isRequired": true,
+          "format": "filepath",
+          "valueHint": "exports_folder"
+        }
+      ]
+    }
+  ]
+}

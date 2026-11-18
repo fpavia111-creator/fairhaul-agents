@@ -1,0 +1,37 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.fpavia111-creator/sirius-of-parcels",
+  "title": "Sirius of Parcels",
+  "description": "Sirius of Parcels: audits UPS, FedEx, DHL and USPS invoice data for late deliveries, duplicate…",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/fpavia111-creator/lodestar-agents",
+    "source": "github",
+    "subfolder": "packages/sirius-of-parcels"
+  },
+  "websiteUrl": "https://fair-agents.com/fairhaul.html",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "sirius-of-parcels",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        },
+        {
+          "type": "named",
+          "name": "--root",
+          "description": "Folder holding the exports this agent may read and write (it cannot reach outside it)",
+          "isRequired": true,
+          "format": "filepath",
+          "valueHint": "exports_folder"
+        }
+      ]
+    }
+  ]
+}

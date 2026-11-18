@@ -1,6 +1,7 @@
 {
   "name": "mira-of-tracking",
   "version": "0.1.0",
+  "mcpName": "io.github.fpavia111-creator/mira-of-tracking",
   "description": "Mira of Tracking: reads your open loads and their tracking events, finds loads with stale or no tracking, missed pickups and ETAs that run past the delivery appointment, ranks carriers on tracking compliance and drafts the delay notice to your customer. Never messages anyone itself.",
   "type": "module",
   "license": "MIT",
@@ -23,7 +24,8 @@
     "evals",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "server.json"
   ],
   "scripts": {
     "test": "node scripts/run-tests.cjs",
