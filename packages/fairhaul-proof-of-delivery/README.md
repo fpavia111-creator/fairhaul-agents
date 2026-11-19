@@ -24,6 +24,13 @@ An invoiced load that is missing its POD, unsigned, short or exception-noted is 
 
 <!-- generated:start -->
 
+## What the AI model sees
+
+- **Masked** (stable pseudonyms such as `CU-3f2a9c1d`, or `[PHONE]`-style placeholders): person's name (`signed_by`). Where these values appear inside other text they are replaced too.
+- **Sent as they are:** ids, codes, places and names of carriers and other businesses (`shipment_id`, `pro`, `carrier`, `invoice_number`, `pod_required`, `document`); dates (`delivery_date`, `invoice_delivery_date`, `received_on`, `pod_delivery_date`); amounts, weights and counts (`pieces`, `invoice_amount`, `pieces_delivered`).
+- **Free text sent as written** (known names, phone numbers, e-mails and SSN-like numbers inside it are replaced; anything else typed there is not): `exceptions`.
+- Results go to whatever model your AI assistant uses. For data you may not share with that provider, use a local model or one covered by your agreements with it. The CSV and HTML files written on your machine keep the real values.
+
 ## A demo run
 
 `npx -y fairhaul-proof-of-delivery demo` runs the agent on the fictional files in [`fixtures/`](fixtures) in a temporary folder. Captured output:

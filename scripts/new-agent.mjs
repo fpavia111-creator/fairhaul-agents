@@ -3,16 +3,16 @@
 // and the shared tests (MCP stdio, arg docs, evals). The agent's own manifest,
 // logic, demo, fixtures, evals and README are written by hand.
 //
-//   node scripts/new-agent.mjs <star>-of-<process> "<one-line description>" kw1,kw2
+//   node scripts/new-agent.mjs fairhaul-<job words> "<one-line description>" kw1,kw2
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repo = join(dirname(fileURLToPath(import.meta.url)), '..');
 const [name, description, kw = ''] = process.argv.slice(2);
-if (!name || !/^[a-z]+-of-[a-z]+$/.test(name) || !description) { console.error('usage: new-agent.mjs <star>-of-<process> "<description>" kw1,kw2'); process.exit(2); }
+if (!name || !/^fairhaul-[a-z]+(-[a-z]+){0,3}$/.test(name) || !description) { console.error('usage: new-agent.mjs fairhaul-<job words> "<description>" kw1,kw2'); process.exit(2); }
 const root = join(repo, 'packages', name);
-const prefix = name.split('-')[0];
+const prefix = name.split('-')[1];
 const corePkg = JSON.parse(readFileSync(join(repo, 'packages/fairhaul-core/package.json'), 'utf8'));
 const write = (f, text, { keep = false } = {}) => { const p = join(root, f); if (keep && existsSync(p)) return; mkdirSync(dirname(p), { recursive: true }); writeFileSync(p, text); };
 

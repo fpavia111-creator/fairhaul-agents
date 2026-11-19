@@ -22,6 +22,12 @@ npx -y fairhaul-lane-spend mcp --root ./freight
 
 <!-- generated:start -->
 
+## What the AI model sees
+
+- **Masked:** this agent reads no column with a person's name or contact details. Anything that looks like a phone number, e-mail or SSN is still replaced in every result.
+- **Sent as they are:** ids, codes, places and names of carriers and other businesses (`shipment_id`, `mode`, `carrier`, `origin_city`, `origin_state`, `origin_postal`, `dest_city`, `dest_state`, `dest_postal`); dates (`ship_date`); amounts, weights and counts (`weight`, `pallets`, `miles`, `cost`).
+- Results go to whatever model your AI assistant uses. For data you may not share with that provider, use a local model or one covered by your agreements with it. The CSV and HTML files written on your machine keep the real values.
+
 ## A demo run
 
 `npx -y fairhaul-lane-spend demo` runs the agent on the fictional files in [`fixtures/`](fixtures) in a temporary folder. Captured output:

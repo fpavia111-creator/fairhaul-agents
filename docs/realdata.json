@@ -1,0 +1,58 @@
+{
+  "run": "2026-11-19",
+  "downloaded": "2026-11-19T10:10:55.286Z",
+  "diesel": {
+    "weeks": 151,
+    "from": "2024-01-01",
+    "to": "2026-11-16",
+    "price_min": 3.451,
+    "price_max": 6.529,
+    "invoices": 151,
+    "planted_wrong_week": 7,
+    "planted_under": 9,
+    "same_band_next_week": 5,
+    "agent_status": {
+      "ok": 135,
+      "wrong_week": 7,
+      "fuel_under": 9
+    },
+    "disagreements": 0,
+    "examples": []
+  },
+  "census": {
+    "carriers": 5000,
+    "same_name_phone_groups": 4,
+    "newest": "2026-11-17",
+    "oldest": "2025-12-16",
+    "levels": {
+      "high": 13,
+      "medium": 2505,
+      "low": 1952,
+      "none": 530
+    },
+    "shared_phone": {
+      "agent": 22,
+      "independent": 22,
+      "agent_only": 0,
+      "independent_only": 0
+    },
+    "free_email": {
+      "agent": 3954,
+      "independent": 3954,
+      "agent_only": 0,
+      "independent_only": 0
+    },
+    "new_authority": {
+      "agent": 2500,
+      "independent": 2500,
+      "agent_only": 0,
+      "independent_only": 0
+    },
+    "all_signals": {
+      "shared_phone": 22,
+      "shared_email": 11,
+      "new_authority": 2500,
+      "free_email": 3954
+    }
+  }
+}

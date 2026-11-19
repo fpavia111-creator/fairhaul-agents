@@ -58,7 +58,7 @@ main(manifest); // gives you: mcp | tools | call | demo | eval | approve | rejec
 ## Scaffold a new agent
 
 ```bash
-npx -y -p fairhaul-core fairhaul-new-agent iris-of-tests --dir packages
+npx -y -p fairhaul-core fairhaul-new-agent fairhaul-example-check --dir packages
 ```
 
 The generated package passes `npm test`, `eval` and `npm pack --dry-run` as is. See `docs/build-an-agent.md` in the monorepo.
@@ -101,7 +101,7 @@ const KINDS = {
 const mem = memoryTools('acme', KINDS);   // acme_recall, acme_learn, acme_accept_learning, acme_retire_memory
 
 export const manifest = defineManifest({
-  name: 'acme-of-access', /* … */
+  name: 'fairhaul-example-check', /* … */
   memory: { prefix: 'acme', kinds: KINDS },
   tools: [
     { name: 'acme_review', kind: 'read', description: '…', handler: async (a, ctx) => {

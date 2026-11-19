@@ -1,5 +1,5 @@
 {
-  "note": "Fictional award rules for the Altair demo.",
+  "note": "Fictional award rules for the demo.",
   "max_share_pct": 40,
   "prefer_incumbent_pct": 2,
   "backup": true,

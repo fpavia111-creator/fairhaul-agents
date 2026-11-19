@@ -28,7 +28,9 @@ export const LOAD_FIELDS = Object.freeze({
   dispatch_phone: t(['Dispatch Phone', 'Driver Phone', 'Phone']),
   dispatch_email: t(['Dispatch Email', 'Email']),
 });
-const FREE_MAIL = /@(gmail|yahoo|hotmail|outlook|aol|icloud|proton(mail)?|gmx|mail|yandex)\./i;
+// Free and consumer mailboxes. Widened in the final pass (19 Nov 2026): 5,000 real FMCSA census
+// records showed live, msn, ymail, me, comcast, att and others in use and not caught.
+const FREE_MAIL = /@(gmail|googlemail|yahoo|ymail|rocketmail|myyahoo|hotmail|outlook|live|msn|aol|icloud|me|mac|proton(mail)?|gmx|mail|yandex|zoho|comcast|att|sbcglobal|bellsouth|verizon|charter|cox|earthlink|juno)\./i;
 const digits = (v) => str(v).replace(/\D/g, '').replace(/^1(?=\d{10}$)/, '');
 const norm = (v) => str(v).toLowerCase().replace(/[^a-z0-9]/g, '');
 export const WEIGHTS = { on_watch_list: 5, shared_bank: 5, shared_phone: 3, shared_email: 3, duplicate_mc: 4, contact_differs_on_load: 4, unsatisfactory_rating: 5, insurance_expired: 4, bank_changed_recently: 3, new_authority: 2, insurance_expiring: 1, remit_to_other_name: 1, free_email: 1, shared_address: 1, conditional_rating: 1, missing_mc_dot: 2 };

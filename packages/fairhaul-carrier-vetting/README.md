@@ -24,6 +24,12 @@ Level: 5 or more is high, 2 to 4 medium, 1 low. Loads on high or inactive carrie
 
 <!-- generated:start -->
 
+## What the AI model sees
+
+- **Masked** (stable pseudonyms such as `CU-3f2a9c1d`, or `[PHONE]`-style placeholders): phone (`phone`), e-mail (`email`), street address (`address`), phone (`dispatch_phone`), e-mail (`dispatch_email`). Where these values appear inside other text they are replaced too.
+- **Sent as they are:** ids, codes, places and names of carriers and other businesses (`carrier_id`, `name`, `mc`, `dot`, `remit_to`, `bank_last4`, `safety_rating`, `status`, `load_id`); dates (`bank_changed`, `authority_date`, `insurance_expiry`, `pickup_date`, `booked_at`); amounts, weights and counts (`value`).
+- Results go to whatever model your AI assistant uses. For data you may not share with that provider, use a local model or one covered by your agreements with it. The CSV and HTML files written on your machine keep the real values.
+
 ## A demo run
 
 `npx -y fairhaul-carrier-vetting demo` runs the agent on the fictional files in [`fixtures/`](fixtures) in a temporary folder. Captured output:

@@ -1,5 +1,5 @@
 {
-  "note": "Fictional free time and rates for the Fomalhaut demo. Use the terms in your own service contract or tariff.",
+  "note": "Fictional free time and rates for the demo. Use the terms in your own service contract or tariff.",
   "start_offset_days": 1,
   "warn_days": 2,
   "excluded_dates": ["2026-11-11"],

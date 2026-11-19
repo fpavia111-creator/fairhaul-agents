@@ -26,6 +26,7 @@ Jeder Agent hat eine `demo` mit fiktiven Dateien, ein `eval` mit eigenen Testfä
 ## Wie sie sicher bleiben
 
 - **Freigabeliste je Agent.** Jeder Agent darf nur seine eigenen Werkzeuge aufrufen.
+- **Maskiert, bevor das Modell es sieht.** Namen von Paket- und Retourenempfängern, Unterzeichnern, Kontakten und Fahrern werden zu Pseudonymen (`CU-3f2a9c1d`, `ST-8cea1a2d`), Telefonnummern, E-Mails und Straßenadressen zu Platzhaltern. Firmennamen von Frachtführern und Kunden, Ladungs- und Rechnungsnummern, Daten und Beträge gehen unverändert hinaus (`--pii strict` verbirgt auch Firmennamen). Die Dateien auf Ihrem Rechner behalten die echten Werte.
 - **Verweigerte Werkzeuge.** Bezahlen, E-Mails senden, TMS ändern, ins Hauptbuch buchen oder beim Zoll einreichen sind benannt und gesperrt.
 - **Ein namentlicher Klick.** Zahlungen, Sendungen, Produktionsänderungen und Buchungsfreigaben warten auf eine namentlich genannte Person, auch im Auto-Modus, gebunden an den sha256 des geprüften Entwurfs.
 - **Prüfprotokoll** unter `.fairhaul/`, verkettet über Hashes, signiert, wenn Sie einen Ed25519-Schlüssel einrichten.

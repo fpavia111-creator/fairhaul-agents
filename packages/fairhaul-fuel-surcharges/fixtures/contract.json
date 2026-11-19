@@ -1,5 +1,5 @@
 {
-  "note": "Fictional contract for the Spica demo. Carriers, rates and diesel prices are made up; copy your own index source's weekly prices into fuel_index.",
+  "note": "Fictional contract for the demo. Carriers, rates and diesel prices are made up; copy your own index source's weekly prices into fuel_index.",
   "currency": "USD",
   "tolerance": 1,
   "fuel_index": [

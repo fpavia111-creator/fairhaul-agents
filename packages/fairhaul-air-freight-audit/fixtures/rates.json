@@ -1,5 +1,5 @@
 {
-  "note": "Fictional air rate sheets for the Canopus demo.",
+  "note": "Fictional air rate sheets for the demo.",
   "tolerance": 1,
   "volumetric_factor": 6000,
   "round_up_to": 0.5,

@@ -1,5 +1,5 @@
 {
-  "note": "Fictional settings for the Bellatrix demo. The density scale is recalled, not checked against the current tariff.",
+  "note": "Fictional settings for the demo. The density scale is recalled, not checked against the current tariff.",
   "weight_tolerance_pct": 2,
   "weight_tolerance_lbs": 25,
   "density_scale": "nmfc_2025_13",

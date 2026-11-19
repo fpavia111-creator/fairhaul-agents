@@ -26,6 +26,7 @@ Ogni agente ha una `demo` su file fittizi, un `eval` con i propri casi di prova 
 ## Come restano sicuri
 
 - **Elenco consentito per agente.** Ogni agente può chiamare solo i propri strumenti.
+- **Mascherato prima che il modello lo veda.** I nomi dei destinatari di pacchi e resi, di chi ha firmato la consegna, dei contatti e degli autisti diventano pseudonimi (`CU-3f2a9c1d`, `ST-8cea1a2d`); telefoni, e-mail e indirizzi diventano segnaposto. I nomi di vettori e clienti (aziende), i numeri di carico e di fattura, le date e gli importi vengono inviati così come sono (`--pii strict` nasconde anche i nomi delle aziende). I file scritti sul vostro computer conservano i valori reali.
 - **Strumenti rifiutati.** Pagare, inviare e-mail, modificare il TMS, registrare in contabilità generale o presentare in dogana sono nominati e bloccati.
 - **Un clic nominativo.** Pagamenti, invii, modifiche in produzione e approvazioni di registrazioni attendono una persona indicata per nome, anche in modalità Auto, legati allo sha256 della bozza rivista.
 - **Registro di audit** in `.fairhaul/`, concatenato tramite hash, firmato se configurate una chiave Ed25519.

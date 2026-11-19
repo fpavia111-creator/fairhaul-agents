@@ -65,6 +65,7 @@ Every agent has a `demo` that runs on fictional files, an `eval` that checks it 
 ## How they stay safe
 
 - **Allowlist per agent.** Each agent can call only its own tools. Anything else is blocked, including tools a host model invents.
+- **Masked before the model sees it.** Names of parcel and return recipients, people who signed for a delivery, contacts and drivers become pseudonyms (`CU-3f2a9c1d`, `ST-8cea1a2d`); phones, e-mails and street addresses become placeholders, in every result an AI model reads. Carrier and customer company names, load and invoice numbers, dates and amounts are sent as they are (`--pii strict` also hides company names). The files written on your machine keep the real values.
 - **Refused tools.** Each agent names the live actions near its job (paying, emailing, changing the TMS, posting to the ledger, filing with customs) and blocks them, so a model asking for them gets a clear refusal.
 - **One named click.** Approving a payment, a send, a production change or a journal waits for a named person, even in Auto mode. The approval is tied to the sha256 of the reviewed draft; if the draft changes, the approval no longer matches.
 - **Audit log.** Every call is written to a hash-chained log under `.fairhaul/`, signed with an Ed25519 key when you configure one.
@@ -91,6 +92,11 @@ claude mcp add fairhaul-freight-bill-audit -- node /path/to/fairhaul-agents/pack
 ```bash
 npm ci
 npm test                       # every package's tests and evals
+npm run evals                  # every agent's eval cases, with totals
+npm run accuracy               # planted problems found, findings on clean data, mutations (docs/accuracy.md)
+npm run model-view             # what each agent sends to the AI model (docs/model-view.md)
+npm run settings               # every day count, rate and limit an agent applies (docs/settings.md)
+npm run realdata               # checks on public real data (download first with realdata:download)
 npm run intl                   # every spreadsheet eval case in 8 languages
 npm run hostile                # planted hostile inputs in every agent
 npm run mcp:check              # the official MCP SDK client against every agent
@@ -98,7 +104,7 @@ npm run readme:check           # generated README sections are up to date
 npm run bench                  # speed at 1,000 and 10,000 rows
 npm run plugin:check           # plugin files match the packages
 npm run release:check:offline  # pack contents, licences, docs and versions
-node scripts/new-agent.mjs <star>-of-<word> "<description>" kw1,kw2 <module>
+node scripts/new-agent.mjs fairhaul-<what-it-does> "<description>" kw1,kw2 <module>
 ```
 
 CI runs on Node 20, 22 and 24, on Linux and Windows.

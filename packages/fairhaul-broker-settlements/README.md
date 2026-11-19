@@ -23,6 +23,12 @@ npx -y fairhaul-broker-settlements mcp --root ./carrier-pay
 
 <!-- generated:start -->
 
+## What the AI model sees
+
+- **Masked:** this agent reads no column with a person's name or contact details. Anything that looks like a phone number, e-mail or SSN is still replaced in every result.
+- **Sent as they are:** ids, codes, places and names of carriers and other businesses (`load_id`, `carrier`, `pod`, `quick_pay`, `invoice_number`, `payee`, `reference`, `factor`); dates (`delivered_at`, `received_at`, `paid_at`, `effective`, `released`); amounts, weights and counts (`rate`, `accessorials`, `pay_terms_days`, `amount`).
+- Results go to whatever model your AI assistant uses. For data you may not share with that provider, use a local model or one covered by your agreements with it. The CSV and HTML files written on your machine keep the real values.
+
 ## A demo run
 
 `npx -y fairhaul-broker-settlements demo` runs the agent on the fictional files in [`fixtures/`](fixtures) in a temporary folder. Captured output:

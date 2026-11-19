@@ -21,6 +21,13 @@ npx -y fairhaul-fuel-surcharges mcp --root ./freight
 
 <!-- generated:start -->
 
+## What the AI model sees
+
+- **Masked:** this agent reads no column with a person's name or contact details. Anything that looks like a phone number, e-mail or SSN is still replaced in every result.
+- **Sent as they are:** ids, codes, places and names of carriers and other businesses (`invoice_number`, `carrier`, `pro`, `bol`, `po`, `mode`, `origin_city`, `origin_state`, `origin_postal`, `dest_city`, `dest_state`, `dest_postal`, `currency`); dates (`invoice_date`, `ship_date`, `delivery_date`); amounts, weights and counts (`amount`, `charge_amount`, `weight`, `miles`, `pallets`, `class`).
+- **Free text sent as written** (known names, phone numbers, e-mails and SSN-like numbers inside it are replaced; anything else typed there is not): `charge_description`.
+- Results go to whatever model your AI assistant uses. For data you may not share with that provider, use a local model or one covered by your agreements with it. The CSV and HTML files written on your machine keep the real values.
+
 ## A demo run
 
 `npx -y fairhaul-fuel-surcharges demo` runs the agent on the fictional files in [`fixtures/`](fixtures) in a temporary folder. Captured output:

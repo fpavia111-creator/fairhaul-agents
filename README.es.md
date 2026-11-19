@@ -26,6 +26,7 @@ Cada agente tiene una `demo` con archivos ficticios, un `eval` con sus propios c
 ## Cómo se mantienen seguros
 
 - **Lista permitida por agente.** Cada agente solo puede llamar a sus propias herramientas.
+- **Enmascarado antes de que el modelo lo vea.** Los nombres de destinatarios de paquetes y devoluciones, firmantes, contactos y conductores se vuelven seudónimos (`CU-3f2a9c1d`, `ST-8cea1a2d`); teléfonos, correos y direcciones, marcadores. Los nombres de transportistas y clientes (empresas), los números de carga y de factura, las fechas y los importes se envían tal cual (`--pii strict` oculta también los nombres de empresas). Los archivos escritos en su equipo conservan los valores reales.
 - **Herramientas rechazadas.** Pagar, enviar correos, cambiar el TMS, contabilizar en el libro mayor o presentar ante aduanas están nombradas y bloqueadas.
 - **Un clic con nombre.** Pagos, envíos, cambios en producción y aprobaciones de asientos esperan a una persona con nombre, incluso en modo Auto, vinculados al sha256 del borrador revisado.
 - **Registro de auditoría** en `.fairhaul/`, encadenado por hash, firmado si configura una clave Ed25519.

@@ -26,6 +26,7 @@ Chaque agent a une `demo` sur fichiers fictifs, un `eval` sur ses propres cas de
 ## Comment ils restent sûrs
 
 - **Liste autorisée par agent.** Chaque agent ne peut appeler que ses propres outils.
+- **Masqué avant que le modèle ne le voie.** Les noms des destinataires de colis et de retours, des signataires, des contacts et des chauffeurs deviennent des pseudonymes (`CU-3f2a9c1d`, `ST-8cea1a2d`) ; téléphones, e-mails et adresses deviennent des marqueurs. Les noms des transporteurs et des clients (entreprises), les numéros de chargement et de facture, les dates et les montants sont envoyés tels quels (`--pii strict` masque aussi les noms d’entreprises). Les fichiers écrits sur votre machine gardent les vraies valeurs.
 - **Outils refusés.** Payer, envoyer des e-mails, modifier le TMS, comptabiliser au grand livre ou déposer en douane sont nommés et bloqués.
 - **Un clic nominatif.** Paiements, envois, changements en production et validations d'écritures attendent une personne nommée, même en mode Auto, liés au sha256 du brouillon relu.
 - **Journal d'audit** sous `.fairhaul/`, chaîné par hachage, signé si vous configurez une clé Ed25519.

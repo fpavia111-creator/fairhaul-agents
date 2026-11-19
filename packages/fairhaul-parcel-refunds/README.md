@@ -31,6 +31,13 @@ Each package gets a request-by date (invoice date plus `claim_window_days`, defa
 
 <!-- generated:start -->
 
+## What the AI model sees
+
+- **Masked** (stable pseudonyms such as `CU-3f2a9c1d`, or `[PHONE]`-style placeholders): street address (`recipient_address`). Where these values appear inside other text they are replaced too.
+- **Sent as they are:** ids, codes, places and names of carriers and other businesses (`tracking`, `invoice_number`, `carrier`, `service`, `zone`); postal codes (`recipient_postal`; cut to three digits with `--pii strict`); dates (`invoice_date`, `ship_date`, `promised_at`, `delivered_at`); amounts, weights and counts (`actual_weight`, `billed_weight`, `length`, `width`, `height`, `charge_amount`).
+- **Free text sent as written** (known names, phone numbers, e-mails and SSN-like numbers inside it are replaced; anything else typed there is not): `charge_description`.
+- Results go to whatever model your AI assistant uses. For data you may not share with that provider, use a local model or one covered by your agreements with it. The CSV and HTML files written on your machine keep the real values.
+
 ## A demo run
 
 `npx -y fairhaul-parcel-refunds demo` runs the agent on the fictional files in [`fixtures/`](fixtures) in a temporary folder. Captured output:

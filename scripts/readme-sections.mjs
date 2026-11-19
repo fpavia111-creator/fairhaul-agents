@@ -14,6 +14,7 @@ import { join, dirname } from 'node:path';
 import { tmpdir } from 'node:os';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { modelViewLines } from './lib/model-view.mjs';
 import { describeSources, EXPORTS_BASIS_NOTE, namesFor, conceptOf, DEFAULT_UNITS, ONE_CLICK_CATEGORIES } from '../packages/fairhaul-core/src/index.js';
 
 const PK = join(dirname(fileURLToPath(import.meta.url)), '..', 'packages');
@@ -46,6 +47,7 @@ function policyOf(m, t) {
 function section(n, m, demo) {
   const prefix = m.tools[0].name.split('_')[0];
   const L = [START, ''];
+  L.push('## What the AI model sees', '', ...modelViewLines(m), '');
   L.push('## A demo run', '', `\`npx -y ${n} demo\` runs the agent on the fictional files in [\`fixtures/\`](fixtures) in a temporary folder. Captured output:`, '', '```text', demo, '```', '');
   L.push('## Tools', '', '| Tool | What it does | Policy |', '|---|---|---|');
   for (const t of m.tools) L.push(`| \`${t.name}\` | ${esc(first(t.description.replace(/^Listed so agents can see it is refused\.\s*/, '')))} | ${policyOf(m, t)} |`);

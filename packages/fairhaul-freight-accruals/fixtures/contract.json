@@ -1,5 +1,5 @@
 {
-  "note": "Fictional contract for the Polaris demo. Carriers, rates and places are made up.",
+  "note": "Fictional contract for the demo. Carriers, rates and places are made up.",
   "currency": "USD",
   "tolerance": 1,
   "fuel_index": [

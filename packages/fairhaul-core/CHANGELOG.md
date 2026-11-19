@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased (final pass, 2026-11-19)
+
+Added
+- Personal-data masking of every result (`pii.js`, ported from fairdrive-core): names of recipients, people who signed for a delivery and contacts become `CU-` pseudonyms, drivers and dispatchers `ST-`, phones, e-mails and street addresses placeholders. Customer, consignee and shipper columns hold company names and are pseudonymised only with `--pii strict` (`FAIRHAUL_PII`). The checks run on the real values; files written on disk keep them.
+- Contract test: `pii_canaries` (fictional values that must never reach a result) or `pii_none` with the reason.
+
+Fixed
+- A path over 1,024 characters (or a name over 255) is refused before the file system sees it; a recursive mkdir of a very long folder name never returned on Windows.
+- One file given for two arguments is read once per argument, each with its own column layout.
+- A header that matches a field only by letter case or punctuation is renamed to the field.
+
+Changed
+- The old family name is gone: bins `fairhaul-approve`, `fairhaul-license`, `fairhaul-new-agent`, `fairhaul-verify-log`; MCP tools `fairhaul_info` and `fairhaul_inspect_input`; settings `FAIRHAUL_*`; state in `.fairhaul/`, reports in `fairhaul-out/`.
+
 ## Unreleased (MCP quality pass, 2026-11-16)
 
 Added

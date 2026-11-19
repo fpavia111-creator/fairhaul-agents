@@ -9,6 +9,12 @@
   ],
   "scripts": {
     "test": "npm test --workspaces",
+    "evals": "node scripts/run-all-evals.mjs",
+    "accuracy": "node scripts/accuracy.mjs",
+    "model-view": "node scripts/model-view.mjs",
+    "settings": "node scripts/settings-list.mjs",
+    "realdata": "node scripts/realdata.mjs",
+    "realdata:download": "node scripts/realdata.mjs --download",
     "hostile": "node scripts/hostile-inputs.mjs",
     "hostile:args": "node scripts/hostile-inputs.mjs --args",
     "release:check": "node scripts/release-check.mjs",

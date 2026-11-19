@@ -1,5 +1,5 @@
 {
-  "note": "Fictional carton catalog and settings for the Deneb demo.",
+  "note": "Fictional carton catalog and settings for the demo.",
   "cartons": [
     { "name": "S1", "l": 10, "w": 8, "h": 4, "cost": 0.45 },
     { "name": "S2", "l": 12, "w": 10, "h": 6, "cost": 0.62 },

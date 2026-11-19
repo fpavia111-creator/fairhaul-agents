@@ -28,6 +28,11 @@ Delimiters are detected from the ISA segment, so `*`, `|` or other separators an
 
 <!-- generated:start -->
 
+## What the AI model sees
+
+- **Masked:** this agent reads no column with a person's name or contact details. Anything that looks like a phone number, e-mail or SSN is still replaced in every result.
+- Results go to whatever model your AI assistant uses. For data you may not share with that provider, use a local model or one covered by your agreements with it. The CSV and HTML files written on your machine keep the real values.
+
 ## A demo run
 
 `npx -y fairhaul-edi-files demo` runs the agent on the fictional files in [`fixtures/`](fixtures) in a temporary folder. Captured output:

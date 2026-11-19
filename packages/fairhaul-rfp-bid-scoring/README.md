@@ -24,6 +24,13 @@ Bid capacity splits a lane across carriers. Lanes are awarded in order of the sa
 
 <!-- generated:start -->
 
+## What the AI model sees
+
+- **Masked:** this agent reads no column with a person's name or contact details. Anything that looks like a phone number, e-mail or SSN is still replaced in every result.
+- **Sent as they are:** ids, codes, places and names of carriers and other businesses (`lane_id`, `origin`, `destination`, `incumbent`, `equipment`, `carrier`); amounts, weights and counts (`annual_loads`, `incumbent_rate`, `rate`, `capacity`).
+- **Free text sent as written** (known names, phone numbers, e-mails and SSN-like numbers inside it are replaced; anything else typed there is not): `notes`.
+- Results go to whatever model your AI assistant uses. For data you may not share with that provider, use a local model or one covered by your agreements with it. The CSV and HTML files written on your machine keep the real values.
+
 ## A demo run
 
 `npx -y fairhaul-rfp-bid-scoring demo` runs the agent on the fictional files in [`fixtures/`](fixtures) in a temporary folder. Captured output:
