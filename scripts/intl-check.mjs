@@ -45,7 +45,7 @@ for (const n of agents) {
   const passedEn = new Set(base.results.filter((r) => r.pass).map((r) => r.id));
   const row = { agent: n, cases: csvCases.length, english: passedEn.size, columns: 0, translated: 0, langs: {} };
   for (const lang of LANGS) {
-    const parent = mkdtempSync(join(tmpdir(), `lodestar-intl-${lang}-`)); const root = join(parent, 'root');
+    const parent = mkdtempSync(join(tmpdir(), `fairhaul-intl-${lang}-`)); const root = join(parent, 'root');
     cpSync(join(PK, n, 'fixtures'), join(root, 'fixtures'), { recursive: true });
     const done = new Map(); const dmyKinds = new Set(); const fileOv = {};
     for (const c of csvCases) {
@@ -63,7 +63,7 @@ for (const n of agents) {
         if (lang === 'de') { row.columns += out.columns; row.translated += out.translated; }
       }
     }
-    if (Object.keys(fileOv).length) writeFileSync(join(root, 'lodestar-sources.json'), JSON.stringify({ note: 'Day-first dates, as the buyer would set them once.', files: fileOv }, null, 2));
+    if (Object.keys(fileOv).length) writeFileSync(join(root, 'fairhaul-sources.json'), JSON.stringify({ note: 'Day-first dates, as the buyer would set them once.', files: fileOv }, null, 2));
     const res = await runEvals(manifest, strip(csvCases), { root });
     const bad = res.results.filter((r) => passedEn.has(r.id) && !r.pass);
     row.langs[lang] = `${res.results.filter((r) => passedEn.has(r.id) && r.pass).length}/${passedEn.size}`;

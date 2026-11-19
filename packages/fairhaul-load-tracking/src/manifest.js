@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { OPEN_LOAD_FIELDS, EVENT_FIELDS, assess, noticeText } from './tracking.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/tracking';
+const OUT = 'fairhaul-out/tracking';
 const files = {
   loads: { type: 'string', description: 'Open loads under --root (TMS export): load id, carrier, customer, pickup and delivery appointment, status, destination' },
   events: { type: 'string', description: 'Tracking events under --root (visibility platform, carrier API dump or EDI 214 converted by Fairhaul EDI Files): load id, event time, event, location, ETA' },
@@ -42,7 +42,7 @@ Rules: Fairhaul Load Tracking never messages anyone and never changes the TMS. T
 3. Only when the person asks, call tracking_draft_delay_notice for one customer, then tracking_request_send after they review it.` }],
   tools: [
     { name: 'tracking_assess', kind: 'read', title: 'Find loads that need attention', description: 'For each open load: status (late, at_risk, blind, on_track, delivered_not_closed), issues (missed_pickup, no_tracking, stale, eta_past_appointment, past_appointment, delay_reported), last event and its age, ETA and appointment. Tracking compliance by carrier.', inputSchema: { type: 'object', additionalProperties: false, required: ['loads', 'events'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'tracking_write_report', kind: 'report', title: 'Write the exceptions board', description: 'Write tracking-exceptions.csv and .html (one row per open load, worst first; carriers by tracking compliance) into out_dir (default lodestar-out/tracking).', inputSchema: { type: 'object', additionalProperties: false, required: ['loads', 'events'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/tracking)' } } }, handler: async (a, ctx) => {
+    { name: 'tracking_write_report', kind: 'report', title: 'Write the exceptions board', description: 'Write tracking-exceptions.csv and .html (one row per open load, worst first; carriers by tracking compliance) into out_dir (default fairhaul-out/tracking).', inputSchema: { type: 'object', additionalProperties: false, required: ['loads', 'events'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/tracking)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const w = writeWorklist(ctx, a.out_dir || OUT, 'tracking-exceptions', { title: `Open loads at ${r.as_of}`, intro: line(r), rows: r.items.map((i) => ({ ...i, issues: (i.issues || []).join(', ') })), columns: ['shipment_id', 'carrier', 'customer', 'status', 'issues', 'pickup_appt', 'delivery_appt', 'eta', 'last_event', 'last_at', 'hours_since_update', 'detail'], sections: [{ title: 'Carriers by tracking', rows: r.carriers, columns: ['carrier', 'open', 'late', 'at_risk', 'blind', 'tracking_ok_pct'] }], limits: [LIMITS.files, 'Times are compared as written; put every file in one time zone. A snapshot, not live tracking.'] });
       return { summary: `Exceptions board written. ${line(r)}`, files: w.files, output_sha256: w.output_sha256 };

@@ -10,7 +10,7 @@ import { learnAndAccept } from '../../fairhaul-core/test/memory-flow.js';
 
 const fixtures = fileURLToPath(new URL('../fixtures', import.meta.url));
 const root = () => { const r = mkdtempSync(join(tmpdir(), 'vetting-mem-')); cpSync(fixtures, join(r, 'fixtures'), { recursive: true }); return r; };
-const rtFor = (r, o = {}) => new AgentRuntime(manifest, { root: r, stateDir: join(r, '.lodestar'), mode: 'assist', ...o });
+const rtFor = (r, o = {}) => new AgentRuntime(manifest, { root: r, stateDir: join(r, '.fairhaul'), mode: 'assist', ...o });
 const vet = (rt) => rt.call('vetting_vet', { carriers: 'fixtures/carriers.csv', loads: 'fixtures/loads.csv', as_of: '2026-11-16' });
 const carrier = (out, id) => out.result.rows.find((c) => c.carrier_id === id);
 

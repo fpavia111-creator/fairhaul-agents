@@ -63,18 +63,18 @@ export const DEFAULT_CAPS = Object.freeze({ maxSteps: 50, maxSpendUsd: 5 });
  *                   enforced in every mode; persisted in <stateDir>/usage.json
  *   session         session id (persisted caps count per session; default random)
  *   root            folder the tools may read and write (default: cwd)
- *   stateDir        audit.jsonl, approvals.jsonl, usage.json, KILL (default: <root>/.lodestar)
+ *   stateDir        audit.jsonl, approvals.jsonl, usage.json, KILL (default: <root>/.fairhaul)
  *   audit           false to keep the log and approvals in memory only (tests)
  *   signingKey      path to an Ed25519 private key (outside root): signs every audit line
  *   auditMirror     second file every audit line is appended to
  *   approvalTtlHours  approvals expire this long after a person approves (default 24)
  *   approvalWebhook URL that receives each new pending approval (POST, HMAC-signed
- *                   with LODESTAR_WEBHOOK_SECRET). Off by default.
+ *                   with FAIRHAUL_WEBHOOK_SECRET). Off by default.
  *   memory          false to run without the agent's accepted memory facts (recall and
  *                   learn still work). Only for agents whose manifest declares memory.
  *   validateInputs  false to skip inputSchema validation (default true)
  *   injectionScan   false to skip the check for instruction-like text in results (default true)
- *   license         licence key text (default: LODESTAR_LICENSE, LODESTAR_LICENSE_FILE, then <stateDir>/license.key)
+ *   license         licence key text (default: FAIRHAUL_LICENSE, FAIRHAUL_LICENSE_FILE, then <stateDir>/license.key)
  *   licenseFile     path to a file holding the licence key
  *   licenseKeys     trusted public keys for licences (PEM strings or a Map). Default: the keys
  *                   shipped in license-keys.js. For tests and the issuer's own checks; the CLI
@@ -97,7 +97,7 @@ export class AgentRuntime {
     }
     this.caps = Object.freeze({ ...DEFAULT_CAPS, ...(manifest.caps || {}), ...(options.caps || {}) });
     this.root = resolve(options.root || process.cwd());
-    this.stateDir = options.stateDir === null ? null : resolve(options.stateDir || join(this.root, '.lodestar'));
+    this.stateDir = options.stateDir === null ? null : resolve(options.stateDir || join(this.root, '.fairhaul'));
     const persist = options.audit !== false && !!this.stateDir;
     this.signer = options.signingKey ? (typeof options.signingKey === 'string' ? loadSigner(options.signingKey, { root: this.root }) : options.signingKey) : null;
     this.audit = new AuditLog(persist ? join(this.stateDir, 'audit.jsonl') : null, { signer: this.signer, mirror: options.auditMirror ? resolve(options.auditMirror) : null });
@@ -139,7 +139,7 @@ export class AgentRuntime {
 
   isKilled() {
     if (this.killed) return true;
-    if (/^(1|true|yes)$/i.test(process.env.LODESTAR_KILL || '')) return true;
+    if (/^(1|true|yes)$/i.test(process.env.FAIRHAUL_KILL || '')) return true;
     return !!(this.stateDir && existsSync(join(this.stateDir, 'KILL')));
   }
 
@@ -242,7 +242,7 @@ export class AgentRuntime {
       exists: (p) => existsSync(safePath(root, p)),
       hashFile: (p) => sha256File(safePath(root, p)),
       validate: (schema, value, label) => assertValid(schema, value, label),
-      outDir: (p) => { const d = safePath(root, p || 'lodestar-out'); mkdirSync(d, { recursive: true }); return d; },
+      outDir: (p) => { const d = safePath(root, p || 'fairhaul-out'); mkdirSync(d, { recursive: true }); return d; },
       // Writes one output file. The name must stay inside dir (ids from data cannot
       // climb out with ".."), and Markdown is passed through safeMarkdown unless
       // the tool opts out with { raw: true }.
@@ -274,10 +274,10 @@ export class AgentRuntime {
 
   #notifyWebhook(rec) {
     if (!this.approvalWebhook) return;
-    const secret = process.env.LODESTAR_WEBHOOK_SECRET;
-    if (!secret) { this.note('webhook-skipped', { reason: 'LODESTAR_WEBHOOK_SECRET is not set', approval_id: rec.id }); return; }
+    const secret = process.env.FAIRHAUL_WEBHOOK_SECRET;
+    if (!secret) { this.note('webhook-skipped', { reason: 'FAIRHAUL_WEBHOOK_SECRET is not set', approval_id: rec.id }); return; }
     const body = JSON.stringify({ type: 'approval.pending', ...rec });
-    const p = fetch(this.approvalWebhook, { method: 'POST', headers: { 'content-type': 'application/json', 'x-lodestar-signature': signWebhook(body, secret) }, body })
+    const p = fetch(this.approvalWebhook, { method: 'POST', headers: { 'content-type': 'application/json', 'x-fairhaul-signature': signWebhook(body, secret) }, body })
       .then((r) => this.note('webhook-sent', { approval_id: rec.id, http_status: r.status }))
       .catch((e) => this.note('webhook-failed', { approval_id: rec.id, reason: String(e && e.message || e).slice(0, 200) }));
     this.pendingWebhooks.push(p);
@@ -289,11 +289,11 @@ export class AgentRuntime {
    * each column's values look like. No cell value is returned.
    */
   inspect(args = {}) {
-    const tool = 'lodestar_inspect_input';
+    const tool = 'fairhaul_inspect_input';
     if (args === null || typeof args !== 'object' || Array.isArray(args)) args = {};
     if (this.isKilled()) {
       this.#record(tool, args, { decision: 'block', status: 'blocked', reason: 'kill switch engaged' });
-      return { status: 'blocked', decision: 'block', reason: 'Kill switch engaged. Remove .lodestar/KILL (or unset LODESTAR_KILL) to resume.' };
+      return { status: 'blocked', decision: 'block', reason: 'Kill switch engaged. Remove .fairhaul/KILL (or unset FAIRHAUL_KILL) to resume.' };
     }
     const v = validate(INSPECT_SCHEMA, args);
     if (!v.ok) {
@@ -338,7 +338,7 @@ export class AgentRuntime {
     if (args === null || typeof args !== 'object' || Array.isArray(args)) args = {};
     if (this.isKilled()) {
       this.#record(tool, args, { decision: 'block', status: 'blocked', reason: 'kill switch engaged' });
-      return { status: 'blocked', decision: 'block', reason: 'Kill switch engaged. Remove .lodestar/KILL (or unset LODESTAR_KILL) to resume.' };
+      return { status: 'blocked', decision: 'block', reason: 'Kill switch engaged. Remove .fairhaul/KILL (or unset FAIRHAUL_KILL) to resume.' };
     }
     const d = this.policy.decide(tool, { mode: this.mode, autoActions: this.autoActions });
     const t = d.tool;
@@ -354,7 +354,7 @@ export class AgentRuntime {
         const why = st.valid ? `The installed licence (${st.plan}) does not include the "${t.feature}" feature.` : st.reason;
         const reason = `${tool} is part of the paid tier. ${why} Free tools keep working.`;
         this.#record(tool, args, { decision: d.decision, status: 'needs_license', reason, license_status: st.status });
-        return { status: 'needs_license', decision: d.decision, reason, license: licenseView(st), how_to_license: 'Install a licence key with "<agent> license install <file>" or set LODESTAR_LICENSE. See "<agent> license status".' };
+        return { status: 'needs_license', decision: d.decision, reason, license: licenseView(st), how_to_license: 'Install a licence key with "<agent> license install <file>" or set FAIRHAUL_LICENSE. See "<agent> license status".' };
       }
     }
     const ignored = [];
@@ -411,7 +411,7 @@ export class AgentRuntime {
         this.#record(tool, args, { decision: 'ask', status: 'needs_approval', reason: d.reason, approval_id: approvalId });
         return {
           status: 'needs_approval', decision: 'ask', reason: d.reason, approval_id: approvalId, ...(details ? { approving: details } : {}), ...extra,
-          how_to_approve: `A person approves it, then the same call is repeated with the same arguments. Either: npx -y -p fairhaul-core lodestar-approve ${approvalId} --as "Your Name" --dir "${this.stateDir || '.lodestar'}", or open the local approvals page: npx ${this.manifest.name} approvals serve.`,
+          how_to_approve: `A person approves it, then the same call is repeated with the same arguments. Either: npx -y -p fairhaul-core fairhaul-approve ${approvalId} --as "Your Name" --dir "${this.stateDir || '.fairhaul'}", or open the local approvals page: npx ${this.manifest.name} approvals serve.`,
         };
       }
       approvedBy = rec.approved_by;
@@ -456,7 +456,7 @@ export class AgentRuntime {
   }
 }
 
-/** Arguments of the built-in lodestar_inspect_input tool. */
+/** Arguments of the built-in fairhaul_inspect_input tool. */
 export const INSPECT_SCHEMA = Object.freeze({
   type: 'object', required: ['path'], additionalProperties: false,
   properties: {

@@ -82,7 +82,7 @@ test('Chinese GBK and Korean EUC-KR shipment lists read their carrier, dates and
   assert.deepEqual([ko.shipment_id, ko.carrier, ko.ship_date, ko.pallets], ['K-7', '예시물류', '2026-11-06', '3']);
 });
 
-test('English headers with a unit convert too, a pounds column is left alone, and "units" in lodestar-sources.json wins', () => {
+test('English headers with a unit convert too, a pounds column is left alone, and "units" in fairhaul-sources.json wins', () => {
   let r = adaptRecords(m([['Invoice Number', 'Weight (kg)', 'Distance (km)'], ['A', '100', '100']]), INV, {});
   assert.equal(Number(r.rows[0].weight), 220.46); assert.equal(Number(r.rows[0].miles), 62.14);
   r = adaptRecords(m([['Invoice Number', 'Weight (lb)', 'Miles'], ['A', '100', '100']]), INV, {});

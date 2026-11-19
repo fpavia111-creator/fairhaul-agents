@@ -178,7 +178,7 @@
         "credits": "fixtures/credits.csv",
         "charges": "fixtures/return-freight.csv",
         "as_of": "2026-11-16",
-        "out_dir": "lodestar-out/evals/returns_write_report"
+        "out_dir": "fairhaul-out/evals/returns_write_report"
       },
       "expect": {
         "status": "executed",
@@ -263,7 +263,7 @@
         "credits": "fixtures/credits.csv",
         "charges": "fixtures/return-freight.csv",
         "as_of": "2026-11-16",
-        "out_dir": "lodestar-out/evals/returns_write_report"
+        "out_dir": "fairhaul-out/evals/returns_write_report"
       },
       "mode": "review",
       "expect": {

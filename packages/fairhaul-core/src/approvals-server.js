@@ -1,7 +1,7 @@
 // Local approvals page: lists pending approvals and lets a named person approve
 // or reject them. Binds to 127.0.0.1 by default, strict CSP, no scripts, a
 // per-start CSRF token, and Host/Origin checks against DNS rebinding.
-// Optional: POST /callback accepts HMAC-signed decisions (LODESTAR_WEBHOOK_SECRET).
+// Optional: POST /callback accepts HMAC-signed decisions (FAIRHAUL_WEBHOOK_SECRET).
 
 import { createServer } from 'node:http';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
@@ -26,9 +26,9 @@ const eq = (a, b) => { const x = Buffer.from(String(a)); const y = Buffer.from(S
 
 /**
  * Start the approvals server. Returns { server, url, token, close() }.
- * opts: { stateDir, host='127.0.0.1', port=0, ttlHours, secret=process.env.LODESTAR_WEBHOOK_SECRET, title }
+ * opts: { stateDir, host='127.0.0.1', port=0, ttlHours, secret=process.env.FAIRHAUL_WEBHOOK_SECRET, title }
  */
-export function serveApprovals({ stateDir, host = '127.0.0.1', port = 0, ttlHours, secret = process.env.LODESTAR_WEBHOOK_SECRET, title = null, agent = null, lang = process.env.LODESTAR_LANG } = {}) {
+export function serveApprovals({ stateDir, host = '127.0.0.1', port = 0, ttlHours, secret = process.env.FAIRHAUL_WEBHOOK_SECRET, title = null, agent = null, lang = process.env.FAIRHAUL_LANG } = {}) {
   const defaultLang = normLang(lang);
   if (!stateDir) throw new Error('stateDir is required');
   const store = new ApprovalStore(stateDir, { ttlHours });
@@ -94,7 +94,7 @@ ${r.details ? `<div><b>${escapeHtml(t('approving'))}</b></div><pre style="white-
       }
       if (req.method === 'POST' && url.pathname === '/callback') {
         const body = await readBody(req);
-        const v = verifyWebhook(body, req.headers['x-lodestar-signature'], secret);
+        const v = verifyWebhook(body, req.headers['x-fairhaul-signature'], secret);
         if (!v.ok) {
           audit.write({ type: 'webhook-rejected', via: 'callback', reason: v.reason });
           return send(res, 401, JSON.stringify({ ok: false, reason: v.reason }), 'application/json');

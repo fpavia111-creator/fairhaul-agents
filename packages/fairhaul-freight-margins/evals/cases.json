@@ -174,7 +174,7 @@
         "alternatives": [
           2500
         ],
-        "out_dir": "lodestar-out/evals/margins_write_report"
+        "out_dir": "fairhaul-out/evals/margins_write_report"
       },
       "expect": {
         "status": "executed",
@@ -255,7 +255,7 @@
         "alternatives": [
           2500
         ],
-        "out_dir": "lodestar-out/evals/margins_write_report"
+        "out_dir": "fairhaul-out/evals/margins_write_report"
       },
       "mode": "review",
       "expect": {

@@ -89,12 +89,12 @@ test('learn stores a waiting fact that changes nothing; a named person accepts i
   assert.equal(after.memory_applied.length, 1);
   assert.equal(after.memory_applied[0].id, id);
   assert.equal(after.memory_applied[0].accepted_by, 'Dana Reviewer');
-  const audit = readAudit(join(dir, '.lodestar', 'audit.jsonl'));
+  const audit = readAudit(join(dir, '.fairhaul', 'audit.jsonl'));
   assert.deepEqual(audit.at(-1).memory_applied, [id]);
   assert.ok(verifyChain(audit).ok);
 
   // The file is its own chain, separate from the audit log, one per agent.
-  const file = memoryFile(join(dir, '.lodestar'), 'mem-pack');
+  const file = memoryFile(join(dir, '.fairhaul'), 'mem-pack');
   assert.ok(existsSync(file));
   assert.ok(verifyChain(readAudit(file)).ok);
   assert.deepEqual(readAudit(file).map((l) => l.event), ['proposed', 'accepted']);
@@ -171,7 +171,7 @@ test('a memory file that has been edited is not used, and the call says so', asy
   const rt = new AgentRuntime(memManifest(), { root: dir });
   const id = (await rt.call('mem_learn', { kind: 'extra_role', value: { role: 'Ops Lead' } })).result.fact.id;
   await approved(rt, 'mem_accept_learning', { id, decision: 'accept' });
-  const file = memoryFile(join(dir, '.lodestar'), 'mem-pack');
+  const file = memoryFile(join(dir, '.fairhaul'), 'mem-pack');
   writeFileSync(file, readFileSync(file, 'utf8').replace('Ops Lead', 'Ops Lead Two'));
   const r = await rt.call('mem_check', {});
   assert.deepEqual(r.result.roles, []);
@@ -184,7 +184,7 @@ test('an "accepted" line with no matching approval is not used, even when the ch
   const dir = tmp();
   const rt = new AgentRuntime(memManifest(), { root: dir });
   const id = (await rt.call('mem_learn', { kind: 'extra_role', value: { role: 'Forged Role' } })).result.fact.id;
-  const file = memoryFile(join(dir, '.lodestar'), 'mem-pack');
+  const file = memoryFile(join(dir, '.fairhaul'), 'mem-pack');
   // Someone with write access appends a properly chained acceptance.
   new AuditLog(file).write({ type: 'memory', agent: 'mem-pack', event: 'accepted', memory_id: id, by: 'Dana Reviewer', reason: null, approval_id: approvalIdFor('mem-pack', 'mem_accept_learning', { id, decision: 'accept' }), tool: 'mem_accept_learning' });
   assert.ok(verifyChain(readAudit(file)).ok);
@@ -211,7 +211,7 @@ test('a forged retirement is ignored, so an accepted fact cannot be switched off
   const rt = new AgentRuntime(memManifest(), { root: dir });
   const id = (await rt.call('mem_learn', { kind: 'extra_role', value: { role: 'Keep Me' } })).result.fact.id;
   await approved(rt, 'mem_accept_learning', { id, decision: 'accept' });
-  new AuditLog(memoryFile(join(dir, '.lodestar'), 'mem-pack')).write({ type: 'memory', agent: 'mem-pack', event: 'retired', memory_id: id, by: 'Dana Reviewer', reason: 'x', approval_id: '0123456789abcdef', tool: 'mem_retire_memory' });
+  new AuditLog(memoryFile(join(dir, '.fairhaul'), 'mem-pack')).write({ type: 'memory', agent: 'mem-pack', event: 'retired', memory_id: id, by: 'Dana Reviewer', reason: 'x', approval_id: '0123456789abcdef', tool: 'mem_retire_memory' });
   assert.deepEqual((await rt.call('mem_check', {})).result.roles, ['Keep Me']);
 });
 
@@ -238,7 +238,7 @@ test('each agent has its own file; lines from another agent are ignored', async 
   assert.deepEqual((await b.call('beta_check', {})).result.roles, []);
   assert.notEqual(a.memory.file, b.memory.file);
   // Copying alpha's file over beta's does not make beta use alpha's facts.
-  mkdirSync(join(dir, '.lodestar', 'memory'), { recursive: true });
+  mkdirSync(join(dir, '.fairhaul', 'memory'), { recursive: true });
   writeFileSync(b.memory.file, readFileSync(a.memory.file));
   assert.deepEqual((await b.call('beta_check', {})).result.roles, []);
   assert.ok(b.memory.load().problems.some((p) => /belongs to alpha-pack/.test(p)));
@@ -301,7 +301,7 @@ test('CLI: memory list, accept by name, verify, and lines cut from the end are c
   assert.deepEqual((await new AgentRuntime(m, { root: dir }).call('mem_check', {})).result.roles, ['Cli Role']);
   // Cut the acceptance off the end: the chain still verifies on its own, but the
   // audit log says an acceptance ran, so verify fails.
-  const file = memoryFile(join(dir, '.lodestar'), 'mem-pack');
+  const file = memoryFile(join(dir, '.fairhaul'), 'mem-pack');
   const lines = readFileSync(file, 'utf8').split('\n').filter(Boolean);
   writeFileSync(file, lines.slice(0, -1).join('\n') + '\n');
   r = await cli(m, ['memory', 'verify', '--root', dir]);
@@ -323,12 +323,12 @@ test('an agent without memory has no memory tools or commands', async () => {
   assert.doesNotMatch((await cli(m, ['help'])).text, /memory accept/);
 });
 
-test('lodestar_info shows memory counts and whether the file verifies; MCP marks accept as one-click', async () => {
+test('fairhaul_info shows memory counts and whether the file verifies; MCP marks accept as one-click', async () => {
   const { createMcpHandler } = await import('../src/index.js');
   const rt = new AgentRuntime(memManifest(), { audit: false });
   await rt.call('mem_learn', { kind: 'extra_role', value: { role: 'Info Role' } });
   const h = createMcpHandler(rt);
-  const info = await h({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'lodestar_info', arguments: {} } });
+  const info = await h({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'fairhaul_info', arguments: {} } });
   const m = info.result.structuredContent.memory;
   assert.deepEqual(m.counts, { pending: 1 });
   assert.equal(m.file_verifies, true);
@@ -338,7 +338,7 @@ test('lodestar_info shows memory counts and whether the file verifies; MCP marks
   const acc = list.result.tools.find((t) => t.name === 'mem_accept_learning');
   assert.match(acc.description, /^\[ASK/);
   const plain = createMcpHandler(new AgentRuntime(defineManifest({ name: 'plain-pack', version: '1', model: { provider: 'anthropic', id: 'claude-sonnet-4-5-20250929' }, tools: [{ name: 'p_read', kind: 'read', description: 'r', handler: async () => ({ summary: 'ok' }) }], policy: { rules: [{ tool: 'p_read', decision: 'allow' }] } }), { audit: false }));
-  const pi = await plain({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'lodestar_info', arguments: {} } });
+  const pi = await plain({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'fairhaul_info', arguments: {} } });
   assert.equal(pi.result.structuredContent.memory, undefined);
 });
 
@@ -351,10 +351,10 @@ test('the person approving sees the fact itself, not just its id (result, approv
   assert.deepEqual(ask.approving.value, { role: 'Shown Role' });
   assert.equal(ask.approving.note, 'Why it matters');
   assert.equal(ask.approving.effect_if_accepted, KINDS.extra_role.effect);
-  const pending = new ApprovalStore(join(dir, '.lodestar')).pending();
+  const pending = new ApprovalStore(join(dir, '.fairhaul')).pending();
   assert.equal(pending[0].details.kind, 'extra_role');
   const { serveApprovals } = await import('../src/index.js');
-  const s = await serveApprovals({ stateDir: join(dir, '.lodestar'), port: 0 });
+  const s = await serveApprovals({ stateDir: join(dir, '.fairhaul'), port: 0 });
   try {
     const html = await (await fetch(s.url)).text();
     assert.match(html, /What you are approving/);

@@ -147,7 +147,7 @@
         "requests": "fixtures/requests.csv",
         "dock": "fixtures/dock.json",
         "date": "2026-11-18",
-        "out_dir": "lodestar-out/evals/docks_write_report"
+        "out_dir": "fairhaul-out/evals/docks_write_report"
       },
       "expect": {
         "status": "executed",
@@ -167,7 +167,7 @@
         "requests": "fixtures/requests.csv",
         "dock": "fixtures/dock.json",
         "date": "2026-11-18",
-        "out_dir": "lodestar-out/evals/docks_draft_schedule"
+        "out_dir": "fairhaul-out/evals/docks_draft_schedule"
       },
       "expect": {
         "status": "needs_approval",
@@ -181,7 +181,7 @@
         "requests": "fixtures/requests.csv",
         "dock": "fixtures/dock.json",
         "date": "2026-11-18",
-        "out_dir": "lodestar-out/evals/docks_draft_schedule"
+        "out_dir": "fairhaul-out/evals/docks_draft_schedule"
       },
       "approve": "Pat Example",
       "expect": {
@@ -256,7 +256,7 @@
         "requests": "fixtures/requests.csv",
         "dock": "fixtures/dock.json",
         "date": "2026-11-18",
-        "out_dir": "lodestar-out/evals/docks_draft_schedule"
+        "out_dir": "fairhaul-out/evals/docks_draft_schedule"
       },
       "mode": "review",
       "expect": {

@@ -9,12 +9,12 @@ The shared core for **Fairhaul Machine domain agents**: small MCP agents that ea
   - **Assist** (default): the policy as written. `ask` returns an `approval_id` and waits for a named human.
   - **Auto**: off by default and **opt-in per action** (`--auto tool_a,tool_b`). Only opted-in `ask` actions run without a click. Step and spend caps and a kill switch always apply.
 - **Always one-click, even in Auto**: `go_live`, `revoke_access`, `delete_personal_data`, `move_money`, `binding_send`, `production_deploy`, and `accept_learning` (changing what an agent remembers). Trying to put one of these on Auto throws an error. Auto prepares the work; a person clicks.
-- **Audit log** — append-only JSONL (`.lodestar/audit.jsonl`), one line per decision, hash-chained so edits and removed lines show up. Arguments are stored as a SHA-256 hash, not in full. Field names follow Alethea's record vocabulary (`id`, `type`, `date`, `requirements`) so logs sit cleanly next to an Alethea `.decisions/` folder; this package does not write into `.decisions/`.
-- **Stdio MCP server** — zero-dependency, newline-delimited JSON-RPC 2.0 (`initialize`, `ping`, `tools/list`, `tools/call`, `prompts/list`, `prompts/get`), protocol versions up to `2025-11-25`, tool annotations (`readOnlyHint`, `destructiveHint`, …) derived from each tool's kind, plus a built-in `lodestar_info` tool that reports usage and pending approvals.
+- **Audit log** — append-only JSONL (`.fairhaul/audit.jsonl`), one line per decision, hash-chained so edits and removed lines show up. Arguments are stored as a SHA-256 hash, not in full. Field names follow Alethea's record vocabulary (`id`, `type`, `date`, `requirements`) so logs sit cleanly next to an Alethea `.decisions/` folder; this package does not write into `.decisions/`.
+- **Stdio MCP server** — zero-dependency, newline-delimited JSON-RPC 2.0 (`initialize`, `ping`, `tools/list`, `tools/call`, `prompts/list`, `prompts/get`), protocol versions up to `2025-11-25`, tool annotations (`readOnlyHint`, `destructiveHint`, …) derived from each tool's kind, plus a built-in `fairhaul_info` tool that reports usage and pending approvals.
 - **Input validation** — every call is checked against the tool's `inputSchema` before anything runs or reaches a human. Errors carry JSON-pointer paths (`/vendors/3/tin expected string`).
 - **Signed audit log (opt-in)** — with `--signing-key`, every line is also signed with Ed25519. A re-chained file fails `verify-log --pubkey`. Key rotation is recorded as a signed entry.
 - **Approvals people can actually use** — CLI, a local approvals page on 127.0.0.1, or an HMAC-signed webhook callback. Approvals are single-use, bound to the exact arguments, expire after 24 h by default, and can be rejected.
-- **Caps that survive restarts** — per session, per day and per tool, persisted in `.lodestar/usage.json`.
+- **Caps that survive restarts** — per session, per day and per tool, persisted in `.fairhaul/usage.json`.
 - **Domain memory (opt-in per agent)** — an agent can remember facts about one customer's setup in its own specialty (a column name, an extra privileged role). Learning only proposes; a fact applies after a named person accepts it, every result says which facts it used, and the file is hash-chained like the audit log. See [Domain memory](#domain-memory).
 - **Private evals** — fixture-based, deterministic test cases, with an offline HTML report and regression highlighting against a baseline.
 - **Shared helpers** — JSON Schema validation, iCalendar, SARIF 2.1.0, unified diff/patch, Jaro-Winkler and name/address normalisation, entropy, a small ZIP/DOCX reader, and a self-contained HTML page template.
@@ -58,7 +58,7 @@ main(manifest); // gives you: mcp | tools | call | demo | eval | approve | rejec
 ## Scaffold a new agent
 
 ```bash
-npx -y -p fairhaul-core lodestar-new-agent iris-of-tests --dir packages
+npx -y -p fairhaul-core fairhaul-new-agent iris-of-tests --dir packages
 ```
 
 The generated package passes `npm test`, `eval` and `npm pack --dry-run` as is. See `docs/build-an-agent.md` in the monorepo.
@@ -68,7 +68,7 @@ The generated package passes `npm test`, `eval` and `npm pack --dry-run` as is. 
 When a call is `ask`, the result contains an `approval_id` bound to that exact tool and arguments. A person approves it once:
 
 ```bash
-npx -y -p fairhaul-core lodestar-approve 3f2a9c1d0b7e6a55 --as "Your Name" --dir .lodestar
+npx -y -p fairhaul-core fairhaul-approve 3f2a9c1d0b7e6a55 --as "Your Name" --dir .fairhaul
 ```
 
 Then the same call runs and the log records who approved it.
@@ -76,7 +76,7 @@ Then the same call runs and the log records who approved it.
 Other ways to decide:
 
 - `npx <pack> approvals serve` opens a local page (127.0.0.1 only, strict CSP, no scripts, a per-start form token, Host and Origin checks) that lists pending approvals with a short, non-sensitive preview of the arguments. Type your name and approve once, or reject.
-- `--approval-webhook https://…` POSTs each new pending approval to your endpoint, signed with `LODESTAR_WEBHOOK_SECRET` (HMAC-SHA256, header `x-lodestar-signature: t=<unix>,v1=<hex>`). Your system answers by POSTing `{ "id", "decision": "approve"|"reject", "by": "Person Name" }`, signed the same way, to the approvals page's `/callback`. A bad signature, a timestamp older than 5 minutes or a missing name is refused and audited.
+- `--approval-webhook https://…` POSTs each new pending approval to your endpoint, signed with `FAIRHAUL_WEBHOOK_SECRET` (HMAC-SHA256, header `x-fairhaul-signature: t=<unix>,v1=<hex>`). Your system answers by POSTing `{ "id", "decision": "approve"|"reject", "by": "Person Name" }`, signed the same way, to the approvals page's `/callback`. A bad signature, a timestamp older than 5 minutes or a missing name is refused and audited.
 - `npx <pack> reject <id> --as "Name"` refuses a pending action.
 
 Approvals expire 24 hours after a person approves (`--approval-ttl HOURS`). Names like "agent" or "claude" are refused as approvers. One-click categories can be approved by a person through any of these routes, but never by Auto.
@@ -123,7 +123,7 @@ export const manifest = defineManifest({
 
 What is enforced in code, not left to the model:
 
-- **One file per agent**: `.lodestar/memory/<agent>.jsonl`. The runtime picks it from the manifest name; no tool argument names a file or another agent. Lines written for another agent are ignored and reported.
+- **One file per agent**: `.fairhaul/memory/<agent>.jsonl`. The runtime picks it from the manifest name; no tool argument names a file or another agent. Lines written for another agent are ignored and reported.
 - **Only declared kinds**, each checked against its JSON Schema (which must set `additionalProperties: false`) and its optional `check`. A built-in `note` kind is for people and changes no check. Policy, caps, Auto opt-ins and one-click categories are not memory and cannot be learned.
 - **Learning only proposes.** A fact applies from the next call after a named person accepts it. Accepting is the one-click category `accept_learning`, so it always asks, even in Auto.
 - **Each acceptance is checked against the approvals file**: the approval must be by the same person, given before the line was written, for exactly that fact and decision (the approval id is a hash of the tool and its arguments). A properly chained "accepted" line with no such approval is shown as `unverified` and not used. The same check applies to retiring a fact.
@@ -147,23 +147,23 @@ npx <pack> memory verify [--pubkey public.pem]
 
 ## Kill switch and caps
 
-- `npx <pack> kill` creates `.lodestar/KILL`; every call is then blocked until `unkill`. `LODESTAR_KILL=1` does the same.
+- `npx <pack> kill` creates `.fairhaul/KILL`; every call is then blocked until `unkill`. `FAIRHAUL_KILL=1` does the same.
 - `--max-steps N` and `--max-spend USD` stop a session and report. Spend counts each tool's declared `costUsd` (the wave-1 packs are local and declare $0), plus any `costUsd` a handler returns.
 
-- Caps persist in `.lodestar/usage.json`: `--session ID` keeps a session's count across restarts, `--max-steps-per-day` and `--max-spend-per-day` cap a whole day, and a manifest can set `caps.perTool.<tool>.maxSteps` so one tool cannot use the whole budget. A cap hit returns `{ status: "blocked", cap: { cap, scope, limit, used } }` and is audited. `npx <pack> usage` shows the counters.
+- Caps persist in `.fairhaul/usage.json`: `--session ID` keeps a session's count across restarts, `--max-steps-per-day` and `--max-spend-per-day` cap a whole day, and a manifest can set `caps.perTool.<tool>.maxSteps` so one tool cannot use the whole budget. A cap hit returns `{ status: "blocked", cap: { cap, scope, limit, used } }` and is audited. `npx <pack> usage` shows the counters.
 
 ## Verify a log
 
 ```bash
-npx -y -p fairhaul-core lodestar-verify-log .lodestar/audit.jsonl
+npx -y -p fairhaul-core fairhaul-verify-log .fairhaul/audit.jsonl
 ```
 
 Unsigned, the chain is tamper-evident, not tamper-proof: someone with write access can rewrite the whole file. To close that gap, sign it:
 
 ```bash
-npx <pack> keygen --out ~/.lodestar-keys/my-pack        # keep this outside --root
-npx <pack> mcp --signing-key ~/.lodestar-keys/my-pack/private.pem --audit-mirror /backup/my-pack-audit.jsonl
-npx <pack> verify-log --pubkey ~/.lodestar-keys/my-pack/public.pem
+npx <pack> keygen --out ~/.fairhaul-keys/my-pack        # keep this outside --root
+npx <pack> mcp --signing-key ~/.fairhaul-keys/my-pack/private.pem --audit-mirror /backup/my-pack-audit.jsonl
+npx <pack> verify-log --pubkey ~/.fairhaul-keys/my-pack/public.pem
 npx <pack> rotate-key --signing-key OLD.pem --new-key NEW.pem --as "Your Name"
 ```
 
@@ -221,9 +221,9 @@ What happens to a file:
 - The tool result gets a `sources` list (export recognised, columns mapped and not used, rows skipped, the date order read, notes about what the export lacks) and its `warnings` carry anything a person should check. The audit line records a compact version with no cell values.
 - A file with none of a required column is read as it is and the result says which column was not found.
 
-`<pack> sources` lists what a pack reads. `<pack> inspect <file>` (and the MCP tool `lodestar_inspect_input`) shows how one file would be read: format, sheets, header row, each column's name and shape (dates day-first, amounts, yes/no...), never a cell value. Column names that read like instructions to an AI are flagged.
+`<pack> sources` lists what a pack reads. `<pack> inspect <file>` (and the MCP tool `fairhaul_inspect_input`) shows how one file would be read: format, sheets, header row, each column's name and shape (dates day-first, amounts, yes/no...), never a cell value. Column names that read like instructions to an AI are flagged.
 
-When a file does not match, put `lodestar-sources.json` in the root (checked against a schema on every call):
+When a file does not match, put `fairhaul-sources.json` in the root (checked against a schema on every call):
 
 ```json
 {
@@ -238,7 +238,7 @@ How far to trust the layouts: two (Procore RFIs, Ramp transactions) were compare
 
 The core reads exports the way systems in Germany, France, Spain, Brazil, Italy, Japan, China, Korea and the English-speaking countries write them. These nine languages cover the largest business-software markets (sources in the ver 6 review).
 
-- **Text encodings.** A file is decoded by the first of: the `encoding` set for it in `lodestar-sources.json`; a byte-order mark (UTF-8, UTF-16); strict UTF-8; UTF-16 without a mark; a scored guess among Shift_JIS, EUC-KR, GB18030, Big5 and Windows-1252 (known header words count most, and `--lang` breaks ties). A guessed encoding is named in the result's warnings with how to fix it. Names you can set: `utf-8`, `utf-16le`, `utf-16be`, `shift_jis`, `euc-jp`, `euc-kr`, `gb18030`, `gbk`, `big5`, `windows-1252`, `iso-8859-1`, `iso-8859-15` and common aliases (`sjis`, `cp932`, `cp949`, `cp936`, `latin1`...).
+- **Text encodings.** A file is decoded by the first of: the `encoding` set for it in `fairhaul-sources.json`; a byte-order mark (UTF-8, UTF-16); strict UTF-8; UTF-16 without a mark; a scored guess among Shift_JIS, EUC-KR, GB18030, Big5 and Windows-1252 (known header words count most, and `--lang` breaks ties). A guessed encoding is named in the result's warnings with how to fix it. Names you can set: `utf-8`, `utf-16le`, `utf-16be`, `shift_jis`, `euc-jp`, `euc-kr`, `gb18030`, `gbk`, `big5`, `windows-1252`, `iso-8859-1`, `iso-8859-15` and common aliases (`sjis`, `cp932`, `cp949`, `cp936`, `latin1`...).
 - **Amounts.** `1.234,56`, `1 234,56`, `1'234.56`, `12,5`, `R$ 1.234,56`, `1,200円`, `￥1,200`, `₩15,000`, Japanese negatives `△300` and `▲300`, `(45.10)`, a trailing minus and Indian grouping `12,34,567`. A whole column decides whether the comma is the decimal mark, so `1.234` in a column that also holds `2.500,50` reads as 1234. `toNumber("12,5")` is 12.5 (before ver 6 it was 125).
 - **Dates.** Month names in English, German, French, Spanish, Portuguese, Italian and Dutch, also between slashes (`14/NOV/2026`, as Mexican and Brazilian bank exports write them); `2026年11月14日`, `2026년 11월 14일`, `2026. 11. 14.`; Japanese era years (`令和8年11月14日`, `R8.11.14`) and Taiwan 民國 years; 午前/午後 and 오전/오후 times.
 - **Column names.** About 100 common columns are known in German, French, Spanish, Portuguese, Italian, Japanese, Chinese and Korean (`Betrag`, `Montant`, `Importe`, `Valor`, `Importo`, `金額`, `金额`, `금액`...). They fill only columns still unmatched after the English names and never take a column already used; the result lists them under `translated_columns`. A field can opt out with `translate: false` or point at another concept, for example `translate: 'ledger_debit'` so a general-ledger debit reads `Soll` or `借方` rather than a bank's money-out column.
@@ -249,7 +249,7 @@ The core reads exports the way systems in Germany, France, Spain, Brazil, Italy,
 { "files": { "exports/仕訳.csv": { "encoding": "shift_jis", "decimal": "." } } }
 ```
 
-**Output language.** `--lang de|fr|es|pt|it|ja|zh|ko` (or `LODESTAR_LANG`) sets the language of the pages and reports people read: the approvals page (which also has a language switcher), the Olympus readiness report, and the Ladon recertification summary and evidence page; a tool argument `language` overrides it per call where offered. Tool results, codes, CSV columns and JSON stay in English, so scripts and later runs read them the same. Any string not yet translated falls back to English. Use `makeText(catalog, lang)` and `coreText(lang)` for a pack's own pages.
+**Output language.** `--lang de|fr|es|pt|it|ja|zh|ko` (or `FAIRHAUL_LANG`) sets the language of the pages and reports people read: the approvals page (which also has a language switcher), the Olympus readiness report, and the Ladon recertification summary and evidence page; a tool argument `language` overrides it per call where offered. Tool results, codes, CSV columns and JSON stay in English, so scripts and later runs read them the same. Any string not yet translated falls back to English. Use `makeText(catalog, lang)` and `coreText(lang)` for a pack's own pages.
 
 **Limits.** The translations were written by Claude and have not been reviewed by native speakers; every translated page says so. The encoding guess can be wrong on very short files; set `encoding` when names look garbled. The column dictionaries cover common names, not every system's labels. The agents make no claim about any country's laws, tax rules or filing formats.
 
@@ -257,17 +257,17 @@ The core reads exports the way systems in Germany, France, Spain, Brazil, Italy,
 
 A tool marked `tier: 'pro'` (optionally with a `feature` name) runs only with a valid licence key. Without one it returns `status: 'needs_license'` with the reason; free tools keep working. The check runs after the policy, so a blocked tool stays blocked, an `ask` tool still asks, nothing is put on Auto and one-click categories are untouched; no approval is requested for a call that cannot run.
 
-A key is `LODESTAR1.<payload>.<Ed25519 signature>` with licensee, plan, agents (`*` or package names), features, issue and expiry dates. It is checked offline against the public keys in `src/license-keys.js` (empty in this release, so nothing can be unlocked yet). There is no environment variable or config file that adds a trusted key.
+A key is `FAIRHAUL1.<payload>.<Ed25519 signature>` with licensee, plan, agents (`*` or package names), features, issue and expiry dates. It is checked offline against the public keys in `src/license-keys.js` (empty in this release, so nothing can be unlocked yet). There is no environment variable or config file that adds a trusted key.
 
-- Customer: `<pack> license install key.txt` (copies it to `.lodestar/license.key`), `<pack> license status`, or set `LODESTAR_LICENSE` / `LODESTAR_LICENSE_FILE`. `lodestar_info` shows the plan, expiry and which tools are unlocked, never the key.
-- Seller, on their own computer: `npx -p fairhaul-core lodestar-license keygen --out ~/lodestar-licence-keys`, paste the printed public key into `LICENSE_PUBLIC_KEYS`, release, then `lodestar-license issue --key ~/lodestar-licence-keys/private.pem --licensee "Customer" --plan pro --days 365 [--agents fairhaul-freight-bill-audit] --out customer.key` and `lodestar-license verify customer.key --pubkey ~/lodestar-licence-keys/public.pem`. Withdrawn licence ids go in `LICENSE_REVOKED_IDS` and take effect from the next release.
+- Customer: `<pack> license install key.txt` (copies it to `.fairhaul/license.key`), `<pack> license status`, or set `FAIRHAUL_LICENSE` / `FAIRHAUL_LICENSE_FILE`. `fairhaul_info` shows the plan, expiry and which tools are unlocked, never the key.
+- Seller, on their own computer: `npx -p fairhaul-core fairhaul-license keygen --out ~/fairhaul-licence-keys`, paste the printed public key into `LICENSE_PUBLIC_KEYS`, release, then `fairhaul-license issue --key ~/fairhaul-licence-keys/private.pem --licensee "Customer" --plan pro --days 365 [--agents fairhaul-freight-bill-audit] --out customer.key` and `fairhaul-license verify customer.key --pubkey ~/fairhaul-licence-keys/public.pem`. Withdrawn licence ids go in `LICENSE_REVOKED_IDS` and take effect from the next release.
 - `ctx.license` gives a handler `{ status, valid, plan, features, has(feature) }`.
 
 This is not copy protection: the packages are MIT-licensed source and anyone can remove the check. It draws a clear line for honest customers.
 
 ## What the model pin means
 
-The manifest declares which host model a pack's prompts and evals target. An MCP server cannot force your MCP host to use that model; the pin is reported in `initialize` and `lodestar_info` so you can check it. The wave-1 packs' tools are deterministic and call no model at all.
+The manifest declares which host model a pack's prompts and evals target. An MCP server cannot force your MCP host to use that model; the pin is reported in `initialize` and `fairhaul_info` so you can check it. The wave-1 packs' tools are deterministic and call no model at all.
 
 ## Packs built on this core
 

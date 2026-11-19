@@ -163,7 +163,7 @@
         "items": "fixtures/items.csv",
         "actuals": "fixtures/actual-freight.csv",
         "threshold_pct": 40,
-        "out_dir": "lodestar-out/evals/costing_write_report"
+        "out_dir": "fairhaul-out/evals/costing_write_report"
       },
       "expect": {
         "status": "executed",
@@ -238,7 +238,7 @@
         "items": "fixtures/items.csv",
         "actuals": "fixtures/actual-freight.csv",
         "threshold_pct": 40,
-        "out_dir": "lodestar-out/evals/costing_write_report"
+        "out_dir": "fairhaul-out/evals/costing_write_report"
       },
       "mode": "review",
       "expect": {

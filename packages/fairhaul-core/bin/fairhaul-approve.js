@@ -5,14 +5,14 @@ import { parseFlags } from '../src/cli.js';
 
 const { flags, pos } = parseFlags(process.argv.slice(2));
 if (!pos[0] || flags.help) {
-  process.stdout.write('Usage: lodestar-approve <approval_id> --as "Your Name" [--dir .lodestar] [--note "why"]\n');
+  process.stdout.write('Usage: fairhaul-approve <approval_id> --as "Your Name" [--dir .fairhaul] [--note "why"]\n');
   process.exit(pos[0] ? 0 : 2);
 }
 try {
-  const dir = resolve(flags.dir || join(process.cwd(), '.lodestar'));
+  const dir = resolve(flags.dir || join(process.cwd(), '.fairhaul'));
   const rec = new ApprovalStore(dir).approve(pos[0], flags.as, flags.note || '');
   process.stdout.write(`Approved ${rec.id} as ${rec.approved_by} (${dir}). It can be used once.\n`);
 } catch (e) {
-  process.stderr.write(`lodestar-approve: ${e.message}\n`);
+  process.stderr.write(`fairhaul-approve: ${e.message}\n`);
   process.exit(1);
 }

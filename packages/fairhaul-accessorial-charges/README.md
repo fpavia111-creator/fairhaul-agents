@@ -61,7 +61,7 @@ Fairhaul Accessorial Charges demo (fictional loads, October 2026) in <demo folde
 | Tool | What it does | Policy |
 |---|---|---|
 | `accessorials_analyse` | Accessorial charges by type, location and carrier; charges a shipper could have ordered but did not; charges above the contract; and repeats at the same location with the address-book change that stops them. | runs |
-| `accessorials_write_report` | Write accessorials.csv and .html (one row per accessorial charge; repeats to fix; totals by type, location and carrier) into out_dir (default lodestar-out/accessorials). | runs |
+| `accessorials_write_report` | Write accessorials.csv and .html (one row per accessorial charge; repeats to fix; totals by type, location and carrier) into out_dir (default fairhaul-out/accessorials). | runs |
 | `accessorials_draft_address_update` | Write drafts/address_update-<name>.md: the address-book changes (residential, liftgate, appointment and similar flags) for every location with repeat accessorials. | asks first (Auto can be opted in) |
 | `accessorials_request_apply` | After one named human click (even in Auto), record that the reviewed address update draft is approved in address_update-requests.csv. | one named click, even in Auto (`production_deploy`) |
 | `tms_update_address` | Fairhaul Accessorial Charges never changes your TMS or ERP address book; a person does. | refused |
@@ -142,7 +142,7 @@ Where a layout says "checked", its column names were compared with the vendor's 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-accessorial-charges inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-accessorial-charges inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -197,7 +197,7 @@ fairhaul-accessorial-charges demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

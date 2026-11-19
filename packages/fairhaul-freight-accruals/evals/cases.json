@@ -159,7 +159,7 @@
         "period_end": "2026-10-31",
         "contract": "fixtures/contract.json",
         "prior": "fixtures/prior-accrual.csv",
-        "out_dir": "lodestar-out/evals/accruals_write_report"
+        "out_dir": "fairhaul-out/evals/accruals_write_report"
       },
       "expect": {
         "status": "executed",
@@ -242,7 +242,7 @@
         "period_end": "2026-10-31",
         "contract": "fixtures/contract.json",
         "prior": "fixtures/prior-accrual.csv",
-        "out_dir": "lodestar-out/evals/accruals_write_report"
+        "out_dir": "fairhaul-out/evals/accruals_write_report"
       },
       "mode": "review",
       "expect": {

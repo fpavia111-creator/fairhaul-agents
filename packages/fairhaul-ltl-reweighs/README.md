@@ -66,7 +66,7 @@ Fairhaul LTL Reweighs demo (fictional LTL corrections, October 2026) in <demo fo
 | Tool | What it does | Policy |
 |---|---|---|
 | `reweigh_review` | For each correction: weight change, density and density class from your dimensions, the reasons to challenge (within_tolerance, class_not_supported, no_certificate) and a status (challenge, ask_for_certificate, fix_ou… | runs |
-| `reweigh_write_report` | Write reweigh-corrections.csv and .html (one row per correction with status and reasons; item-master fixes; totals by carrier) into out_dir (default lodestar-out/reweigh). | runs |
+| `reweigh_write_report` | Write reweigh-corrections.csv and .html (one row per correction with status and reasons; item-master fixes; totals by carrier) into out_dir (default fairhaul-out/reweigh). | runs |
 | `reweigh_draft_dispute` | Write drafts/dispute-<carrier>.md listing each correction worth challenging or missing its certificate, with the reason (within scale tolerance, class not supported by density, no certificate). | asks first (Auto can be opted in) |
 | `reweigh_request_send` | After one named human click (even in Auto), record that the reviewed dispute draft is approved in dispute-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `ap_pay_invoice` | Fairhaul LTL Reweighs never pays or short-pays carriers. | refused |
@@ -101,7 +101,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-ltl-reweighs inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-ltl-reweighs inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -156,7 +156,7 @@ fairhaul-ltl-reweighs demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

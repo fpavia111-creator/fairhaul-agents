@@ -73,7 +73,7 @@ Fairhaul Dock Scheduling demo (fictional distribution center) in <demo folder>
 |---|---|---|
 | `docks_plan` | Place each request on the earliest fitting door within its window and dock hours without exceeding crews (earliest window end first, then priority). | runs |
 | `docks_review` | Arrival against appointment (on time, late, early, no-show), wait for a door, work and turn minutes per load; by carrier, by appointment hour and by load type with minutes per pallet and the 80th percentile work time. | runs |
-| `docks_write_report` | Write docks-plan.csv and .html (the day's schedule, door use, loads by hour) and, with history, docks-review.csv and .html into out_dir (default lodestar-out/docks). | runs |
+| `docks_write_report` | Write docks-plan.csv and .html (the day's schedule, door use, loads by hour) and, with history, docks-review.csv and .html into out_dir (default fairhaul-out/docks). | runs |
 | `docks_draft_schedule` | Write drafts/schedule-<date>.md: the day's appointments by load, carrier, door and time, and the requests that need another window. | asks first (Auto can be opted in) |
 | `docks_request_publish` | After one named human click (even in Auto), record that the reviewed schedule draft is approved in schedule-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `yms_book_appointment` | Fairhaul Dock Scheduling never books, moves or cancels appointments in your scheduling or yard system. | refused |
@@ -114,7 +114,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-dock-scheduling inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-dock-scheduling inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -169,7 +169,7 @@ fairhaul-dock-scheduling demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

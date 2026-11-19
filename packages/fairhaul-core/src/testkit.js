@@ -21,7 +21,7 @@ const VOLATILE = /(^|_)(ms|at|time|generated|ran|date_written|written_at|elapsed
 function strip(v) {
   if (Array.isArray(v)) return v.map(strip);
   if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).filter(([k]) => !VOLATILE.test(k)).map(([k, x]) => [k, strip(x)]));
-  if (typeof v === 'string') return v.replace(/\d{4}-\d{2}-\d{2}T[\d:.]+Z/g, '<time>').replace(/[A-Za-z]:?[\\/][^\s"]*lodestar-out[^\s"]*/g, '<out>');
+  if (typeof v === 'string') return v.replace(/\d{4}-\d{2}-\d{2}T[\d:.]+Z/g, '<time>').replace(/[A-Za-z]:?[\\/][^\s"]*fairhaul-out[^\s"]*/g, '<out>');
   return v;
 }
 
@@ -47,8 +47,8 @@ export function agentContract({ manifest, casesFile }) {
   const decision = (t) => (manifest.policy.rules.find((r) => r.tool === t.name) || manifest.policy.rules.find((r) => r.category && r.category === t.category) || {}).decision;
   const runs = manifest.tools.filter((t) => decision(t) !== 'block');
   const caseFor = (t) => cases.find((c) => c.tool === t.name && (!c.expect || !c.expect.status || ['executed', 'needs_approval'].includes(c.expect.status)));
-  const sandbox = () => { const d = mkdtempSync(join(tmpdir(), `${manifest.name}-contract-`)); cpSync(srcRoot, d, { recursive: true, filter: (p) => !/[\\/](node_modules|lodestar-out|\.lodestar)([\\/]|$)/.test(p) }); return d; };
-  const rtIn = (root, opts = {}) => new AgentRuntime(manifest, { root, stateDir: join(root, '.lodestar-test'), audit: false, ...opts });
+  const sandbox = () => { const d = mkdtempSync(join(tmpdir(), `${manifest.name}-contract-`)); cpSync(srcRoot, d, { recursive: true, filter: (p) => !/[\\/](node_modules|fairhaul-out|\.fairhaul)([\\/]|$)/.test(p) }); return d; };
+  const rtIn = (root, opts = {}) => new AgentRuntime(manifest, { root, stateDir: join(root, '.fairhaul-test'), audit: false, ...opts });
   async function run(rt, tool, args) {
     const first = await rt.call(tool, args);
     if (first.status !== 'needs_approval') return first;

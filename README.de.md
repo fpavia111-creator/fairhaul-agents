@@ -28,7 +28,7 @@ Jeder Agent hat eine `demo` mit fiktiven Dateien, ein `eval` mit eigenen Testfä
 - **Freigabeliste je Agent.** Jeder Agent darf nur seine eigenen Werkzeuge aufrufen.
 - **Verweigerte Werkzeuge.** Bezahlen, E-Mails senden, TMS ändern, ins Hauptbuch buchen oder beim Zoll einreichen sind benannt und gesperrt.
 - **Ein namentlicher Klick.** Zahlungen, Sendungen, Produktionsänderungen und Buchungsfreigaben warten auf eine namentlich genannte Person, auch im Auto-Modus, gebunden an den sha256 des geprüften Entwurfs.
-- **Prüfprotokoll** unter `.lodestar/`, verkettet über Hashes, signiert, wenn Sie einen Ed25519-Schlüssel einrichten.
+- **Prüfprotokoll** unter `.fairhaul/`, verkettet über Hashes, signiert, wenn Sie einen Ed25519-Schlüssel einrichten.
 - **Not-Aus:** `<agent> kill` stoppt alle Werkzeuge bis `<agent> unkill`.
 
 ## Wie sie getestet werden

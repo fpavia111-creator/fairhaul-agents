@@ -166,7 +166,7 @@ test('file names and slugs keep Japanese, Chinese and Korean names, and stay saf
   assert.equal(normalizeName('ｶ)ｶｸｳｼｮｳｼﾞ'), 'カクウショウジ', 'half-width bank names are unified and lose the カ) legal form');
 });
 
-test('lodestar-sources.json can set a file\'s encoding; an unknown one is refused', async () => {
+test('fairhaul-sources.json can set a file\'s encoding; an unknown one is refused', async () => {
   const root = tmp(); copyFileSync(join(FX, 'zh-gbk.csv'), join(root, 'a.csv'));
   const m = defineManifest({
     name: 'ledger-pack', version: '0.0.1', description: 'Test.', model: { provider: 'anthropic', id: 'claude-sonnet-4-5-20250929' },
@@ -178,11 +178,11 @@ test('lodestar-sources.json can set a file\'s encoding; an unknown one is refuse
   let r = await rt.call('read_ledger', { file: 'a.csv' });
   assert.equal(r.status, 'executed'); assert.equal(r.result.lang, 'zh'); assert.equal(r.result.rows[0].amount, '1200.00');
   assert.ok(r.warnings.some((w) => /read as GB18030/.test(w)));
-  writeFileSync(join(root, 'lodestar-sources.json'), JSON.stringify({ files: { 'a.csv': { encoding: 'gbk' } } }));
+  writeFileSync(join(root, 'fairhaul-sources.json'), JSON.stringify({ files: { 'a.csv': { encoding: 'gbk' } } }));
   rt = new AgentRuntime(m, { root });
   r = await rt.call('read_ledger', { file: 'a.csv' });
   assert.equal(r.result.rows[1].description, '差旅费'); assert.ok(!(r.warnings || []).some((w) => /a guess/.test(w))); assert.equal(r.result.lang, 'en');
-  writeFileSync(join(root, 'lodestar-sources.json'), JSON.stringify({ files: { 'a.csv': { encoding: 'klingon' } } }));
+  writeFileSync(join(root, 'fairhaul-sources.json'), JSON.stringify({ files: { 'a.csv': { encoding: 'klingon' } } }));
   r = await new AgentRuntime(m, { root }).call('read_ledger', { file: 'a.csv' });
   assert.equal(r.status, 'error'); assert.match(r.reason, /klingon/);
 });
@@ -207,7 +207,7 @@ test('languages: names, fallbacks and every core string in all nine', () => {
 });
 
 test('the approvals page speaks the approver\'s language and keeps the one-click warning', async () => {
-  const root = tmp(); const state = join(root, '.lodestar'); mkdirSync(state, { recursive: true });
+  const root = tmp(); const state = join(root, '.fairhaul'); mkdirSync(state, { recursive: true });
   const store = new ApprovalStore(state);
   store.request({ agent: 'demo-pack', tool: 'revoke', args: { user: 'ana' }, reason: 'needs a person', category: 'revoke_access', one_click: true });
   const s = await serveApprovals({ stateDir: state, port: 0, lang: 'ja', agent: 'demo-pack' });

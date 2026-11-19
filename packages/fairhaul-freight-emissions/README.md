@@ -64,7 +64,7 @@ Fairhaul Freight Emissions demo (fictional shipments, example factors only) in <
 | Tool | What it does | Policy |
 |---|---|---|
 | `emissions_estimate` | Per shipment: mode, tonnes, km, tonne-km, factor, kg CO2e estimate and data quality. | runs |
-| `emissions_write_report` | Write emissions.csv and .html (one row per shipment; by mode, carrier, lane and customer; mode-shift what-if) into out_dir (default lodestar-out/emissions). | runs |
+| `emissions_write_report` | Write emissions.csv and .html (one row per shipment; by mode, carrier, lane and customer; mode-shift what-if) into out_dir (default fairhaul-out/emissions). | runs |
 | `emissions_draft_emissions_statement` | Write drafts/emissions_statement-<customer>.md: estimated emissions of one customer's shipments, line by line, with the method, the factor source and a plain statement that the figures are estimates and not verified. | asks first (Auto can be opted in) |
 | `emissions_request_send` | After one named human click (even in Auto), record that the reviewed emissions statement draft is approved in emissions_statement-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `esg_portal_submit` | Fairhaul Freight Emissions never submits figures to a reporting portal, customer survey or regulator. | refused |
@@ -94,7 +94,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-freight-emissions inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-freight-emissions inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -149,7 +149,7 @@ fairhaul-freight-emissions demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

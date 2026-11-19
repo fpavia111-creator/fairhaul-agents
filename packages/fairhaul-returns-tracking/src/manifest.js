@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { RMA_FIELDS, RECEIPT_FIELDS, CREDIT_FIELDS, CHARGE_FIELDS, trackReturns, disputeText } from './returns.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/returns';
+const OUT = 'fairhaul-out/returns';
 const files = {
   rmas: { type: 'string', description: 'Return authorisations under --root: RMA, customer, SKU, units, value, reason, date authorised, return label tracking, status' },
   receipts: { type: 'string', description: 'Optional returns received at the warehouse: RMA or tracking, date received, units received, condition' },
@@ -45,7 +45,7 @@ Rules: Fairhaul Returns Tracking never issues credits, voids labels or emails an
 4. Only when the person asks, call returns_draft_carrier_dispute for one carrier, then returns_request_send after they review it.` }],
   tools: [
     { name: 'returns_track', kind: 'read', title: 'Follow returns from label to credit', description: 'Each RMA\'s stage (awaiting return, label unused, received not credited, credited not received, closed), every point found with its amount, and return value and freight by reason, customer and SKU.', inputSchema: { type: 'object', additionalProperties: false, required: ['rmas'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'returns_write_report', kind: 'report', title: 'Write the returns report', description: 'Write returns.csv and .html (points found; every RMA with its stage; by reason, customer and SKU) into out_dir (default lodestar-out/returns).', inputSchema: { type: 'object', additionalProperties: false, required: ['rmas'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/returns)' } } }, handler: async (a, ctx) => {
+    { name: 'returns_write_report', kind: 'report', title: 'Write the returns report', description: 'Write returns.csv and .html (points found; every RMA with its stage; by reason, customer and SKU) into out_dir (default fairhaul-out/returns).', inputSchema: { type: 'object', additionalProperties: false, required: ['rmas'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/returns)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const roll = ['returns', 'value', 'freight', 'freight_pct_of_value'];
       const w = writeWorklist(ctx, a.out_dir || OUT, 'returns', { title: 'Returns from label to credit', intro: line(r), rows: r.items, columns: ['rma', 'code', 'detail', 'amount'], sections: [{ title: 'Every return', rows: r.rmas_detail, columns: ['rma', 'customer', 'sku', 'reason', 'units', 'value', 'authorised_at', 'received_at', 'units_received', 'condition', 'credited', 'freight', 'stage'] }, { title: 'By reason', rows: r.by_reason, columns: ['reason', ...roll] }, { title: 'By customer', rows: r.by_customer, columns: ['customer', ...roll] }, { title: 'By SKU', rows: r.by_sku, columns: ['sku', ...roll] }], limits: [LIMITS.files, 'Receipts match by RMA or return tracking; credits by RMA; freight by tracking. A credit before receipt may be intended; check before reversing anything.'] });

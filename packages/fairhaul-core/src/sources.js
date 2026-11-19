@@ -33,7 +33,7 @@ import { encodingName, ENCODINGS } from './encoding.js';
 export { normHeader, parseAnyDate, inferDateOrder, cleanAmount, inferDecimal, decimalEvidence };
 
 export const FIELD_TYPES = ['text', 'date', 'datetime', 'money', 'number', 'bool', 'email'];
-export const SOURCES_FILE = 'lodestar-sources.json';
+export const SOURCES_FILE = 'fairhaul-sources.json';
 
 // Yes and no in the nine report languages too (ja, si, sim, oui, はい, 是, 예...), and the
 // ○ / × marks Japanese and Korean forms use.
@@ -81,7 +81,7 @@ export const conceptOf = (f, fd) => (fd && fd.translate === false ? null : fd &&
 // Freight files weigh in pounds or kilograms and measure in miles or kilometres.
 // A field that declares the unit the agent works in (fd.unit, or the default
 // below for its name) is converted when the column says it holds another unit
-// ("Weight (kg)", "Distance km", "重量(kg)"), when lodestar-sources.json says so
+// ("Weight (kg)", "Distance km", "重量(kg)"), when fairhaul-sources.json says so
 // ("units": { "weight": "kg" }), or when an export layout says so. A column found
 // by its German, French, Spanish, Portuguese, Italian, Japanese, Chinese or Korean
 // name and with no unit in it is read as metric, and the report says so.
@@ -367,7 +367,7 @@ export function adaptRecords(table, def, { override = null, kind = '', arg = '',
   };
 }
 
-/** JSON Schema for lodestar-sources.json. */
+/** JSON Schema for fairhaul-sources.json. */
 const OVERRIDE = {
   type: 'object', additionalProperties: false,
   properties: {
@@ -392,7 +392,7 @@ export const SOURCES_CONFIG_SCHEMA = {
   },
 };
 
-/** Read and check <root>/lodestar-sources.json. Returns null when there is none. */
+/** Read and check <root>/fairhaul-sources.json. Returns null when there is none. */
 export function loadSourceOverrides(root) {
   const f = join(root, SOURCES_FILE);
   if (!existsSync(f)) return null;

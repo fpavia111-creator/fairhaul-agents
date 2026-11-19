@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { QUOTE_LOAD_FIELDS, QUOTE_FIELDS, QUOTE_SETTINGS_SCHEMA, compareQuotes, bookingText } from './quotes.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/quotes';
+const OUT = 'fairhaul-out/quotes';
 const files = {
   loads: { type: 'string', description: 'Loads needing a truck under --root: load id, origin, destination, equipment, pickup date, deliver-by date, miles, accessorials, lane history average' },
   quotes: { type: 'string', description: 'Quotes collected under --root: load id, carrier or broker, amount, all-in or linehaul only, accessorials included, valid until, transit days, notes' },
@@ -41,7 +41,7 @@ Rules: Fairhaul Spot Quotes never books. Fuel and accessorial additions are the 
 3. Only when the person asks, call quotes_draft_booking for one load, then quotes_request_tender after they review it.` }],
   tools: [
     { name: 'quotes_compare', kind: 'read', title: 'Compare spot quotes', description: 'For each load: every quote on an all-in basis with what was added, whether it is usable (not expired, arrives by the deliver-by date), the best usable quote, the spread, the difference from lane history, flags and a status (ready, check_price, requote, no_quotes).', inputSchema: { type: 'object', additionalProperties: false, required: ['loads', 'quotes'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'quotes_write_report', kind: 'report', title: 'Write the quote board', description: 'Write quotes.csv and .html (one row per quote, best first within each load) into out_dir (default lodestar-out/quotes).', inputSchema: { type: 'object', additionalProperties: false, required: ['loads', 'quotes'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/quotes)' } } }, handler: async (a, ctx) => {
+    { name: 'quotes_write_report', kind: 'report', title: 'Write the quote board', description: 'Write quotes.csv and .html (one row per quote, best first within each load) into out_dir (default fairhaul-out/quotes).', inputSchema: { type: 'object', additionalProperties: false, required: ['loads', 'quotes'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/quotes)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const rows = r.items.flatMap((i) => (i.quotes.length ? i.quotes : [{ carrier: '(none)', notes: [] }]).map((q, n) => ({ load_id: i.load_id, lane: i.lane, pickup_date: i.pickup_date, deliver_by: i.deliver_by, status: i.status, rank: q.usable ? n + 1 : '', carrier: q.carrier, quoted: q.quoted, all_in_cost: q.all_in_cost, per_mile: q.per_mile, history_avg: i.history_avg, usable: q.usable, notes: [...(q.notes || []), q.quote_notes].filter(Boolean).join('; '), flags: n === 0 ? i.flags.join(' ') : '' })));
       const w = writeWorklist(ctx, a.out_dir || OUT, 'quotes', { title: `Spot quotes as of ${r.as_of}`, intro: line(r), rows, columns: ['load_id', 'lane', 'pickup_date', 'deliver_by', 'status', 'rank', 'carrier', 'quoted', 'all_in_cost', 'per_mile', 'history_avg', 'usable', 'notes', 'flags'], limits: [LIMITS.files, 'Fuel and accessorial additions are your own allowances from the settings file; confirm the real total with the carrier before booking.'] });

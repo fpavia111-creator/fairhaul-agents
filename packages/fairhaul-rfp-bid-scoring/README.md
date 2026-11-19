@@ -71,7 +71,7 @@ Fairhaul RFP Bid Scoring demo (fictional RFP, six lanes) in <demo folder>
 | Tool | What it does | Policy |
 |---|---|---|
 | `bids_award` | For each lane: bids, best and median rate, awarded carrier(s) with loads and rate, backup, uncovered loads, cost against the incumbent baseline and notes (incumbent kept, share cap reached, possible bid error). | runs |
-| `bids_write_report` | Write bids-award.csv and .html (one row per lane with award, backup and savings; carrier shares; rules used) into out_dir (default lodestar-out/bids). | runs |
+| `bids_write_report` | Write bids-award.csv and .html (one row per lane with award, backup and savings; carrier shares; rules used) into out_dir (default fairhaul-out/bids). | runs |
 | `bids_draft_award` | Write drafts/award-<carrier>.md: the award letter for one carrier listing its lanes, estimated loads and rates, and lanes where it is backup. | asks first (Auto can be opted in) |
 | `bids_request_send` | After one named human click (even in Auto), record that the reviewed award draft is approved in award-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `tms_load_rates` | Fairhaul RFP Bid Scoring never loads rates or routing guides into your TMS. | refused |
@@ -107,7 +107,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-rfp-bid-scoring inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-rfp-bid-scoring inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -162,7 +162,7 @@ fairhaul-rfp-bid-scoring demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

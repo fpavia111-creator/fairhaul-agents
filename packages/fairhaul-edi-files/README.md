@@ -72,7 +72,7 @@ Fairhaul EDI Files demo (fictional X12 between a shipper and two carriers) in <d
 | `edi_inspect` | Detect delimiters and check ISA/IEA, GS/GE and ST/SE pairs, control numbers and counts for each file. | runs |
 | `edi_reconcile` | Match 210 invoices to 204 tenders and 990 acceptances, compare amounts, look for 214 delivery events, and list transactions a 997/999 rejected. | runs |
 | `edi_tender_stats` | Accepted and declined 990 responses per carrier SCAC, lowest acceptance first. | runs |
-| `edi_convert` | Write one CSV per kind (tenders, invoices, invoice lines, status events, responses, acknowledgements) plus edi-reconcile.csv and .html into out_dir (default lodestar-out/edi). | runs |
+| `edi_convert` | Write one CSV per kind (tenders, invoices, invoice lines, status events, responses, acknowledgements) plus edi-reconcile.csv and .html into out_dir (default fairhaul-out/edi). | runs |
 | `edi_transmit` | Fairhaul EDI Files never sends EDI to a trading partner or VAN; your EDI provider does. | refused |
 | `van_upload` | Fairhaul EDI Files never uploads to a VAN, AS2 endpoint or SFTP mailbox. | refused |
 
@@ -127,7 +127,7 @@ fairhaul-edi-files demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

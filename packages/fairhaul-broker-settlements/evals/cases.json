@@ -181,7 +181,7 @@
         "payments": "fixtures/payments.csv",
         "noas": "fixtures/noas.csv",
         "as_of": "2026-11-16",
-        "out_dir": "lodestar-out/evals/settlements_write_report"
+        "out_dir": "fairhaul-out/evals/settlements_write_report"
       },
       "expect": {
         "status": "executed",
@@ -267,7 +267,7 @@
         "payments": "fixtures/payments.csv",
         "noas": "fixtures/noas.csv",
         "as_of": "2026-11-16",
-        "out_dir": "lodestar-out/evals/settlements_write_report"
+        "out_dir": "fairhaul-out/evals/settlements_write_report"
       },
       "mode": "review",
       "expect": {

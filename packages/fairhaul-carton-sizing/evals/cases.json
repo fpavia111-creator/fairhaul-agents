@@ -129,7 +129,7 @@
       "args": {
         "packages": "fixtures/packages.csv",
         "cartons": "fixtures/cartons.json",
-        "out_dir": "lodestar-out/evals/cartons_write_report"
+        "out_dir": "fairhaul-out/evals/cartons_write_report"
       },
       "expect": {
         "status": "executed",
@@ -147,7 +147,7 @@
       "args": {
         "packages": "fixtures/packages.csv",
         "cartons": "fixtures/cartons.json",
-        "out_dir": "lodestar-out/evals/cartons_draft_carton_change"
+        "out_dir": "fairhaul-out/evals/cartons_draft_carton_change"
       },
       "expect": {
         "status": "needs_approval",
@@ -160,7 +160,7 @@
       "args": {
         "packages": "fixtures/packages.csv",
         "cartons": "fixtures/cartons.json",
-        "out_dir": "lodestar-out/evals/cartons_draft_carton_change"
+        "out_dir": "fairhaul-out/evals/cartons_draft_carton_change"
       },
       "approve": "Pat Example",
       "expect": {
@@ -235,7 +235,7 @@
       "args": {
         "packages": "fixtures/packages.csv",
         "cartons": "fixtures/cartons.json",
-        "out_dir": "lodestar-out/evals/cartons_draft_carton_change"
+        "out_dir": "fairhaul-out/evals/cartons_draft_carton_change"
       },
       "mode": "review",
       "expect": {

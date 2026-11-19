@@ -4,7 +4,7 @@ import { PAYMENT_FIELDS, PAYMENT_PROFILES, findDuplicates, recoveryText } from '
 import { MEMORY, MEMORY_KINDS, vendorGroups } from './memory.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/duplicates';
+const OUT = 'fairhaul-out/duplicates';
 const files = {
   payments: { type: 'string', description: 'AP payment history under --root (CSV, Excel or JSON), any number of years: vendor, vendor id, invoice number and date, amount, paid date, payment ref, PRO; credit memos as negative amounts' },
   date_window_days: { type: 'integer', minimum: 0, maximum: 30, description: 'Same carrier and amount with invoice dates this close counts as a low-confidence look-alike (default 3)' },
@@ -44,7 +44,7 @@ Rules: Fairhaul Duplicate Payments never moves money or changes vendor records. 
 3. Only when the person asks, call duplicates_draft_recovery for one vendor, then duplicates_request_send after they review it.` }],
   tools: [
     { name: 'duplicates_search', kind: 'read', title: 'Find invoices paid twice', description: 'Groups of payments that look like one invoice paid more than once, each with a rule (exact_duplicate, invoice_number_variant, two_vendor_records, same_pro, same_amount_and_date), a confidence, the amount paid twice, credits already received and the amount left to recover.', inputSchema: { type: 'object', additionalProperties: false, required: ['payments'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'duplicates_write_report', kind: 'report', title: 'Write the duplicate payment report', description: 'Write duplicates.csv and .html (one row per group, by confidence, totals by vendor) into out_dir (default lodestar-out/duplicates).', inputSchema: { type: 'object', additionalProperties: false, required: ['payments'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/duplicates)' } } }, handler: async (a, ctx) => {
+    { name: 'duplicates_write_report', kind: 'report', title: 'Write the duplicate payment report', description: 'Write duplicates.csv and .html (one row per group, by confidence, totals by vendor) into out_dir (default fairhaul-out/duplicates).', inputSchema: { type: 'object', additionalProperties: false, required: ['payments'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/duplicates)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const rows = r.items.map((g) => ({ ...g, vendors: g.vendors.join(' / '), invoice_numbers: g.invoice_numbers.join(' / '), amounts: g.amounts.join(' / '), paid_dates: g.paid_dates.join(' / '), payment_refs: g.payment_refs.join(' / '), rows: g.rows.join(' ') }));
       const w = writeWorklist(ctx, a.out_dir || OUT, 'duplicates', { title: 'Freight invoices paid twice', intro: line(r), rows, columns: ['confidence', 'rule', 'vendors', 'invoice_numbers', 'pro', 'amounts', 'paid_dates', 'payment_refs', 'overpaid', 'credited', 'to_recover', 'age_days', 'status', 'why', 'rows'], sections: [{ title: 'By vendor', rows: r.vendors, columns: ['vendor', 'groups', 'to_recover', 'high'] }], limits: [LIMITS.files, 'Medium and low confidence groups can be two real loads; pull both bills before asking for money back.', 'How far back you can recover depends on your agreements and the law that applies; Fairhaul Duplicate Payments does not decide that.'] });

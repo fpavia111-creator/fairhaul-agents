@@ -28,7 +28,7 @@ Ogni agente ha una `demo` su file fittizi, un `eval` con i propri casi di prova 
 - **Elenco consentito per agente.** Ogni agente può chiamare solo i propri strumenti.
 - **Strumenti rifiutati.** Pagare, inviare e-mail, modificare il TMS, registrare in contabilità generale o presentare in dogana sono nominati e bloccati.
 - **Un clic nominativo.** Pagamenti, invii, modifiche in produzione e approvazioni di registrazioni attendono una persona indicata per nome, anche in modalità Auto, legati allo sha256 della bozza rivista.
-- **Registro di audit** in `.lodestar/`, concatenato tramite hash, firmato se configurate una chiave Ed25519.
+- **Registro di audit** in `.fairhaul/`, concatenato tramite hash, firmato se configurate una chiave Ed25519.
 - **Arresto di emergenza:** `<agent> kill` ferma tutti gli strumenti fino a `<agent> unkill`.
 
 ## Come vengono testati

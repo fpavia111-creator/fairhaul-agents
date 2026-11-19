@@ -25,7 +25,7 @@ write('package.json', JSON.stringify({
   repository: { type: 'git', url: 'git+https://github.com/fpavia111-creator/fairhaul-agents.git', directory: `packages/${name}` },
   homepage: `https://github.com/fpavia111-creator/fairhaul-agents/tree/main/packages/${name}#readme`,
   bugs: { url: 'https://github.com/fpavia111-creator/fairhaul-agents/issues' },
-  keywords: ['mcp', 'mcp-server', 'freight', 'logistics', 'freight-audit', 'lodestar', ...kw.split(',').filter(Boolean)],
+  keywords: ['mcp', 'mcp-server', 'freight', 'logistics', 'freight-audit', 'fairhaul', ...kw.split(',').filter(Boolean)],
 }, null, 2) + '\n');
 write(`bin/${name}.js`, `#!/usr/bin/env node\nimport { fileURLToPath } from 'node:url';\nimport { main } from 'fairhaul-core';\nimport { manifest } from '../src/manifest.js';\nimport { demo } from '../src/demo.js';\n\nmain(manifest, { bin: '${name}', demo, evalFile: fileURLToPath(new URL('../evals/cases.json', import.meta.url)) });\n`);
 write('src/index.js', `export { manifest } from './manifest.js';\nexport * from './${process.argv[5] || 'logic'}.js';\n`, { keep: true });

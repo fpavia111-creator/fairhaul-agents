@@ -4,7 +4,7 @@
 //
 // Empty list = no licence can verify, so every tool marked `tier: 'pro'` stays
 // locked. To switch licensing on:
-//   1. npx -p fairhaul-core lodestar-license keygen --out <a folder outside any repo>
+//   1. npx -p fairhaul-core fairhaul-license keygen --out <a folder outside any repo>
 //   2. paste the printed public key block into LICENSE_PUBLIC_KEYS below
 //   3. publish a release that carries it
 // Keep an old key in the list for as long as licences signed with it should work.

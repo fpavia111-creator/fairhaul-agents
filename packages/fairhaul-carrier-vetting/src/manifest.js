@@ -4,7 +4,7 @@ import { CARRIER_FIELDS, LOAD_FIELDS, vetCarriers, verificationText } from './ca
 import { MEMORY, MEMORY_KINDS, watchList } from './memory.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/vetting';
+const OUT = 'fairhaul-out/vetting';
 const files = {
   carriers: { type: 'string', description: 'Carrier master under --root (TMS or AP vendor export): id, name, MC, DOT, phone, email, address, remit-to, bank last 4, date payment details changed, authority date, insurance expiry, safety rating, status' },
   loads: { type: 'string', description: 'Optional booked loads: load id, carrier id, pickup date, cargo value, and the dispatch phone and email used for this load' },
@@ -44,7 +44,7 @@ Rules: Fairhaul Carrier Vetting never blocks a carrier, changes payment details 
 3. Only when the person asks, call vetting_draft_verification_request for one carrier, then vetting_request_send after they review it.` }],
   tools: [
     { name: 'vetting_vet', kind: 'read', title: 'Check carriers for warning signs', description: 'Score each carrier on weighted warning signs with the detail behind each, and list booked loads with the action to take before pickup (hold, verify or none).', inputSchema: { type: 'object', additionalProperties: false, required: ['carriers'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'vetting_write_report', kind: 'report', title: 'Write the carrier vetting report', description: 'Write vetting-carriers.csv and .html (one row per carrier with its signals; loads to hold and verify) into out_dir (default lodestar-out/vetting).', inputSchema: { type: 'object', additionalProperties: false, required: ['carriers'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/vetting)' } } }, handler: async (a, ctx) => {
+    { name: 'vetting_write_report', kind: 'report', title: 'Write the carrier vetting report', description: 'Write vetting-carriers.csv and .html (one row per carrier with its signals; loads to hold and verify) into out_dir (default fairhaul-out/vetting).', inputSchema: { type: 'object', additionalProperties: false, required: ['carriers'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/vetting)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const w = writeWorklist(ctx, a.out_dir || OUT, 'vetting-carriers', { title: 'Carrier warning signs', intro: line(r), rows: r.rows.map(({ signal_list, ...x }) => ({ ...x, details: x.details.join(' ') })), columns: ['carrier_id', 'name', 'mc', 'status', 'score', 'level', 'signals', 'details'], sections: [{ title: 'Booked loads', rows: r.load_rows, columns: ['load_id', 'carrier_id', 'carrier', 'pickup_date', 'level', 'action', 'reasons'] }], limits: [LIMITS.files, 'These are warning signs, not findings of fraud; each has innocent explanations. Fairhaul Carrier Vetting reads only your files and does not look anything up with government registries or insurers. Verify by calling a number you already had.'] });
       return { summary: `Carrier report written. ${line(r)}`, files: w.files, output_sha256: w.output_sha256 };

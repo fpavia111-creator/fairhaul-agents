@@ -28,7 +28,7 @@ test('convert writes one CSV per kind and the reconciliation', async () => {
   const root = mkdtempSync(join(tmpdir(), 'edi-')); cpSync(fixtures, root, { recursive: true });
   const r = await new AgentRuntime(manifest, { root, audit: false }).call('edi_convert', { files: ['tenders-204.edi', 'invoices-210.edi', 'responses-990.edi', 'ack-997.edi', 'status-214.edi'] });
   assert.equal(r.status, 'executed', r.reason);
-  for (const f of ['edi-tenders.csv', 'edi-invoices.csv', 'edi-invoice-lines.csv', 'edi-status-events.csv', 'edi-responses.csv', 'edi-acknowledgements.csv', 'edi-reconcile.html']) assert.ok(existsSync(join(root, 'lodestar-out/edi', f)), f);
+  for (const f of ['edi-tenders.csv', 'edi-invoices.csv', 'edi-invoice-lines.csv', 'edi-status-events.csv', 'edi-responses.csv', 'edi-acknowledgements.csv', 'edi-reconcile.html']) assert.ok(existsSync(join(root, 'fairhaul-out/edi', f)), f);
 });
 
 test('paths outside --root are refused', async () => {

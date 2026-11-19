@@ -126,7 +126,7 @@
       "args": {
         "shipments": "fixtures/shipments.csv",
         "tl_rate_per_mile": 2.5,
-        "out_dir": "lodestar-out/evals/lanes_write_report"
+        "out_dir": "fairhaul-out/evals/lanes_write_report"
       },
       "expect": {
         "status": "executed",
@@ -145,7 +145,7 @@
       "args": {
         "shipments": "fixtures/shipments.csv",
         "tl_rate_per_mile": 2.5,
-        "out_dir": "lodestar-out/evals/lanes_draft_consolidation_plan"
+        "out_dir": "fairhaul-out/evals/lanes_draft_consolidation_plan"
       },
       "expect": {
         "status": "needs_approval",
@@ -158,7 +158,7 @@
       "args": {
         "shipments": "fixtures/shipments.csv",
         "tl_rate_per_mile": 2.5,
-        "out_dir": "lodestar-out/evals/lanes_draft_consolidation_plan"
+        "out_dir": "fairhaul-out/evals/lanes_draft_consolidation_plan"
       },
       "approve": "Pat Example",
       "expect": {
@@ -231,7 +231,7 @@
       "args": {
         "shipments": "fixtures/shipments.csv",
         "tl_rate_per_mile": 2.5,
-        "out_dir": "lodestar-out/evals/lanes_draft_consolidation_plan"
+        "out_dir": "fairhaul-out/evals/lanes_draft_consolidation_plan"
       },
       "mode": "review",
       "expect": {

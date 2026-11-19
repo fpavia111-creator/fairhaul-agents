@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { AIR_FIELDS, AIR_RATES_SCHEMA, auditAir, disputeText, chargeableKg, breakRate } from './air.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/air';
+const OUT = 'fairhaul-out/air';
 const files = {
   invoices: { type: 'string', description: 'Air freight invoice lines under --root: invoice, forwarder, AWB, origin and destination airport, flight date, pieces, actual kg, volume m³, billed chargeable kg, charge, amount, currency' },
   rates: { type: 'string', description: 'Rate sheet JSON: per forwarder, lanes with weight-break rates per kg and a minimum, surcharges per kg or flat, volumetric factor' },
@@ -47,7 +47,7 @@ Rules: Fairhaul Air Freight Audit never pays and never sends. It compares agains
       const sur = Object.entries(fw.surcharges || {}).map(([code, s]) => ({ code, amount: s.per_kg !== undefined ? Math.round(Math.max(s.per_kg * (s.on === 'actual' ? a.actual_kg : w.chargeable_kg), s.minimum || 0) * 100) / 100 : s.flat ?? null }));
       return { summary: `${w.chargeable_kg} kg chargeable (actual ${a.actual_kg}, volumetric ${w.volumetric_kg}): air freight ${b.cost} at the ${b.key} break, plus surcharges ${sur.map((s) => `${s.code} ${s.amount}`).join(', ')}.`, ...w, air_freight: b, surcharges: sur, total: Math.round((b.cost + sur.reduce((x, s) => x + (s.amount || 0), 0)) * 100) / 100 };
     } },
-    { name: 'air_write_report', kind: 'report', title: 'Write the air audit', description: 'Write air.csv and .html (one row per finding; clean waybills listed) into out_dir (default lodestar-out/air).', inputSchema: { type: 'object', additionalProperties: false, required: ['invoices', 'rates'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/air)' } } }, handler: async (a, ctx) => {
+    { name: 'air_write_report', kind: 'report', title: 'Write the air audit', description: 'Write air.csv and .html (one row per finding; clean waybills listed) into out_dir (default fairhaul-out/air).', inputSchema: { type: 'object', additionalProperties: false, required: ['invoices', 'rates'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/air)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const rows = r.items.flatMap((i) => (i.findings.length ? i.findings : [{ code: 'clean', detail: 'Matches the rate sheet.', amount: 0 }]).map((f) => ({ invoice_number: i.invoice_number, forwarder: i.forwarder, awb: i.awb, lane: i.lane, flight_date: i.flight_date, actual_kg: i.actual_kg, volumetric_kg: i.volumetric_kg, chargeable_kg: i.chargeable_kg, billed_kg: i.billed_kg, billed: i.billed, finding: f.code, detail: f.detail, disputable: f.amount })));
       const w = writeWorklist(ctx, a.out_dir || OUT, 'air', { title: 'Air freight audit', intro: line(r), rows, columns: ['invoice_number', 'forwarder', 'awb', 'lane', 'flight_date', 'actual_kg', 'volumetric_kg', 'chargeable_kg', 'billed_kg', 'billed', 'finding', 'detail', 'disputable'], limits: [LIMITS.files, 'Volumetric weight uses your factor (default 6000 cm³ per kg). Compared against your rate sheet, not an airline tariff.', LIMITS.advice] });

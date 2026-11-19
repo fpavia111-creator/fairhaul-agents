@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { RATECON_FIELDS, CARRIER_INVOICE_FIELDS, PAYMENT_FIELDS, NOA_FIELDS, settle, batchText } from './settlements.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/settlements';
+const OUT = 'fairhaul-out/settlements';
 const files = {
   ratecons: { type: 'string', description: 'Rate confirmations under --root (TMS export): load, carrier, agreed rate, approved accessorials, delivery date, POD received, pay terms in days, quick pay' },
   invoices: { type: 'string', description: 'Optional carrier invoices received: load, carrier, invoice number, amount, date received' },
@@ -44,7 +44,7 @@ Rules: Fairhaul Broker Settlements never pays anyone or changes the TMS. Pay to 
 3. Only when the person asks, call settlements_draft_payment_batch, then settlements_request_release after they review it.` }],
   tools: [
     { name: 'settlements_settle', kind: 'read', title: 'Settle carrier pay', description: 'Per load: agreed amount, quick pay, owed, billed, due date, paid, party to pay and status (awaiting invoice, held for POD, ready, past due, paid); every point found with its amount; and the next payment batch by payee.', inputSchema: { type: 'object', additionalProperties: false, required: ['ratecons'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'settlements_write_report', kind: 'report', title: 'Write the settlement report', description: 'Write settlements.csv and .html (one row per load; points found; next batch by payee) into out_dir (default lodestar-out/settlements).', inputSchema: { type: 'object', additionalProperties: false, required: ['ratecons'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/settlements)' } } }, handler: async (a, ctx) => {
+    { name: 'settlements_write_report', kind: 'report', title: 'Write the settlement report', description: 'Write settlements.csv and .html (one row per load; points found; next batch by payee) into out_dir (default fairhaul-out/settlements).', inputSchema: { type: 'object', additionalProperties: false, required: ['ratecons'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/settlements)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const w = writeWorklist(ctx, a.out_dir || OUT, 'settlements', { title: 'Carrier settlements', intro: line(r), rows: r.rows, columns: ['load_id', 'carrier', 'pay_to', 'agreed', 'quick_pay', 'owed', 'billed', 'invoice_received', 'due', 'paid', 'status', 'to_pay'], sections: [{ title: 'Points found', rows: r.items, columns: ['load_id', 'code', 'detail', 'amount'] }, { title: 'Next batch by payee', rows: r.batch_by_payee, columns: ['pay_to', 'loads', 'amount', 'load_ids'] }], limits: [LIMITS.files, 'Notices of assignment are applied by carrier name and date. Confirm a notice and any release with the factor before changing who you pay.', LIMITS.advice] });
       return { summary: `Settlement report written. ${line(r)}`, files: w.files, output_sha256: w.output_sha256 };

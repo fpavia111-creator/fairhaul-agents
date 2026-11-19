@@ -28,7 +28,7 @@ Chaque agent a une `demo` sur fichiers fictifs, un `eval` sur ses propres cas de
 - **Liste autorisée par agent.** Chaque agent ne peut appeler que ses propres outils.
 - **Outils refusés.** Payer, envoyer des e-mails, modifier le TMS, comptabiliser au grand livre ou déposer en douane sont nommés et bloqués.
 - **Un clic nominatif.** Paiements, envois, changements en production et validations d'écritures attendent une personne nommée, même en mode Auto, liés au sha256 du brouillon relu.
-- **Journal d'audit** sous `.lodestar/`, chaîné par hachage, signé si vous configurez une clé Ed25519.
+- **Journal d'audit** sous `.fairhaul/`, chaîné par hachage, signé si vous configurez une clé Ed25519.
 - **Arrêt d'urgence :** `<agent> kill` arrête tous les outils jusqu'à `<agent> unkill`.
 
 ## Comment ils sont testés

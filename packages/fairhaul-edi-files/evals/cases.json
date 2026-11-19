@@ -151,7 +151,7 @@
           "fixtures/invoices-210.edi",
           "fixtures/ack-997.edi"
         ],
-        "out_dir": "lodestar-out/evals/edi_convert"
+        "out_dir": "fairhaul-out/evals/edi_convert"
       },
       "expect": {
         "status": "executed",

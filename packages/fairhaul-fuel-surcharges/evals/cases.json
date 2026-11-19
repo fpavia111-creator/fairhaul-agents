@@ -165,7 +165,7 @@
       "args": {
         "invoices": "fixtures/invoices.csv",
         "contract": "fixtures/contract.json",
-        "out_dir": "lodestar-out/evals/fuel_write_report"
+        "out_dir": "fairhaul-out/evals/fuel_write_report"
       },
       "expect": {
         "status": "executed",
@@ -238,7 +238,7 @@
       "args": {
         "invoices": "fixtures/invoices.csv",
         "contract": "fixtures/contract.json",
-        "out_dir": "lodestar-out/evals/fuel_write_report"
+        "out_dir": "fairhaul-out/evals/fuel_write_report"
       },
       "mode": "review",
       "expect": {

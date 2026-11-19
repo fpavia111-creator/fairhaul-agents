@@ -5,7 +5,7 @@ import { auditInvoices, disputeText } from './audit.js';
 import { MEMORY, MEMORY_KINDS, withLearned } from './memory.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/bills';
+const OUT = 'fairhaul-out/bills';
 const files = {
   invoices: { type: 'string', description: 'Carrier invoices under --root: CSV, Excel, JSON or an X12 210 file (.edi/.x12). One row per invoice or per charge line.' },
   contract: { type: 'string', description: 'Freight contract JSON (lanes, fuel table, accessorials, fuel_index); validated against the freight_contract schema' },
@@ -89,7 +89,7 @@ Rules: Fairhaul Freight Bill Audit never pays and never sends. ap_pay_invoice, e
         return { summary: `${i.invoice_number} (${i.carrier}): ${i.status}, billed ${i.total}, disputable ${i.disputable}. ${i.findings.map((f) => f.detail).join(' ')}`.trim(), invoice: i };
       } },
     { name: 'bills_write_report', kind: 'report', title: 'Write the audit worklist',
-      description: 'Write bills-audit.csv (one row per invoice with blank decision columns) and bills-audit.html (totals by carrier and finding) into out_dir (default lodestar-out/bills).',
+      description: 'Write bills-audit.csv (one row per invoice with blank decision columns) and bills-audit.html (totals by carrier and finding) into out_dir (default fairhaul-out/bills).',
       inputSchema: { type: 'object', additionalProperties: false, required: ['invoices', 'contract'], properties: { ...files, out_dir: { type: 'string' } } },
       handler: async (a, ctx) => {
         const { r } = run(a, ctx);

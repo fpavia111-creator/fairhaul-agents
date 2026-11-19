@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { LOAD_FIELDS, POD_FIELDS, matchPods, requestText } from './pods.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/pod';
+const OUT = 'fairhaul-out/pod';
 const files = {
   loads: { type: 'string', description: 'Delivered or invoiced loads under --root (TMS or AP export): shipment id, PRO, carrier, delivery date, pieces, invoice number, amount and billed delivery date, whether the customer requires a POD' },
   pods: { type: 'string', description: 'POD log under --root (document system or carrier portal export): PRO or shipment id, date received, delivery date on the POD, signed by, pieces delivered, exceptions noted, file name' },
@@ -41,7 +41,7 @@ Rules: Fairhaul Proof of Delivery never holds, releases or pays invoices and nev
 3. Only when the person asks, call pod_draft_pod_request for one carrier, then pod_request_send after they review it.` }],
   tools: [
     { name: 'pod_match', kind: 'read', title: 'Match loads to PODs', description: 'For each load: the POD found (by PRO or shipment id), issues (missing_pod, unsigned, date_mismatch, short, exception_noted), a status (ok, chase, waiting, claim_review, fix) and whether to hold the invoice for review. POD rate, clean rate and days to POD by carrier.', inputSchema: { type: 'object', additionalProperties: false, required: ['loads', 'pods'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'pod_write_report', kind: 'report', title: 'Write the POD worklist', description: 'Write pods.csv and .html (one row per load with issues, the invoices to hold, and POD performance by carrier) into out_dir (default lodestar-out/pod).', inputSchema: { type: 'object', additionalProperties: false, required: ['loads', 'pods'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/pod)' } } }, handler: async (a, ctx) => {
+    { name: 'pod_write_report', kind: 'report', title: 'Write the POD worklist', description: 'Write pods.csv and .html (one row per load with issues, the invoices to hold, and POD performance by carrier) into out_dir (default fairhaul-out/pod).', inputSchema: { type: 'object', additionalProperties: false, required: ['loads', 'pods'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/pod)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx); const order = { chase: 0, claim_review: 1, fix: 2, waiting: 3, ok: 4 };
       const rows = [...r.items].sort((x, y) => order[x.status] - order[y.status] || (y.age_days ?? 0) - (x.age_days ?? 0)).map((i) => ({ ...i, issues: i.issues.map((x) => x.detail).join(' ') }));
       const w = writeWorklist(ctx, a.out_dir || OUT, 'pods', { title: `Proof of delivery as of ${r.as_of}`, intro: line(r), rows, columns: ['shipment_id', 'pro', 'carrier', 'delivered', 'age_days', 'invoice_number', 'invoice_amount', 'pod_document', 'status', 'hold_invoice', 'issues'], sections: [{ title: 'By carrier', rows: r.carriers, columns: ['carrier', 'loads', 'with_pod', 'pod_pct', 'clean_pct', 'avg_days_to_pod', 'missing'] }], limits: [LIMITS.files, 'Fairhaul Proof of Delivery reads the POD log, not the images; a person should look at any POD before an invoice is released or disputed.'] });

@@ -10,7 +10,7 @@
 // are cycled; each copy gets its own ids, emails, references, party names and tax ids, amounts get
 // a small seeded change, dates are spread over four weeks), then the tool runs once in its own process with the
 // policy, validation and adapters on. Wall time includes reading and parsing the
-// files. Results: lodestar-out/bench/bench.md and bench.json. No network; the data
+// files. Results: fairhaul-out/bench/bench.md and bench.json. No network; the data
 // stays fictional (the source rows are the agents' own fictional fixtures).
 
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, cpSync, mkdtempSync, rmSync, existsSync, statSync } from 'node:fs';
@@ -86,7 +86,7 @@ for (const n of agents) {
     seen.add(t.name);
     for (const size of SIZES) {
       const parent = mkdtempSync(join(tmpdir(), `bench-${n}-`)); const root = join(parent, 'root');
-      cpSync(base, root, { recursive: true, filter: (s) => !/node_modules|\.lodestar|lodestar-out|\/\.git(\/|$)/.test(s) });
+      cpSync(base, root, { recursive: true, filter: (s) => !/node_modules|\.fairhaul|fairhaul-out|\/\.git(\/|$)/.test(s) });
       let rowsIn = 0; let seed = 7;
       for (const [, rel] of tables) {
         const f = join(root, rel); const rows = parseCsv(readFileSync(f, 'utf8'));
@@ -94,7 +94,7 @@ for (const n of agents) {
         const grown = grow(rows, size, seed++); rowsIn += grown.length;
         writeFileSync(f, toCsv(grown, Object.keys(rows[0]), { raw: true }));
       }
-      const args = { ...c.args }; if ('out_dir' in (t.inputSchema?.properties || {})) args.out_dir = 'lodestar-out/bench';
+      const args = { ...c.args }; if ('out_dir' in (t.inputSchema?.properties || {})) args.out_dir = 'fairhaul-out/bench';
       const p = spawnSync(process.execPath, [join(ROOT, 'scripts', 'bench', 'one.mjs'), pkgDir, root, t.name, JSON.stringify(args)], { encoding: 'utf8', timeout: TIMEOUT, maxBuffer: 16 * 1024 * 1024 });
       let r; try { r = JSON.parse(p.stdout.trim().split('\n').pop()); } catch { r = { status: p.error && p.error.code === 'ETIMEDOUT' ? 'timeout' : 'crash', reason: (p.stderr || '').split('\n').find(Boolean)?.slice(0, 200) }; }
       results.push({ agent: n, tool: t.name, size, files: tables.length, rows_in: rowsIn, ...r });
@@ -115,7 +115,7 @@ const summary = Object.entries(rowsOf).map(([k, v]) => {
   const flag = !b ? 'not run' : b.status === 'timeout' ? `timeout (> ${TIMEOUT / 1000}s)` : b.status === 'error' && /\bfirst\b/i.test(b.reason || '') ? 'skipped (needs an earlier step)' : b.status !== 'executed' ? b.status : ratio !== null && ratio > (hi / lo) * 3 && b.ms > 1000 ? 'grows much faster than the input' : b.ms > 10000 ? 'slow' : 'ok';
   return { agent, tool, [`ms_${lo}`]: a?.ms ?? null, [`ms_${hi}`]: b?.ms ?? null, [`rss_mb_${hi}`]: b?.rss_mb ?? null, ratio: ratio === null ? null : Math.round(ratio * 10) / 10, flag, ...(b && b.reason ? { reason: b.reason } : {}) };
 });
-const out = join(ROOT, 'lodestar-out', 'bench'); mkdirSync(out, { recursive: true });
+const out = join(ROOT, 'fairhaul-out', 'bench'); mkdirSync(out, { recursive: true });
 const env = { node: process.version, platform: process.platform, cpus: cpus().length, cpu: cpus()[0]?.model, mem_gb: Math.round(totalmem() / 1073741824) };
 writeFileSync(join(out, 'bench.json'), JSON.stringify({ created: new Date().toISOString(), env, sizes: SIZES, summary, runs: results }, null, 2) + '\n');
 const md = [`# Scale test`, '', `${new Date().toISOString()} · Node ${env.node} · ${env.platform} · ${env.cpus} CPU (${env.cpu}) · ${env.mem_gb} GB`, '',

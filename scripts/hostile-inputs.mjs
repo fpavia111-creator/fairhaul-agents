@@ -39,8 +39,8 @@ const IDCOL = /(^|_)id$|^sku$|number$|^ref/i;
 const CRASH = /Cannot read prop|is not a function|undefined is not|is not iterable|of undefined|of null|is not defined|Maximum call stack|Invalid array length|E(NOENT|ISDIR|ACCES|NOTDIR):|\n\s+at /;
 const walk = (d) => (existsSync(d) ? readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)])) : []);
 const load = async (n) => ({ manifest: (await import(pathToFileURL(join(PK, n, 'src', 'manifest.js')).href)).manifest, cases: (() => { const c = JSON.parse(readFileSync(join(PK, n, 'evals', 'cases.json'), 'utf8')); return c.cases || c; })() });
-const sandbox = (n) => { const parent = mkdtempSync(join(tmpdir(), 'lodestar-hostile-')); const root = join(parent, 'root'); cpSync(join(PK, n, 'fixtures'), join(root, 'fixtures'), { recursive: true }); return { parent, root }; };
-const runtime = (manifest, root) => new AgentRuntime(manifest, { root, stateDir: join(root, '.lodestar'), mode: 'assist', caps: { maxSteps: 100000, maxSpendUsd: 1e9 } });
+const sandbox = (n) => { const parent = mkdtempSync(join(tmpdir(), 'fairhaul-hostile-')); const root = join(parent, 'root'); cpSync(join(PK, n, 'fixtures'), join(root, 'fixtures'), { recursive: true }); return { parent, root }; };
+const runtime = (manifest, root) => new AgentRuntime(manifest, { root, stateDir: join(root, '.fairhaul'), mode: 'assist', caps: { maxSteps: 100000, maxSpendUsd: 1e9 } });
 const call = async (manifest, root, tool, args) => { const rt = runtime(manifest, root); let out = await rt.call(tool, args); if (out.status === 'needs_approval') { rt.approvals.approve(out.approval_id, 'Hostile Input Check'); out = await rt.call(tool, args); } return out; };
 
 const findings = []; const info = { calls: 0, poisoned: 0, injectWarnings: 0, changed: 0 };
@@ -92,7 +92,7 @@ async function dataPass(n) {
       if (variant === 'clean' && (out.warnings || []).some((w) => /reads like instructions/.test(w)) && n !== 'nemesis-of-servers') add({ n, kind: 'FALSE_INJECTION_WARNING', where: c.id });
     }
     for (const f of walk(root)) {
-      const rel = relative(root, f).split('\\').join('/'); if (rel.startsWith('fixtures/') || rel.startsWith('.lodestar/')) continue;
+      const rel = relative(root, f).split('\\').join('/'); if (rel.startsWith('fixtures/') || rel.startsWith('.fairhaul/')) continue;
       if (statSync(f).size > 5e6) continue; const text = readFileSync(f, 'utf8');
       if (variant === 'formula' && f.endsWith('.csv')) { let rows = []; try { rows = parseCsv(text); } catch { /* not a table */ }
         for (const r of rows) { const bad = Object.entries(r).find(([, v]) => neutraliseFormula(v) !== v); if (bad) { add({ n, kind: 'CSV_FORMULA', where: rel, detail: `${bad[0]}: ${bad[1].slice(0, 50)}` }); break; } } }

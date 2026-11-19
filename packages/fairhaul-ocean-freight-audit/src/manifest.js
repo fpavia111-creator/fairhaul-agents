@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { OCEAN_LINE_FIELDS, OCEAN_CONTRACT_SCHEMA, auditOcean, disputeText } from './ocean.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/ocean';
+const OUT = 'fairhaul-out/ocean';
 const files = {
   invoices: { type: 'string', description: 'Ocean freight invoice lines under --root (line or forwarder export): invoice, carrier, B/L, POL, POD, sailing date, equipment, container count, charge, quantity, amount, currency' },
   contract: { type: 'string', description: 'Ocean contract JSON: per carrier, lanes with rates per container type, allowed surcharges with amounts and validity dates, included charges' },
@@ -39,7 +39,7 @@ Rules: Fairhaul Ocean Freight Audit never pays and never sends. It compares agai
 3. Only when the person asks, call ocean_draft_dispute for one line or forwarder, then ocean_request_send after they review it.` }],
   tools: [
     { name: 'ocean_audit', kind: 'read', title: 'Audit ocean invoices', description: 'For each bill of lading: billed total, findings (rate_over, surcharge_over, surcharge_not_in_contract, surcharge_included, surcharge_out_of_window, surcharge_unpriced, duplicate_charge, container_count, no_lane, no_rate_for_equipment, currency_mismatch, no_contract, contract_expired) and the disputable amount.', inputSchema: { type: 'object', additionalProperties: false, required: ['invoices', 'contract'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'ocean_write_report', kind: 'report', title: 'Write the ocean audit', description: 'Write ocean.csv and .html (one row per finding, bills with no findings listed as clean) into out_dir (default lodestar-out/ocean).', inputSchema: { type: 'object', additionalProperties: false, required: ['invoices', 'contract'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/ocean)' } } }, handler: async (a, ctx) => {
+    { name: 'ocean_write_report', kind: 'report', title: 'Write the ocean audit', description: 'Write ocean.csv and .html (one row per finding, bills with no findings listed as clean) into out_dir (default fairhaul-out/ocean).', inputSchema: { type: 'object', additionalProperties: false, required: ['invoices', 'contract'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/ocean)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const rows = r.items.flatMap((i) => (i.findings.length ? i.findings : [{ code: 'clean', detail: 'Matches the contract.', amount: 0 }]).map((f) => ({ invoice_number: i.invoice_number, carrier: i.carrier, bl: i.bl, lane: `${i.pol} → ${i.pod}`, sailing_date: i.sailing_date, equipment: `${i.containers ?? '?'} x ${i.equipment}`, billed: i.billed, finding: f.code, detail: f.detail, disputable: f.amount })));
       const w = writeWorklist(ctx, a.out_dir || OUT, 'ocean', { title: 'Ocean freight audit', intro: line(r), rows, columns: ['invoice_number', 'carrier', 'bl', 'lane', 'sailing_date', 'equipment', 'billed', 'finding', 'detail', 'disputable'], limits: [LIMITS.files, 'Compared against your contract file, not the line\'s published tariff. Charges in another currency are flagged, not converted.', LIMITS.advice] });

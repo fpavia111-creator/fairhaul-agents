@@ -193,7 +193,7 @@
         "claims": "fixtures/claims-log.csv",
         "terms": "fixtures/terms.json",
         "as_of": "2026-11-16",
-        "out_dir": "lodestar-out/evals/claims_write_report"
+        "out_dir": "fairhaul-out/evals/claims_write_report"
       },
       "expect": {
         "status": "executed",
@@ -275,7 +275,7 @@
         "claims": "fixtures/claims-log.csv",
         "terms": "fixtures/terms.json",
         "as_of": "2026-11-16",
-        "out_dir": "lodestar-out/evals/claims_write_report"
+        "out_dir": "fairhaul-out/evals/claims_write_report"
       },
       "mode": "review",
       "expect": {

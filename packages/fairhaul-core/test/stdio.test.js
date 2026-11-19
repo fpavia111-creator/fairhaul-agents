@@ -11,7 +11,7 @@ test('serveStdio speaks newline-delimited JSON-RPC and survives bad input', asyn
   output.on('data', (d) => got.push(...String(d).split('\n').filter(Boolean).map((l) => JSON.parse(l))));
   input.write('not json\n');
   input.write(JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/list' }) + '\n');
-  input.write(JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'lodestar_info', arguments: {} } }) + '\n');
+  input.write(JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'fairhaul_info', arguments: {} } }) + '\n');
   await new Promise((r) => setTimeout(r, 100));
   rl.close();
   assert.equal(got[0].error.code, -32700);

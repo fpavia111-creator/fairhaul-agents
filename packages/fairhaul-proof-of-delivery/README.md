@@ -71,7 +71,7 @@ Fairhaul Proof of Delivery demo (fictional loads, November 2026) in <demo folder
 | Tool | What it does | Policy |
 |---|---|---|
 | `pod_match` | For each load: the POD found (by PRO or shipment id), issues (missing_pod, unsigned, date_mismatch, short, exception_noted), a status (ok, chase, waiting, claim_review, fix) and whether to hold the invoice for review. | runs |
-| `pod_write_report` | Write pods.csv and .html (one row per load with issues, the invoices to hold, and POD performance by carrier) into out_dir (default lodestar-out/pod). | runs |
+| `pod_write_report` | Write pods.csv and .html (one row per load with issues, the invoices to hold, and POD performance by carrier) into out_dir (default fairhaul-out/pod). | runs |
 | `pod_draft_pod_request` | Write drafts/pod_request-<carrier>.md asking one carrier for each missing or unsigned POD, with shipment, PRO, delivery date and invoice. | asks first (Auto can be opted in) |
 | `pod_request_send` | After one named human click (even in Auto), record that the reviewed pod request draft is approved in pod_request-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `ap_hold_invoice` | Fairhaul Proof of Delivery never holds or releases invoices in your AP system; it lists them for a person. | refused |
@@ -113,7 +113,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-proof-of-delivery inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-proof-of-delivery inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -168,7 +168,7 @@ fairhaul-proof-of-delivery demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

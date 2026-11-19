@@ -67,7 +67,7 @@ Fairhaul Carrier Vetting demo (fictional carriers and loads, as of 2026-11-16) i
 | Tool | What it does | Policy |
 |---|---|---|
 | `vetting_vet` | Score each carrier on weighted warning signs with the detail behind each, and list booked loads with the action to take before pickup (hold, verify or none). | runs |
-| `vetting_write_report` | Write vetting-carriers.csv and .html (one row per carrier with its signals; loads to hold and verify) into out_dir (default lodestar-out/vetting). | runs |
+| `vetting_write_report` | Write vetting-carriers.csv and .html (one row per carrier with its signals; loads to hold and verify) into out_dir (default fairhaul-out/vetting). | runs |
 | `vetting_draft_verification_request` | Write drafts/verification_request-<carrier>.md: a polite request to one carrier for the documents that would clear its warning signs (insurance certificate from the agent, notice of assignment, payment detail confirma… | asks first (Auto can be opted in) |
 | `vetting_request_send` | After one named human click (even in Auto), record that the reviewed verification request draft is approved in verification_request-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `tms_block_carrier` | Fairhaul Carrier Vetting never blocks or deactivates a carrier. | refused |
@@ -117,7 +117,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-carrier-vetting inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-carrier-vetting inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -125,7 +125,7 @@ A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or
 
 ## Memory
 
-fairhaul-carrier-vetting can remember facts about your setup so the next run does not have to be told again. `vetting_learn` only proposes a fact; it changes nothing until a named person accepts it with `vetting_accept_learning`, which is one click even in Auto. Facts live in one hash-chained file per agent under `.lodestar/memory/`; if the chain does not verify, no fact is used. Credentials, personal identifiers and text that reads like instructions to an AI are refused. Run without memory with `--no-memory`.
+fairhaul-carrier-vetting can remember facts about your setup so the next run does not have to be told again. `vetting_learn` only proposes a fact; it changes nothing until a named person accepts it with `vetting_accept_learning`, which is one click even in Auto. Facts live in one hash-chained file per agent under `.fairhaul/memory/`; if the chain does not verify, no fact is used. Credentials, personal identifiers and text that reads like instructions to an AI are refused. Run without memory with `--no-memory`.
 
 | Kind | What an accepted fact changes |
 |---|---|
@@ -187,7 +187,7 @@ fairhaul-carrier-vetting demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

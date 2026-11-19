@@ -72,7 +72,7 @@ Fairhaul Standard Freight Cost demo (fictional items, August to October freight)
 | Tool | What it does | Policy |
 |---|---|---|
 | `costing_compare` | Per SKU: units, actual freight, standard, actual per unit, variance in money and percent, month-by-month per unit and trend, status, proposed standard with basis, and inventory revaluation estimate. | runs |
-| `costing_write_report` | Write costing-standards.csv and .html (one row per SKU) into out_dir (default lodestar-out/costing). | runs |
+| `costing_write_report` | Write costing-standards.csv and .html (one row per SKU) into out_dir (default fairhaul-out/costing). | runs |
 | `costing_draft_standard_update` | Write drafts/standard_update-<name>.md: the items whose freight standard moved past the threshold, the proposed standard and its basis, units on hand and the revaluation estimate. | asks first (Auto can be opted in) |
 | `costing_request_apply` | After one named human click (even in Auto), record that the reviewed standard update draft is approved in standard_update-requests.csv. | one named click, even in Auto (`production_deploy`) |
 | `erp_update_item_cost` | Fairhaul Standard Freight Cost never changes standard costs in your ERP. | refused |
@@ -106,7 +106,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-standard-freight-cost inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-standard-freight-cost inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -161,7 +161,7 @@ fairhaul-standard-freight-cost demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

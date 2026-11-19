@@ -22,7 +22,7 @@ for (const n of readdirSync(PK).filter((x) => /^fair[a-z]+-(?!core$)/.test(x)).s
     if (k.exports.length) { L.push('| System | Export | Layout checked against vendor docs |', '|---|---|---|'); for (const e of k.exports) L.push(`| ${e.system} | ${e.label || e.id} | ${e.layout_checked === 'no' ? 'no' : e.layout_checked.replace(/^against /, '')} |`); L.push(''); }
     else L.push('No named exports: other column names are matched by a list of common alternatives.', '');
   }
-  L.push(`Columns named differently? Run \`npx ${bin} inspect <file>\` to see how a file is read (column names and shapes only, never values), then name your columns in \`lodestar-sources.json\` in the root:`, '', '```json', '{ "files": { "exports/users.csv": { "columns": { "email": "Work E-mail" }, "date_order": "dmy" } } }', '```', '', `${EXPORTS_BASIS_NOTE} If a real export does not match, the result says which columns were missing; please report it.`, END);
+  L.push(`Columns named differently? Run \`npx ${bin} inspect <file>\` to see how a file is read (column names and shapes only, never values), then name your columns in \`fairhaul-sources.json\` in the root:`, '', '```json', '{ "files": { "exports/users.csv": { "columns": { "email": "Work E-mail" }, "date_order": "dmy" } } }', '```', '', `${EXPORTS_BASIS_NOTE} If a real export does not match, the result says which columns were missing; please report it.`, END);
   const block = L.join('\n');
   const txt = readFileSync(f, 'utf8');
   const next = txt.includes(START) ? txt.replace(new RegExp(`${START}[\\s\\S]*?${END}`), block) : txt.replace(/\n## Install\b/, `\n${block}\n\n## Install`);

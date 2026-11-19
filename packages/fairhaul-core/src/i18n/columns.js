@@ -6,7 +6,7 @@
 //
 // Written from common ERP, bank, HR and expense exports (DATEV, SAP, Sage,
 // freee, Yayoi, Kingdee, Yonyou, Douzone and others). A wrong or missing word
-// can always be fixed with "columns" in lodestar-sources.json; the result's
+// can always be fixed with "columns" in fairhaul-sources.json; the result's
 // source report lists every column that was matched by a translated name.
 //
 // Kept out on purpose: US-only forms (W-9, W-8, TIN), US insurance terms, and
@@ -125,7 +125,7 @@ export const COLUMN_WORDS = {
   // Written from common TMS, carrier, forwarder and customs-broker exports in each
   // market (DB Schenker, DHL, Nippon Express, Sinotrans, CJ Logistics style
   // reports, SAP TM and Oracle freight extracts). None was checked against a
-  // live account; "columns" in lodestar-sources.json fixes any miss.
+  // live account; "columns" in fairhaul-sources.json fixes any miss.
   carrier: W(['Spediteur', 'Frachtführer', 'Transporteur', 'Transportunternehmen'], ['Transporteur', 'Nom du transporteur', 'Prestataire de transport'], ['Transportista', 'Empresa de transporte', 'Transportadora'], ['Transportadora', 'Nome da transportadora'], ['Vettore', 'Trasportatore', 'Corriere'], ['運送会社', '運送業者', '配送業者', 'キャリア'], ['承运商', '承運商', '物流公司', '承运人'], ['운송사', '운송업체', '택배사']),
   ocean_line: W(['Reederei', 'Linienreederei'], ['Compagnie maritime', 'Armateur'], ['Naviera', 'Línea naviera'], ['Armador', 'Companhia marítima'], ['Compagnia di navigazione', 'Compagnia marittima'], ['船会社', '船社'], ['船公司', '船东'], ['선사', '해운사']),
   shipment_id: W(['Sendungs-ID', 'Sendungsnummer intern', 'Transportnummer', 'Ladungsnummer', 'Ladungs-Nr.'], ["N° d'expédition", "Numéro d'expédition", 'N° de chargement', 'N° de transport'], ['N.º de envío', 'Número de envío', 'N.º de embarque', 'N.º de carga'], ['Nº da remessa', 'Número da remessa', 'Nº do embarque', 'Nº da carga'], ['N. spedizione', 'Numero spedizione', 'N. carico', 'Numero viaggio'], ['出荷番号', '配送番号', '輸送番号', '運送番号'], ['发货单号', '装运单号', '货运编号', '运输单号'], ['출하번호', '배송번호', '운송번호']),

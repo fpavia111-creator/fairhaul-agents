@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { SCORE_FIELDS, SCORECARD_SCHEMA, METRIC_LABELS, scorecards, reviewText } from './scorecards.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/scorecards';
+const OUT = 'fairhaul-out/scorecards';
 const files = {
   shipments: { type: 'string', description: 'Shipment history under --root (TMS export, CSV, Excel or JSON): load id, carrier, tender response, planned and actual pickup and delivery, expected and billed amount, claim amount, tracking updates, miles' },
   settings: { type: 'string', description: 'Optional scorecard settings JSON: weights, targets, grace minutes, billing tolerance, minimum loads to rank' },
@@ -40,7 +40,7 @@ Rules: Fairhaul Carrier Scorecards never sends and never changes the routing gui
 3. Only when the person asks, call scorecards_draft_review for one carrier, then scorecards_request_send after they review it.` }],
   tools: [
     { name: 'scorecards_score', kind: 'read', title: 'Score and rank carriers', description: 'Per carrier: loads, spend, on-time delivery and pickup, tender acceptance, billing accuracy and amount over agreed, claim-free loads, tracking, cost per mile, the weighted score (measures with no data drop out), rank, targets missed and on-time delivery by quarter.', inputSchema: { type: 'object', additionalProperties: false, required: ['shipments'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'scorecards_write_report', kind: 'report', title: 'Write the scorecard', description: 'Write scorecards-scorecard.csv and .html (one row per carrier, plus the on-time trend by quarter) into out_dir (default lodestar-out/scorecards).', inputSchema: { type: 'object', additionalProperties: false, required: ['shipments'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/scorecards)' } } }, handler: async (a, ctx) => {
+    { name: 'scorecards_write_report', kind: 'report', title: 'Write the scorecard', description: 'Write scorecards-scorecard.csv and .html (one row per carrier, plus the on-time trend by quarter) into out_dir (default fairhaul-out/scorecards).', inputSchema: { type: 'object', additionalProperties: false, required: ['shipments'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/scorecards)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const rows = r.cards.map((c) => ({ ...c, rank: c.rank ?? `not ranked (<${r.min_loads} loads)`, below: c.below_target.map((b) => b.label).join(', ') }));
       const trend = r.cards.flatMap((c) => c.otd_trend.map((q) => ({ carrier: c.carrier, ...q })));

@@ -168,7 +168,7 @@
       "args": {
         "shipments": "fixtures/shipments.csv",
         "factors": "fixtures/factors.json",
-        "out_dir": "lodestar-out/evals/emissions_write_report"
+        "out_dir": "fairhaul-out/evals/emissions_write_report"
       },
       "expect": {
         "status": "executed",
@@ -241,7 +241,7 @@
       "args": {
         "shipments": "fixtures/shipments.csv",
         "factors": "fixtures/factors.json",
-        "out_dir": "lodestar-out/evals/emissions_write_report"
+        "out_dir": "fairhaul-out/evals/emissions_write_report"
       },
       "mode": "review",
       "expect": {

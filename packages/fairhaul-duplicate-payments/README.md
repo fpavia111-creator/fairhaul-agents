@@ -67,7 +67,7 @@ Fairhaul Duplicate Payments demo (fictional payments, 2025 to 2026) in <demo fol
 | Tool | What it does | Policy |
 |---|---|---|
 | `duplicates_search` | Groups of payments that look like one invoice paid more than once, each with a rule (exact_duplicate, invoice_number_variant, two_vendor_records, same_pro, same_amount_and_date), a confidence, the amount paid twice, c… | runs |
-| `duplicates_write_report` | Write duplicates.csv and .html (one row per group, by confidence, totals by vendor) into out_dir (default lodestar-out/duplicates). | runs |
+| `duplicates_write_report` | Write duplicates.csv and .html (one row per group, by confidence, totals by vendor) into out_dir (default fairhaul-out/duplicates). | runs |
 | `duplicates_draft_recovery` | Write drafts/recovery-<vendor>.md: a refund request listing each invoice the vendor was paid twice, with payment refs and dates. | asks first (Auto can be opted in) |
 | `duplicates_request_send` | After one named human click (even in Auto), record that the reviewed recovery draft is approved in recovery-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `ap_void_payment` | Fairhaul Duplicate Payments never voids, reverses or offsets payments. | refused |
@@ -112,7 +112,7 @@ Where a layout says "checked", its column names were compared with the vendor's 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-duplicate-payments inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-duplicate-payments inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -120,7 +120,7 @@ A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or
 
 ## Memory
 
-fairhaul-duplicate-payments can remember facts about your setup so the next run does not have to be told again. `duplicates_learn` only proposes a fact; it changes nothing until a named person accepts it with `duplicates_accept_learning`, which is one click even in Auto. Facts live in one hash-chained file per agent under `.lodestar/memory/`; if the chain does not verify, no fact is used. Credentials, personal identifiers and text that reads like instructions to an AI are refused. Run without memory with `--no-memory`.
+fairhaul-duplicate-payments can remember facts about your setup so the next run does not have to be told again. `duplicates_learn` only proposes a fact; it changes nothing until a named person accepts it with `duplicates_accept_learning`, which is one click even in Auto. Facts live in one hash-chained file per agent under `.fairhaul/memory/`; if the chain does not verify, no fact is used. Credentials, personal identifiers and text that reads like instructions to an AI are refused. Run without memory with `--no-memory`.
 
 | Kind | What an accepted fact changes |
 |---|---|
@@ -182,7 +182,7 @@ fairhaul-duplicate-payments demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

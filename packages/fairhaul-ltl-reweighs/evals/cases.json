@@ -146,7 +146,7 @@
       "args": {
         "corrections": "fixtures/corrections.csv",
         "terms": "fixtures/terms.json",
-        "out_dir": "lodestar-out/evals/reweigh_write_report"
+        "out_dir": "fairhaul-out/evals/reweigh_write_report"
       },
       "expect": {
         "status": "executed",
@@ -220,7 +220,7 @@
       "args": {
         "corrections": "fixtures/corrections.csv",
         "terms": "fixtures/terms.json",
-        "out_dir": "lodestar-out/evals/reweigh_write_report"
+        "out_dir": "fairhaul-out/evals/reweigh_write_report"
       },
       "mode": "review",
       "expect": {

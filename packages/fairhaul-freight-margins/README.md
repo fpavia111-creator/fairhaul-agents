@@ -68,7 +68,7 @@ Fairhaul Freight Margins demo (fictional orders and freight costs) in <demo fold
 | Tool | What it does | Policy |
 |---|---|---|
 | `margins_margins` | Per order: terms, value, freight charged and cost (split by value on shared shipments), gap, recovery and flags. | runs |
-| `margins_write_report` | Write margins.csv and .html (one row per order; by customer; by terms; threshold estimates) into out_dir (default lodestar-out/margins). | runs |
+| `margins_write_report` | Write margins.csv and .html (one row per order; by customer; by terms; threshold estimates) into out_dir (default fairhaul-out/margins). | runs |
 | `margins_draft_terms_change` | Write drafts/terms_change-<name>.md: the freight recovery gap, policy leaks, the customers losing the most with a proposal to decide, and the free-shipping threshold estimates. | asks first (Auto can be opted in) |
 | `margins_request_apply` | After one named human click (even in Auto), record that the reviewed terms change draft is approved in terms_change-requests.csv. | one named click, even in Auto (`production_deploy`) |
 | `erp_update_customer_terms` | Fairhaul Freight Margins never changes customer freight terms or prices. | refused |
@@ -109,7 +109,7 @@ Where a layout says "checked", its column names were compared with the vendor's 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-freight-margins inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-freight-margins inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -164,7 +164,7 @@ fairhaul-freight-margins demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

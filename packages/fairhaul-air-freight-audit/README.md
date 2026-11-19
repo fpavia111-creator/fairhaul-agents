@@ -67,7 +67,7 @@ Fairhaul Air Freight Audit demo (fictional forwarder and rates, autumn 2026) in 
 |---|---|---|
 | `air_audit` | For each air waybill: actual, volumetric and chargeable kg, billed total, findings (rate_over, weight_over, surcharge_over, charge_not_on_rate_sheet, no_lane, no_weight, no_rate_sheet, currency_mismatch) and the dispu… | runs |
 | `air_quote` | Chargeable weight and air freight cost for one shipment on a lane in the rate sheet, using the cheapest valid weight break. | runs |
-| `air_write_report` | Write air.csv and .html (one row per finding; clean waybills listed) into out_dir (default lodestar-out/air). | runs |
+| `air_write_report` | Write air.csv and .html (one row per finding; clean waybills listed) into out_dir (default fairhaul-out/air). | runs |
 | `air_draft_dispute` | Write drafts/dispute-<forwarder>.md listing each air waybill charged above the rate sheet, with actual, volumetric and chargeable weight. | asks first (Auto can be opted in) |
 | `air_request_send` | After one named human click (even in Auto), record that the reviewed dispute draft is approved in dispute-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `ap_pay_invoice` | Fairhaul Air Freight Audit never pays forwarders or airlines. | refused |
@@ -100,7 +100,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-air-freight-audit inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-air-freight-audit inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -155,7 +155,7 @@ fairhaul-air-freight-audit demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

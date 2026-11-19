@@ -5,7 +5,7 @@
 // EUC-KR, Big5 or Windows-1252, and Excel's "Unicode text" is UTF-16. Reading
 // those as UTF-8 turns every non-English header and name into replacement
 // characters. Order of decisions:
-//   1. an encoding the user set (lodestar-sources.json "encoding", --encoding);
+//   1. an encoding the user set (fairhaul-sources.json "encoding", --encoding);
 //   2. a byte-order mark (UTF-8, UTF-16 LE/BE);
 //   3. valid UTF-8 (every plain-ASCII file is valid UTF-8);
 //   4. otherwise a guess among the legacy encodings, scored by how many header

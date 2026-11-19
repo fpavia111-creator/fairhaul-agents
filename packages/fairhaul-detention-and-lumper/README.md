@@ -75,7 +75,7 @@ Fictional Grocery DC: 3 stop(s), avg dwell 2.33 h, 67% over free time, detention
 | `detention_audit` | Check each detention, layover and lumper charge against dock times, appointment grace, free time, billing increment, caps and receipts. | runs |
 | `detention_explain` | Show every detention, layover and lumper charge on one load with the dock times and the reasoning. | runs |
 | `detention_facilities` | Average and longest dwell, share of stops over free time, late carrier arrivals and detention billed, per facility, worst first. | runs |
-| `detention_write_report` | Write detention-audit.csv and .html (charges with allowed and disputable amounts, plus the facility ranking) into out_dir (default lodestar-out/detention). | runs |
+| `detention_write_report` | Write detention-audit.csv and .html (charges with allowed and disputable amounts, plus the facility ranking) into out_dir (default fairhaul-out/detention). | runs |
 | `detention_draft_dispute` | Write drafts/dispute-<carrier>.md listing every disputed detention, layover and lumper charge for one carrier with billed, allowed and the dock-time reason. | asks first (Auto can be opted in) |
 | `detention_request_send` | After one named human click (even in Auto), record that the reviewed dispute draft is approved in dispute-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `ap_pay_invoice` | Fairhaul Detention and Lumper never pays carriers or lumper services. | refused |
@@ -114,7 +114,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-detention-and-lumper inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-detention-and-lumper inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -169,7 +169,7 @@ fairhaul-detention-and-lumper demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

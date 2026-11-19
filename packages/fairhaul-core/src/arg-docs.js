@@ -20,7 +20,7 @@ function glossary(arg, props, toolName) {
   const col = /^(.+)_column$/.exec(arg);
   if (col) return `Name of the column in the input file that holds the ${words(col[1])}.`;
   switch (arg) {
-    case 'out_dir': return `Folder under --root for the files this writes (default lodestar-out/${prefix}).`;
+    case 'out_dir': return `Folder under --root for the files this writes (default fairhaul-out/${prefix}).`;
     case 'as_of': return 'Date to measure ages, due dates and deadlines from, as YYYY-MM-DD.';
     case 'reason': return 'Why, in a sentence. Kept with the request and in the audit log, so a reviewer can see it.';
     case 'title': return 'Title printed at the top of the report.';

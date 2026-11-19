@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { ITEM_FIELDS, ACTUAL_FIELDS, compareStandards, updateText } from './costing.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/costing';
+const OUT = 'fairhaul-out/costing';
 const files = {
   items: { type: 'string', description: 'Item master under --root: SKU, standard freight per unit, optionally description, units on hand and standard cost' },
   actuals: { type: 'string', description: 'Actual freight by SKU: SKU, units, freight, optionally ship date and shipment id (allocation.csv from Fairhaul Freight Allocation works as is)' },
@@ -40,7 +40,7 @@ Rules: Fairhaul Standard Freight Cost never changes item costs or revalues inven
 3. Only when the person asks, call costing_draft_standard_update, then costing_request_apply after they review it.` }],
   tools: [
     { name: 'costing_compare', kind: 'read', title: 'Compare freight standards with actual', description: 'Per SKU: units, actual freight, standard, actual per unit, variance in money and percent, month-by-month per unit and trend, status, proposed standard with basis, and inventory revaluation estimate.', inputSchema: { type: 'object', additionalProperties: false, required: ['items', 'actuals'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'costing_write_report', kind: 'report', title: 'Write the freight standard report', description: 'Write costing-standards.csv and .html (one row per SKU) into out_dir (default lodestar-out/costing).', inputSchema: { type: 'object', additionalProperties: false, required: ['items', 'actuals'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/costing)' } } }, handler: async (a, ctx) => {
+    { name: 'costing_write_report', kind: 'report', title: 'Write the freight standard report', description: 'Write costing-standards.csv and .html (one row per SKU) into out_dir (default fairhaul-out/costing).', inputSchema: { type: 'object', additionalProperties: false, required: ['items', 'actuals'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/costing)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const w = writeWorklist(ctx, a.out_dir || OUT, 'costing-standards', { title: 'Freight standards against actual', intro: line(r), rows: r.rows, columns: ['sku', 'description', 'units', 'freight', 'standard', 'actual_per_unit', 'variance', 'variance_pct', 'months', 'trend_pct', 'status', 'proposed_standard', 'proposed_basis', 'on_hand', 'revaluation_estimate'], limits: [LIMITS.files, `Stale means more than ${r.settings.threshold_pct}% from standard on at least ${r.settings.min_units} units. When the per-unit cost moved more than that across the months, the proposal uses the latest month; otherwise the period average. Revaluation is proposed minus standard times units on hand, an estimate.`, LIMITS.advice] });
       return { summary: `Standards report written. ${line(r)}`, files: w.files, output_sha256: w.output_sha256 };

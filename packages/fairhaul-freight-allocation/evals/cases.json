@@ -159,7 +159,7 @@
         "costs": "fixtures/freight-costs.csv",
         "order_lines": "fixtures/order-lines.csv",
         "basis": "pallets",
-        "out_dir": "lodestar-out/evals/allocation_write_report"
+        "out_dir": "fairhaul-out/evals/allocation_write_report"
       },
       "expect": {
         "status": "executed",
@@ -232,7 +232,7 @@
         "costs": "fixtures/freight-costs.csv",
         "order_lines": "fixtures/order-lines.csv",
         "basis": "pallets",
-        "out_dir": "lodestar-out/evals/allocation_write_report"
+        "out_dir": "fairhaul-out/evals/allocation_write_report"
       },
       "mode": "review",
       "expect": {

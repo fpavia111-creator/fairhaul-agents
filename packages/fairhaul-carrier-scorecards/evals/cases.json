@@ -149,7 +149,7 @@
       "args": {
         "shipments": "fixtures/shipments.csv",
         "settings": "fixtures/scorecard.json",
-        "out_dir": "lodestar-out/evals/scorecards_write_report"
+        "out_dir": "fairhaul-out/evals/scorecards_write_report"
       },
       "expect": {
         "status": "executed",
@@ -224,7 +224,7 @@
       "args": {
         "shipments": "fixtures/shipments.csv",
         "settings": "fixtures/scorecard.json",
-        "out_dir": "lodestar-out/evals/scorecards_write_report"
+        "out_dir": "fairhaul-out/evals/scorecards_write_report"
       },
       "mode": "review",
       "expect": {

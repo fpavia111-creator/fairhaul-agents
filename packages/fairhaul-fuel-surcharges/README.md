@@ -79,7 +79,7 @@ Fairhaul Fuel Surcharges demo (fictional carriers and diesel prices, autumn 2026
 | `fuel_check` | For each invoice: billed fuel, the table amount at the diesel price for the week it shipped, the difference and a status (ok, fuel_over, wrong_week, fuel_under, fuel_not_billed, fuel_not_in_contract, index_stale, not_… | runs |
 | `fuel_compare` | Each carrier's fuel surcharge at several diesel prices for one reference load, so tables with different bases (percent of linehaul or per mile) can be compared. | runs |
 | `fuel_sensitivity` | Reprice the fuel on these invoices with diesel moved by step dollars per gallon and report the change, by carrier. | runs |
-| `fuel_write_report` | Write fuel.csv and .html (one row per invoice with the table amount and status, totals by carrier, the table comparison) into out_dir (default lodestar-out/fuel). | runs |
+| `fuel_write_report` | Write fuel.csv and .html (one row per invoice with the table amount and status, totals by carrier, the table comparison) into out_dir (default fairhaul-out/fuel). | runs |
 | `fuel_draft_dispute` | Write drafts/dispute-<carrier>.md listing each invoice whose fuel surcharge is above the carrier's table at the diesel price for the week it shipped, including invoices priced on a later week. | asks first (Auto can be opted in) |
 | `fuel_request_send` | After one named human click (even in Auto), record that the reviewed dispute draft is approved in dispute-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `ap_pay_invoice` | Fairhaul Fuel Surcharges never pays or short-pays carriers. | refused |
@@ -131,7 +131,7 @@ Where a layout says "checked", its column names were compared with the vendor's 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-fuel-surcharges inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-fuel-surcharges inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -186,7 +186,7 @@ fairhaul-fuel-surcharges demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

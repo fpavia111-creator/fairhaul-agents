@@ -184,7 +184,7 @@
         "terms": "fixtures/terms.json",
         "voids": "fixtures/voids.csv",
         "as_of": "2026-11-16",
-        "out_dir": "lodestar-out/evals/parcels_write_report"
+        "out_dir": "fairhaul-out/evals/parcels_write_report"
       },
       "expect": {
         "status": "executed",
@@ -205,7 +205,7 @@
         "voids": "fixtures/voids.csv",
         "as_of": "2026-11-16",
         "carrier": "UPS",
-        "out_dir": "lodestar-out/evals/parcels_draft_refund_request"
+        "out_dir": "fairhaul-out/evals/parcels_draft_refund_request"
       },
       "expect": {
         "status": "needs_approval",
@@ -221,7 +221,7 @@
         "voids": "fixtures/voids.csv",
         "as_of": "2026-11-16",
         "carrier": "UPS",
-        "out_dir": "lodestar-out/evals/parcels_draft_refund_request"
+        "out_dir": "fairhaul-out/evals/parcels_draft_refund_request"
       },
       "approve": "Pat Example",
       "expect": {
@@ -304,7 +304,7 @@
         "voids": "fixtures/voids.csv",
         "as_of": "2026-11-16",
         "carrier": "UPS",
-        "out_dir": "lodestar-out/evals/parcels_draft_refund_request"
+        "out_dir": "fairhaul-out/evals/parcels_draft_refund_request"
       },
       "mode": "review",
       "expect": {

@@ -61,7 +61,7 @@ Fairhaul Ocean Freight Audit demo (fictional lines and contracts, 2026) in <demo
 | Tool | What it does | Policy |
 |---|---|---|
 | `ocean_audit` | For each bill of lading: billed total, findings (rate_over, surcharge_over, surcharge_not_in_contract, surcharge_included, surcharge_out_of_window, surcharge_unpriced, duplicate_charge, container_count, no_lane, no_ra… | runs |
-| `ocean_write_report` | Write ocean.csv and .html (one row per finding, bills with no findings listed as clean) into out_dir (default lodestar-out/ocean). | runs |
+| `ocean_write_report` | Write ocean.csv and .html (one row per finding, bills with no findings listed as clean) into out_dir (default fairhaul-out/ocean). | runs |
 | `ocean_draft_dispute` | Write drafts/dispute-<carrier>.md listing each ocean invoice charge above or outside the contract, by invoice and B/L. | asks first (Auto can be opted in) |
 | `ocean_request_send` | After one named human click (even in Auto), record that the reviewed dispute draft is approved in dispute-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `ap_pay_invoice` | Fairhaul Ocean Freight Audit never pays lines or forwarders. | refused |
@@ -93,7 +93,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-ocean-freight-audit inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-ocean-freight-audit inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -148,7 +148,7 @@ fairhaul-ocean-freight-audit demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

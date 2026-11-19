@@ -185,7 +185,7 @@
         "invoices": "fixtures/commercial-invoices.csv",
         "as_of": "2026-11-16",
         "correction_window_days": 300,
-        "out_dir": "lodestar-out/evals/entries_write_report"
+        "out_dir": "fairhaul-out/evals/entries_write_report"
       },
       "expect": {
         "status": "executed",
@@ -267,7 +267,7 @@
         "invoices": "fixtures/commercial-invoices.csv",
         "as_of": "2026-11-16",
         "correction_window_days": 300,
-        "out_dir": "lodestar-out/evals/entries_write_report"
+        "out_dir": "fairhaul-out/evals/entries_write_report"
       },
       "mode": "review",
       "expect": {

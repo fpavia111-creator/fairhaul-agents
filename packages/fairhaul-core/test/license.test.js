@@ -42,7 +42,7 @@ test('no trusted key ships in the repository yet, so no licence verifies with th
 
 test('issue and check: the payload is what was signed, and nothing else is accepted', () => {
   const t = issue({ days: 30, agents: ['paid-pack'], features: ['evidence'], seats: 5, id: 'lic-0001' });
-  assert.match(t, /^LODESTAR1\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/);
+  assert.match(t, /^FAIRHAUL1\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/);
   const s = check(t);
   assert.equal(s.status, 'valid'); assert.equal(s.id, 'lic-0001'); assert.equal(s.expires, '2026-12-15'); assert.equal(s.days_left, 30); assert.deepEqual(s.features, ['evidence']);
   assert.equal(parseLicense(t).payload.seats, 5);
@@ -52,7 +52,7 @@ test('issue and check: the payload is what was signed, and nothing else is accep
   assert.equal(check(t.slice(0, -4) + 'AAAA').status, 'bad_signature');
   assert.equal(check(issueLicense(other, { licensee: 'X Co', plan: 'pro' })).status, 'unknown_key');
   const unk = check(issueLicense(other, { licensee: 'Forged Name', plan: 'pro' })); assert.equal(unk.licensee, null, 'nothing from an unverified key is echoed');
-  for (const bad of ['', '   ', 'LODESTAR1', 'LODESTAR1.a.b', 'JWT.e30.sig', 'x'.repeat(9000), `LODESTAR1.${Buffer.from('[1]').toString('base64url')}.AAAA`]) assert.ok(['none', 'malformed'].includes(check(bad).status), bad.slice(0, 20));
+  for (const bad of ['', '   ', 'FAIRHAUL1', 'FAIRHAUL1.a.b', 'JWT.e30.sig', 'x'.repeat(9000), `FAIRHAUL1.${Buffer.from('[1]').toString('base64url')}.AAAA`]) assert.ok(['none', 'malformed'].includes(check(bad).status), bad.slice(0, 20));
   assert.equal(check(null).status, 'none');
 });
 
@@ -78,13 +78,13 @@ test('the view shown to people and models carries no key and no signature', () =
   assert.deepEqual(licenseView(check(null)), { status: 'none', reason: 'No licence key is installed.' });
 });
 
-test('where the key is read from: option, file, LODESTAR_LICENSE, LODESTAR_LICENSE_FILE, then .lodestar/license.key', () => {
-  const d = tmp(); const t = issue(); writeFileSync(join(d, 'k.txt'), `\n${t}\n`); mkdirSync(join(d, '.lodestar')); writeFileSync(join(d, '.lodestar', LICENSE_FILE), t);
+test('where the key is read from: option, file, FAIRHAUL_LICENSE, FAIRHAUL_LICENSE_FILE, then .fairhaul/license.key', () => {
+  const d = tmp(); const t = issue(); writeFileSync(join(d, 'k.txt'), `\n${t}\n`); mkdirSync(join(d, '.fairhaul')); writeFileSync(join(d, '.fairhaul', LICENSE_FILE), t);
   assert.equal(readLicenseToken({ token: t, env: {} }).source, 'option');
-  assert.deepEqual(readLicenseToken({ file: join(d, 'k.txt'), env: { LODESTAR_LICENSE: 'x' } }), { token: t, source: 'file' });
-  assert.equal(readLicenseToken({ env: { LODESTAR_LICENSE: t }, stateDir: join(d, '.lodestar') }).source, 'LODESTAR_LICENSE');
-  assert.equal(readLicenseToken({ env: { LODESTAR_LICENSE_FILE: join(d, 'k.txt') } }).source, 'LODESTAR_LICENSE_FILE');
-  assert.equal(readLicenseToken({ env: {}, stateDir: join(d, '.lodestar') }).source, LICENSE_FILE);
+  assert.deepEqual(readLicenseToken({ file: join(d, 'k.txt'), env: { FAIRHAUL_LICENSE: 'x' } }), { token: t, source: 'file' });
+  assert.equal(readLicenseToken({ env: { FAIRHAUL_LICENSE: t }, stateDir: join(d, '.fairhaul') }).source, 'FAIRHAUL_LICENSE');
+  assert.equal(readLicenseToken({ env: { FAIRHAUL_LICENSE_FILE: join(d, 'k.txt') } }).source, 'FAIRHAUL_LICENSE_FILE');
+  assert.equal(readLicenseToken({ env: {}, stateDir: join(d, '.fairhaul') }).source, LICENSE_FILE);
   assert.deepEqual(readLicenseToken({ env: {}, file: join(d, 'missing') }), { token: null, source: null });
   assert.deepEqual(readLicenseToken({ env: {} }), { token: null, source: null });
 });
@@ -95,14 +95,14 @@ test('runtime: free tools always run; paid tools need a valid licence; the audit
   assert.equal((await none.call('free_read', {})).status, 'executed');
   const locked = await none.call('pro_read', {});
   assert.equal(locked.status, 'needs_license'); assert.equal(locked.decision, 'allow'); assert.match(locked.reason, /paid tier.*No licence key is installed.*Free tools keep working/);
-  const line = readAudit(join(d, '.lodestar', 'audit.jsonl')).pop(); assert.equal(line.status, 'needs_license'); assert.equal(line.license_status, 'none');
+  const line = readAudit(join(d, '.fairhaul', 'audit.jsonl')).pop(); assert.equal(line.status, 'needs_license'); assert.equal(line.license_status, 'none');
   const r = rt(t); const ok = await r.call('pro_read', {}); assert.equal(ok.status, 'executed'); assert.equal(ok.result.plan, 'pro');
   const feat = await r.call('pro_report', {}); assert.equal(feat.status, 'needs_license'); assert.match(feat.reason, /does not include the "evidence" feature/);
   assert.equal((await rt(issue({ features: ['evidence'] })).call('pro_report', {})).status, 'executed');
   assert.equal((await rt(issue({ issued: '2025-01-01', expires: '2025-12-31' })).call('pro_read', {})).status, 'needs_license');
   assert.equal((await rt(issue({ agents: ['someone-else'] })).call('pro_read', {})).status, 'needs_license');
   const paid = new AgentRuntime(manifest(), { root: d, license: t, licenseKeys: [PUB] }); await paid.call('pro_read', {});
-  assert.doesNotMatch(readFileSync(join(d, '.lodestar', 'audit.jsonl'), 'utf8'), new RegExp(t.split('.')[2].slice(0, 16)));
+  assert.doesNotMatch(readFileSync(join(d, '.fairhaul', 'audit.jsonl'), 'utf8'), new RegExp(t.split('.')[2].slice(0, 16)));
 });
 
 test('a licence never weakens the policy: blocks stay blocked, asks still ask, one-click stays one-click', async () => {
@@ -121,14 +121,14 @@ test('manifest: tier and feature are checked', () => {
   assert.ok(m({ tier: 'pro', feature: 'evidence' })); assert.ok(m({ tier: 'free' }));
 });
 
-test('mcp: paid tools are labelled, a locked call is an error result, lodestar_info shows the licence without the key', async () => {
+test('mcp: paid tools are labelled, a locked call is an error result, fairhaul_info shows the licence without the key', async () => {
   const t = issue({ features: ['basic'] });
   const h = createMcpHandler(rt(t));
   const list = await h({ jsonrpc: '2.0', id: 1, method: 'tools/list' });
   assert.match(list.result.tools.find((x) => x.name === 'pro_read').description, /^\[ALLOW · paid tier\]/);
   assert.doesNotMatch(list.result.tools.find((x) => x.name === 'free_read').description, /paid/);
   const locked = await h({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'pro_report', arguments: {} } }); assert.equal(locked.result.isError, true);
-  const info = await h({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'lodestar_info', arguments: {} } });
+  const info = await h({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'fairhaul_info', arguments: {} } });
   const lic = info.result.structuredContent.license;
   assert.equal(lic.status, 'valid'); assert.equal(lic.read_from, 'option');
   assert.deepEqual(lic.paid_tools.map((x) => [x.name, x.unlocked]), [['pro_read', true], ['pro_report', false], ['pro_write', true], ['pro_go_live', true], ['pro_blocked', true]]);

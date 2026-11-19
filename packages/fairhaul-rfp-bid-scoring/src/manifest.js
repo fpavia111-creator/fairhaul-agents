@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { LANE_FIELDS, BID_FIELDS, AWARD_RULES_SCHEMA, award, awardText } from './bids.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/bids';
+const OUT = 'fairhaul-out/bids';
 const files = {
   lanes: { type: 'string', description: 'RFP lanes under --root: lane id, origin, destination, annual loads, incumbent carrier and rate' },
   bids: { type: 'string', description: 'Carrier bids under --root: lane id, carrier, rate per load, optional annual capacity and notes' },
@@ -41,7 +41,7 @@ Rules: Fairhaul RFP Bid Scoring never loads rates and never sends awards. Volume
 4. Only when the person asks, call bids_draft_award for one carrier, then bids_request_send after they review it.` }],
   tools: [
     { name: 'bids_award', kind: 'read', title: 'Build an award scenario', description: 'For each lane: bids, best and median rate, awarded carrier(s) with loads and rate, backup, uncovered loads, cost against the incumbent baseline and notes (incumbent kept, share cap reached, possible bid error). Totals and carrier shares.', inputSchema: { type: 'object', additionalProperties: false, required: ['lanes', 'bids'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'bids_write_report', kind: 'report', title: 'Write the award scenario', description: 'Write bids-award.csv and .html (one row per lane with award, backup and savings; carrier shares; rules used) into out_dir (default lodestar-out/bids).', inputSchema: { type: 'object', additionalProperties: false, required: ['lanes', 'bids'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/bids)' } } }, handler: async (a, ctx) => {
+    { name: 'bids_write_report', kind: 'report', title: 'Write the award scenario', description: 'Write bids-award.csv and .html (one row per lane with award, backup and savings; carrier shares; rules used) into out_dir (default fairhaul-out/bids).', inputSchema: { type: 'object', additionalProperties: false, required: ['lanes', 'bids'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/bids)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const rows = r.results.map((x) => ({ ...x, awards: x.awards.map((s) => `${s.carrier} ${s.loads} @ ${s.rate}`).join('; '), backup: x.backup ? `${x.backup.carrier} @ ${x.backup.rate}` : '', notes: x.notes.join(' ') }));
       const w = writeWorklist(ctx, a.out_dir || OUT, 'bids-award', { title: 'RFP award scenario', intro: line(r), rows, columns: ['lane_id', 'lane', 'annual_loads', 'bids', 'best_rate', 'median_rate', 'incumbent', 'incumbent_rate', 'awards', 'backup', 'uncovered_loads', 'annual_cost', 'baseline_cost', 'savings', 'change_pct', 'status', 'notes'], sections: [{ title: 'Carrier shares', rows: r.carriers, columns: ['carrier', 'lanes', 'loads', 'share_pct', 'spend'] }, { title: 'Rules used', rows: Object.entries(r.rules).filter(([k]) => k !== 'note').map(([rule, value]) => ({ rule, value: Array.isArray(value) ? value.join(', ') : value })), columns: ['rule', 'value'] }], limits: [LIMITS.files, 'Savings assume the estimated volumes move at the bid rates. Lanes are awarded largest savings first, so the share cap falls on later lanes.', LIMITS.advice] });

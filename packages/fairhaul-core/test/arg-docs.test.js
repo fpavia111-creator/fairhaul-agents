@@ -17,7 +17,7 @@ test('arg docs: glossary, argDocs, inline wins, shared objects untouched', () =>
   const shared = { type: 'string' };
   const m = defineManifest(base({ argDocs: { widget: 'Generic widget', 'docs_scan.kept': 'never used' } }));
   const p = m.tools[0].inputSchema.properties;
-  assert.match(p.out_dir.description, /lodestar-out\/docs/);
+  assert.match(p.out_dir.description, /fairhaul-out\/docs/);
   assert.match(p.proposal_sha256.description, /SHA-256 of the proposal file/);
   assert.match(p.proposal.description, /Path under --root to the proposal file/);
   assert.match(p.amount_column.description, /holds the amount/);

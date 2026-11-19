@@ -159,7 +159,7 @@
         "quotes": "fixtures/quotes.csv",
         "settings": "fixtures/settings.json",
         "as_of": "2026-11-16",
-        "out_dir": "lodestar-out/evals/quotes_write_report"
+        "out_dir": "fairhaul-out/evals/quotes_write_report"
       },
       "expect": {
         "status": "executed",
@@ -240,7 +240,7 @@
         "quotes": "fixtures/quotes.csv",
         "settings": "fixtures/settings.json",
         "as_of": "2026-11-16",
-        "out_dir": "lodestar-out/evals/quotes_write_report"
+        "out_dir": "fairhaul-out/evals/quotes_write_report"
       },
       "mode": "review",
       "expect": {

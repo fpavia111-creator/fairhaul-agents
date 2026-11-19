@@ -61,7 +61,7 @@ Fairhaul Spot Quotes demo (fictional loads and quotes, as of 2026-11-16) in <dem
 | Tool | What it does | Policy |
 |---|---|---|
 | `quotes_compare` | For each load: every quote on an all-in basis with what was added, whether it is usable (not expired, arrives by the deliver-by date), the best usable quote, the spread, the difference from lane history, flags and a s… | runs |
-| `quotes_write_report` | Write quotes.csv and .html (one row per quote, best first within each load) into out_dir (default lodestar-out/quotes). | runs |
+| `quotes_write_report` | Write quotes.csv and .html (one row per quote, best first within each load) into out_dir (default fairhaul-out/quotes). | runs |
 | `quotes_draft_booking` | Write drafts/booking-<load>.md: the confirmation accepting one carrier's quote for one load, with the all-in amount and what still needs filling in. | asks first (Auto can be opted in) |
 | `quotes_request_tender` | After one named human click (even in Auto), record that the reviewed booking draft is approved in booking-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `tms_tender_load` | Fairhaul Spot Quotes never tenders or books loads in your TMS or a load board. | refused |
@@ -102,7 +102,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-spot-quotes inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-spot-quotes inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -157,7 +157,7 @@ fairhaul-spot-quotes demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

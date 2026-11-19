@@ -19,7 +19,7 @@ test('assist: ask returns approval id, approval runs it once', async () => {
   const r1 = await rt.call('write_thing', { a: 1 });
   assert.equal(r1.status, 'needs_approval');
   assert.match(r1.approval_id, /^[a-f0-9]{16}$/);
-  new ApprovalStore(join(dir, '.lodestar')).approve(r1.approval_id, 'Kurt Francisco');
+  new ApprovalStore(join(dir, '.fairhaul')).approve(r1.approval_id, 'Kurt Francisco');
   const r2 = await rt.call('write_thing', { a: 1 });
   assert.equal(r2.status, 'executed');
   assert.equal(r2.approved_by, 'Kurt Francisco');
@@ -70,13 +70,13 @@ test('kill switch: method, file and env', async () => {
   rt.kill();
   assert.equal((await rt.call('read_thing')).status, 'blocked');
   const dir = tmp();
-  mkdirSync(join(dir, '.lodestar'), { recursive: true });
-  writeFileSync(join(dir, '.lodestar', 'KILL'), 'x');
+  mkdirSync(join(dir, '.fairhaul'), { recursive: true });
+  writeFileSync(join(dir, '.fairhaul', 'KILL'), 'x');
   const rt2 = new AgentRuntime(sampleManifest(), { root: dir });
   assert.match((await rt2.call('read_thing')).reason, /Kill switch/);
-  process.env.LODESTAR_KILL = '1';
+  process.env.FAIRHAUL_KILL = '1';
   try { assert.equal((await new AgentRuntime(sampleManifest(), { audit: false }).call('read_thing')).status, 'blocked'); }
-  finally { delete process.env.LODESTAR_KILL; }
+  finally { delete process.env.FAIRHAUL_KILL; }
 });
 
 test('audit log is JSONL with a verifiable hash chain', async () => {
@@ -85,7 +85,7 @@ test('audit log is JSONL with a verifiable hash chain', async () => {
   await rt.call('read_thing', { x: 'secret-value' });
   await rt.call('go_live', {});
   await rt.call('write_thing', {});
-  const file = join(dir, '.lodestar', 'audit.jsonl');
+  const file = join(dir, '.fairhaul', 'audit.jsonl');
   const entries = readAudit(file);
   assert.equal(entries.length, 3);
   assert.deepEqual(entries.map((e) => e.status), ['executed', 'blocked', 'needs_approval']);

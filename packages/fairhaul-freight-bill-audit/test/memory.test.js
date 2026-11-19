@@ -16,7 +16,7 @@ const root = () => {
     + 'M-2,SMPF,2026-11-01,1200,OH,43215,GA,30303,500,Line Haul,1400\nM-2,SMPF,2026-11-01,1200,OH,43215,GA,30303,500,DRIVER WAIT,200\n');
   return r;
 };
-const rtFor = (r, opts = {}) => new AgentRuntime(manifest, { root: r, stateDir: join(r, '.lodestar'), mode: opts.mode || 'assist', ...opts });
+const rtFor = (r, opts = {}) => new AgentRuntime(manifest, { root: r, stateDir: join(r, '.fairhaul'), mode: opts.mode || 'assist', ...opts });
 const audit = (rt) => rt.call('bills_audit', { invoices: 'inv.csv', contract: 'fixtures/contract.json' });
 const codes = (out, n) => out.result.items.find((i) => i.invoice_number === n).findings.map((f) => f.code);
 

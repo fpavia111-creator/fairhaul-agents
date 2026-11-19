@@ -118,10 +118,10 @@ test('overrides: columns, set, skip_rows; a named column that is not in the file
   assert.equal(overrideFor(null, 'people', 'f.csv'), null); assert.equal(overrideFor({ files: {} }, 'people', 'f.csv'), null);
 });
 
-test('lodestar-sources.json is schema-checked when read', () => {
+test('fairhaul-sources.json is schema-checked when read', () => {
   const d = tmp(); assert.equal(loadSourceOverrides(d), null);
-  writeFileSync(join(d, SOURCES_FILE), '{ nope'); assert.throws(() => loadSourceOverrides(d), /lodestar-sources\.json is not valid JSON/);
-  writeFileSync(join(d, SOURCES_FILE), JSON.stringify({ sources: { people: { date_ordr: 'dmy' } } })); assert.throws(() => loadSourceOverrides(d), /lodestar-sources\.json is not valid/);
+  writeFileSync(join(d, SOURCES_FILE), '{ nope'); assert.throws(() => loadSourceOverrides(d), /fairhaul-sources\.json is not valid JSON/);
+  writeFileSync(join(d, SOURCES_FILE), JSON.stringify({ sources: { people: { date_ordr: 'dmy' } } })); assert.throws(() => loadSourceOverrides(d), /fairhaul-sources\.json is not valid/);
   writeFileSync(join(d, SOURCES_FILE), JSON.stringify({ files: { 'a.csv': { date_order: 'ymd' } } })); assert.throws(() => loadSourceOverrides(d), /not valid/);
   writeFileSync(join(d, SOURCES_FILE), JSON.stringify({ note: 'ok', sources: { people: { date_order: 'dmy' } } })); assert.equal(loadSourceOverrides(d).sources.people.date_order, 'dmy');
 });
@@ -177,7 +177,7 @@ test('runtime: ctx.records maps by argument, reports once per file, warns at the
   assert.deepEqual(r.result.other, [{ 'Full Name': 'Cy', Anything: '1' }], 'an argument that is not a declared source is read as it is');
   assert.equal(r.sources.length, 1); assert.equal(r.sources[0].arg, 'people'); assert.equal(r.sources[0].file, 'hr.csv');
   assert.match(r.warnings[0], /^hr\.csv: 1 date\(s\)/);
-  const line = readAudit(join(root, '.lodestar', 'audit.jsonl')).pop();
+  const line = readAudit(join(root, '.fairhaul', 'audit.jsonl')).pop();
   assert.deepEqual(line.sources, [{ arg: 'people', file: 'hr.csv', kind: 'people', format: 'csv', profile: 'hr_system', rows: 1, columns_mapped: 5 }]);
   assert.doesNotMatch(JSON.stringify(line), /Ana Ortiz/, 'no row data in the audit line');
 });
@@ -189,7 +189,7 @@ test('runtime: overrides are read per call, a bad override file fails the call p
   const r = await rt.call('list_people', { people: 'wb.xlsx' });
   assert.equal(r.status, 'executed', r.reason); assert.deepEqual(r.result.rows, [{ name: 'Ana', start: '2026-01-05' }]); assert.equal(r.sources[0].sheet, 'Staff'); assert.equal(r.sources[0].format, 'xlsx');
   writeFileSync(join(root, SOURCES_FILE), JSON.stringify({ files: { 'wb.xlsx': { colums: {} } } }));
-  const bad = await rt.call('list_people', { people: 'wb.xlsx' }); assert.equal(bad.status, 'error'); assert.match(bad.reason, /lodestar-sources\.json is not valid/);
+  const bad = await rt.call('list_people', { people: 'wb.xlsx' }); assert.equal(bad.status, 'error'); assert.match(bad.reason, /fairhaul-sources\.json is not valid/);
   assert.doesNotMatch(bad.reason, new RegExp(root.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), 'no absolute path in the message');
 });
 
@@ -201,11 +201,11 @@ test('inspect: names the export, lists columns by shape only, never returns a ce
   assert.deepEqual(r.result.columns.map((c) => c.name), ['Emp #', 'Display Name', 'Mail', 'Hired', 'Stat']); assert.equal(r.result.columns[3].looks_like, 'dates (day first)');
   assert.equal(r.result.readings[0].profile, 'hr_system'); assert.equal(r.result.readings[0].note, 'Pay is not in this export.');
   assert.doesNotMatch(JSON.stringify(r), /Zebedee|Quux|zq-secret|Wilhelmina/);
-  assert.equal(readAudit(join(root, '.lodestar', 'audit.jsonl')).pop().tool, 'lodestar_inspect_input');
+  assert.equal(readAudit(join(root, '.fairhaul', 'audit.jsonl')).pop().tool, 'fairhaul_inspect_input');
   assert.equal(rt.inspect({ path: '../outside.csv' }).status, 'error'); assert.equal(rt.inspect({ path: 'hr.csv', extra: 1 }).status, 'error'); assert.equal(rt.inspect({}).status, 'error');
   assert.match(rt.inspect({ path: 'hr.csv', as: 'nope' }).reason, /not a source kind/);
   assert.match(rt.inspect({ path: 'missing.csv' }).reason, /missing\.csv/);
-  mkdirSync(join(root, '.lodestar'), { recursive: true }); writeFileSync(join(root, '.lodestar', 'KILL'), ''); assert.equal(rt.inspect({ path: 'hr.csv' }).status, 'blocked');
+  mkdirSync(join(root, '.fairhaul'), { recursive: true }); writeFileSync(join(root, '.fairhaul', 'KILL'), ''); assert.equal(rt.inspect({ path: 'hr.csv' }).status, 'blocked');
 });
 
 test('inspect: a column name carrying instructions is flagged, not followed', async () => {
@@ -215,14 +215,14 @@ test('inspect: a column name carrying instructions is flagged, not followed', as
   assert.equal(r.status, 'executed', r.reason); assert.match(r.warnings[0], /read like instructions to an AI .*They are data/);
 });
 
-test('mcp: lodestar_inspect_input is listed read-only and lodestar_info says which systems are read', async () => {
+test('mcp: fairhaul_inspect_input is listed read-only and fairhaul_info says which systems are read', async () => {
   const root = tmp(); writeFileSync(join(root, 'hr.csv'), 'Emp #,Display Name,Hired\n7,Ana,2026-01-05\n');
   const h = createMcpHandler(new AgentRuntime(manifest(), { root, audit: false }));
   const list = await h({ jsonrpc: '2.0', id: 1, method: 'tools/list' });
-  const tool = list.result.tools.find((t) => t.name === 'lodestar_inspect_input'); assert.ok(tool); assert.equal(tool.annotations.readOnlyHint, true); assert.deepEqual(tool.inputSchema.required, ['path']);
-  const call = await h({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'lodestar_inspect_input', arguments: { path: 'hr.csv' } } });
+  const tool = list.result.tools.find((t) => t.name === 'fairhaul_inspect_input'); assert.ok(tool); assert.equal(tool.annotations.readOnlyHint, true); assert.deepEqual(tool.inputSchema.required, ['path']);
+  const call = await h({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'fairhaul_inspect_input', arguments: { path: 'hr.csv' } } });
   assert.equal(call.result.isError, false); assert.equal(call.result.structuredContent.result.readings[0].profile, 'hr_system');
-  const bad = await h({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'lodestar_inspect_input', arguments: { path: 'nope.csv' } } }); assert.equal(bad.result.isError, true);
-  const info = await h({ jsonrpc: '2.0', id: 4, method: 'tools/call', params: { name: 'lodestar_info', arguments: {} } });
+  const bad = await h({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'fairhaul_inspect_input', arguments: { path: 'nope.csv' } } }); assert.equal(bad.result.isError, true);
+  const info = await h({ jsonrpc: '2.0', id: 4, method: 'tools/call', params: { name: 'fairhaul_info', arguments: {} } });
   assert.match(JSON.stringify(info.result.structuredContent), /HR System/);
 });

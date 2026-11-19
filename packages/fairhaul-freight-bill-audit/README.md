@@ -96,7 +96,7 @@ Audit log: <demo folder>
 |---|---|---|
 | `bills_audit` | Check every invoice against the contract and flag duplicates, paid-before bills, linehaul over contract, fuel over table, accessorials not allowed, unpriced or not ordered, math errors and weights over the BOL. | runs |
 | `bills_explain` | Show one invoice's charge lines, the contract amounts they were checked against, and every finding with its reason. | runs |
-| `bills_write_report` | Write bills-audit.csv (one row per invoice with blank decision columns) and bills-audit.html (totals by carrier and finding) into out_dir (default lodestar-out/bills). | runs |
+| `bills_write_report` | Write bills-audit.csv (one row per invoice with blank decision columns) and bills-audit.html (totals by carrier and finding) into out_dir (default fairhaul-out/bills). | runs |
 | `bills_draft_dispute` | Write drafts/dispute-<carrier>.md: one dispute letter to one carrier listing every disputed invoice with the amount and the contract reason. | asks first (Auto can be opted in) |
 | `bills_request_send` | After one named human click (even in Auto), record that the reviewed dispute draft is approved in dispute-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `bills_request_pay` | After one named human click (even in Auto), record in pay-approvals.csv the amount AP may pay on one invoice (usually the undisputed balance). | one named click, even in Auto (`move_money`) |
@@ -221,7 +221,7 @@ Where a layout says "checked", its column names were compared with the vendor's 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-freight-bill-audit inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-freight-bill-audit inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -229,7 +229,7 @@ A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or
 
 ## Memory
 
-fairhaul-freight-bill-audit can remember facts about your setup so the next run does not have to be told again. `bills_learn` only proposes a fact; it changes nothing until a named person accepts it with `bills_accept_learning`, which is one click even in Auto. Facts live in one hash-chained file per agent under `.lodestar/memory/`; if the chain does not verify, no fact is used. Credentials, personal identifiers and text that reads like instructions to an AI are refused. Run without memory with `--no-memory`.
+fairhaul-freight-bill-audit can remember facts about your setup so the next run does not have to be told again. `bills_learn` only proposes a fact; it changes nothing until a named person accepts it with `bills_accept_learning`, which is one click even in Auto. Facts live in one hash-chained file per agent under `.fairhaul/memory/`; if the chain does not verify, no fact is used. Credentials, personal identifiers and text that reads like instructions to an AI are refused. Run without memory with `--no-memory`.
 
 | Kind | What an accepted fact changes |
 |---|---|
@@ -292,7 +292,7 @@ fairhaul-freight-bill-audit demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

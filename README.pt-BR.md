@@ -28,7 +28,7 @@ Cada agente tem uma `demo` com arquivos fictícios, um `eval` com seus próprios
 - **Lista permitida por agente.** Cada agente só pode chamar suas próprias ferramentas.
 - **Ferramentas recusadas.** Pagar, enviar e-mails, alterar o TMS, lançar no razão ou registrar na aduana são nomeadas e bloqueadas.
 - **Um clique nomeado.** Pagamentos, envios, mudanças em produção e aprovações de lançamentos esperam uma pessoa nomeada, mesmo no modo Auto, vinculados ao sha256 do rascunho revisado.
-- **Log de auditoria** em `.lodestar/`, encadeado por hash, assinado se você configurar uma chave Ed25519.
+- **Log de auditoria** em `.fairhaul/`, encadeado por hash, assinado se você configurar uma chave Ed25519.
 - **Parada de emergência:** `<agent> kill` para todas as ferramentas até `<agent> unkill`.
 
 ## Como eles são testados

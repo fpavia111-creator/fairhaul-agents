@@ -68,7 +68,7 @@ Fairhaul Carton Sizing demo (fictional parcels and cartons) in <demo folder>
 | Tool | What it does | Policy |
 |---|---|---|
 | `cartons_check` | For each package: carton used, fill, dimensional and billable weight now, the smallest catalog carton that fits (any orientation, with padding) and its billable weight, the lb and money saved, oversize risk and data p… | runs |
-| `cartons_write_report` | Write cartons.csv and .html (one row per package; savings by SKU; carton usage) into out_dir (default lodestar-out/cartons). | runs |
+| `cartons_write_report` | Write cartons.csv and .html (one row per package; savings by SKU; carton usage) into out_dir (default fairhaul-out/cartons). | runs |
 | `cartons_draft_carton_change` | Write drafts/carton_change-<name>.md: packing rules by SKU (from carton, to carton, saving), cartons to add for packages nothing fits, and carton usage. | asks first (Auto can be opted in) |
 | `cartons_request_apply` | After one named human click (even in Auto), record that the reviewed carton change draft is approved in carton_change-requests.csv. | one named click, even in Auto (`production_deploy`) |
 | `wms_update_cartonization` | Fairhaul Carton Sizing never changes packing rules or the carton catalog in your WMS. | refused |
@@ -98,7 +98,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-carton-sizing inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-carton-sizing inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -153,7 +153,7 @@ fairhaul-carton-sizing demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

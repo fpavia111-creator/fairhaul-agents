@@ -25,13 +25,13 @@ export function annotationsFor(t) {
 export function createMcpHandler(runtime) {
   const m = runtime.manifest;
   const infoTool = {
-    name: 'lodestar_info',
+    name: 'fairhaul_info',
     description: 'Show this pack: pinned model, mode, caps, Auto opt-ins, and the allow/ask/block decision for every tool.',
     inputSchema: { type: 'object', properties: {} },
     annotations: { title: 'Pack info', readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
   };
   const inspectTool = {
-    name: 'lodestar_inspect_input',
+    name: 'fairhaul_inspect_input',
     description: 'Show how a CSV, TSV, Excel, JSON or JSONL file under the root would be read: its format, which export it looks like, which of its columns map to this pack\'s columns, and what each column holds. Returns column names and shapes only, never cell values. Use it before a tool when a file comes straight from another system.',
     inputSchema: INSPECT_SCHEMA,
     annotations: { title: 'Inspect an input file', readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
@@ -105,7 +105,7 @@ export function createMcpHandler(runtime) {
       }
       case 'tools/call': {
         const name = params.name;
-        if (name === 'lodestar_info') {
+        if (name === 'fairhaul_info') {
           return ok(text({
             name: m.name, version: m.version, description: m.description, model: m.model, mode: runtime.mode,
             caps: runtime.caps, usage: runtime.usageReport(), auto_actions: [...runtime.autoActions], kill_switch: runtime.isKilled(),
@@ -117,7 +117,7 @@ export function createMcpHandler(runtime) {
             ...(runtime.memory ? { memory: (() => { const r = runtime.memory.search({ status: 'all', limit: 0 }); return { in_use: runtime.useMemory && r.chain.ok, file_verifies: r.chain.ok, counts: r.counts, kinds: runtime.memory.kindsInfo(), recall_tool: `${m.memory.prefix}_recall` }; })() } : {}),
           }));
         }
-        if (name === 'lodestar_inspect_input') { const r = runtime.inspect(params.arguments || {}); return ok(text(r, r.status === 'blocked' || r.status === 'error')); }
+        if (name === 'fairhaul_inspect_input') { const r = runtime.inspect(params.arguments || {}); return ok(text(r, r.status === 'blocked' || r.status === 'error')); }
         if (typeof name !== 'string') return fail(-32602, 'params.name is required');
         const r = await runtime.call(name, params.arguments || {});
         return ok(text(r, r.status === 'blocked' || r.status === 'error' || r.status === 'needs_license'));

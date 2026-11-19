@@ -71,7 +71,7 @@ Fairhaul Returns Tracking demo (fictional returns, as of 2026-11-16) in <demo fo
 | Tool | What it does | Policy |
 |---|---|---|
 | `returns_track` | Each RMA's stage (awaiting return, label unused, received not credited, credited not received, closed), every point found with its amount, and return value and freight by reason, customer and SKU. | runs |
-| `returns_write_report` | Write returns.csv and .html (points found; every RMA with its stage; by reason, customer and SKU) into out_dir (default lodestar-out/returns). | runs |
+| `returns_write_report` | Write returns.csv and .html (points found; every RMA with its stage; by reason, customer and SKU) into out_dir (default fairhaul-out/returns). | runs |
 | `returns_draft_carrier_dispute` | Write drafts/carrier_dispute-<carrier>.md: return freight charges from one carrier billed twice or on tracking numbers with no return authorised, with the total to credit. | asks first (Auto can be opted in) |
 | `returns_request_send` | After one named human click (even in Auto), record that the reviewed carrier dispute draft is approved in carrier_dispute-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `erp_issue_credit` | Fairhaul Returns Tracking never issues, reverses or changes customer credits. | refused |
@@ -129,7 +129,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-returns-tracking inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-returns-tracking inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -184,7 +184,7 @@ fairhaul-returns-tracking demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

@@ -129,7 +129,7 @@
       "args": {
         "history": "fixtures/history.csv",
         "contracts": "fixtures/contracts.json",
-        "out_dir": "lodestar-out/evals/rerate_write_report"
+        "out_dir": "fairhaul-out/evals/rerate_write_report"
       },
       "expect": {
         "status": "executed",
@@ -148,7 +148,7 @@
       "args": {
         "history": "fixtures/history.csv",
         "contracts": "fixtures/contracts.json",
-        "out_dir": "lodestar-out/evals/rerate_draft_routing_change"
+        "out_dir": "fairhaul-out/evals/rerate_draft_routing_change"
       },
       "expect": {
         "status": "needs_approval",
@@ -161,7 +161,7 @@
       "args": {
         "history": "fixtures/history.csv",
         "contracts": "fixtures/contracts.json",
-        "out_dir": "lodestar-out/evals/rerate_draft_routing_change"
+        "out_dir": "fairhaul-out/evals/rerate_draft_routing_change"
       },
       "approve": "Pat Example",
       "expect": {
@@ -236,7 +236,7 @@
       "args": {
         "history": "fixtures/history.csv",
         "contracts": "fixtures/contracts.json",
-        "out_dir": "lodestar-out/evals/rerate_draft_routing_change"
+        "out_dir": "fairhaul-out/evals/rerate_draft_routing_change"
       },
       "mode": "review",
       "expect": {

@@ -156,7 +156,7 @@
         "lanes": "fixtures/lanes.csv",
         "bids": "fixtures/bids.csv",
         "rules": "fixtures/rules.json",
-        "out_dir": "lodestar-out/evals/bids_write_report"
+        "out_dir": "fairhaul-out/evals/bids_write_report"
       },
       "expect": {
         "status": "executed",
@@ -236,7 +236,7 @@
         "lanes": "fixtures/lanes.csv",
         "bids": "fixtures/bids.csv",
         "rules": "fixtures/rules.json",
-        "out_dir": "lodestar-out/evals/bids_write_report"
+        "out_dir": "fairhaul-out/evals/bids_write_report"
       },
       "mode": "review",
       "expect": {

@@ -27,7 +27,7 @@ export function toIcs(events, { prodId = '-//Fairhaul//fairhaul-core//EN', calNa
     if (!/^\d{4}-\d{2}-\d{2}/.test(String(e.date || ''))) throw new Error(`event "${e.summary}" needs date YYYY-MM-DD`);
     const start = icsDate(e.date);
     const next = new Date(Date.UTC(+start.slice(0, 4), +start.slice(4, 6) - 1, +start.slice(6, 8) + 1)).toISOString().slice(0, 10);
-    const uid = e.uid || `${sha256(`${e.date}|${e.summary}`).slice(0, 24)}@lodestar.local`;
+    const uid = e.uid || `${sha256(`${e.date}|${e.summary}`).slice(0, 24)}@fairhaul.local`;
     L.push('BEGIN:VEVENT', `UID:${uid}`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${start}`, `DTEND;VALUE=DATE:${icsDate(next)}`, `SUMMARY:${icsEsc(e.summary)}`);
     if (e.description) L.push(`DESCRIPTION:${icsEsc(e.description)}`);
     if (e.categories) L.push(`CATEGORIES:${[].concat(e.categories).map(icsEsc).join(',')}`);

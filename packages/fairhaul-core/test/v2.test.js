@@ -40,7 +40,7 @@ test('signed audit: re-chained edits fail with --pubkey; v1 logs verify as chain
   assert.throws(() => loadSigner(join(root, 'nope.pem'), { root }), /must not live under --root/);
   const rt = new AgentRuntime(sampleManifest(), { root, signingKey: k1.privateKeyFile });
   await rt.call('read_thing', { x: 1 }); await rt.call('write_thing', {});
-  const file = join(root, '.lodestar', 'audit.jsonl');
+  const file = join(root, '.fairhaul', 'audit.jsonl');
   const pub = loadPublicKeys(k1.publicKeyFile);
   assert.equal(verifyChain(readAudit(file), { publicKeys: pub }).ok, true);
   assert.ok(!readFileSync(file, 'utf8').includes('PRIVATE KEY'));
@@ -62,16 +62,16 @@ test('signed audit: re-chained edits fail with --pubkey; v1 logs verify as chain
   assert.equal(verifyChain(all, { publicKeys: loadPublicKeys(k2.publicKeyFile) }).ok, false, 'old lines need the old key');
   // v1
   const r2 = tmp(); const rt2 = new AgentRuntime(sampleManifest(), { root: r2 }); await rt2.call('read_thing');
-  assert.equal(verifyChain(readAudit(join(r2, '.lodestar', 'audit.jsonl'))).signing, 'chained, unsigned');
+  assert.equal(verifyChain(readAudit(join(r2, '.fairhaul', 'audit.jsonl'))).signing, 'chained, unsigned');
 });
 
 test('audit mirror receives identical lines; two writers keep one chain', async () => {
   const root = tmp(); const mirror = join(tmp(), 'mirror.jsonl');
   const rt = new AgentRuntime(sampleManifest(), { root, auditMirror: mirror });
   await rt.call('read_thing');
-  const other = new AuditLog(join(root, '.lodestar', 'audit.jsonl')); other.write({ type: 'approval-decision' });
+  const other = new AuditLog(join(root, '.fairhaul', 'audit.jsonl')); other.write({ type: 'approval-decision' });
   await rt.call('read_thing');
-  assert.equal(verifyChain(readAudit(join(root, '.lodestar', 'audit.jsonl'))).ok, true);
+  assert.equal(verifyChain(readAudit(join(root, '.fairhaul', 'audit.jsonl'))).ok, true);
   assert.equal(readAudit(mirror).length, 2);
 });
 
@@ -101,7 +101,7 @@ test('webhook HMAC: good, bad, stale, nameless', () => {
 });
 
 test('approvals page: localhost only, CSP, CSRF token, host check, signed callback audited', async () => {
-  const root = tmp(); const stateDir = join(root, '.lodestar');
+  const root = tmp(); const stateDir = join(root, '.fairhaul');
   const rt = new AgentRuntime(sampleManifest(), { root });
   const a = await rt.call('write_thing', { a: 1 });
   const srv = await serveApprovals({ stateDir, secret: 'k' });
@@ -119,7 +119,7 @@ test('approvals page: localhost only, CSP, CSRF token, host check, signed callba
     const ok = await fetch(srv.url + 'decide', { method: 'POST', body: new URLSearchParams({ id: a.approval_id, name: 'Ana Ops', decision: 'approve', csrf: srv.token }) });
     assert.match(await ok.text(), /Approved/);
     const r2 = await rt.call('write_thing', { a: 1 }); assert.equal(r2.status, 'executed'); assert.equal(r2.approved_by, 'Ana Ops');
-    const cb = await fetch(srv.url + 'callback', { method: 'POST', headers: { 'x-lodestar-signature': 't=1,v1=' + '0'.repeat(64) }, body: '{}' });
+    const cb = await fetch(srv.url + 'callback', { method: 'POST', headers: { 'x-fairhaul-signature': 't=1,v1=' + '0'.repeat(64) }, body: '{}' });
     assert.equal(cb.status, 401);
     const log = readAudit(join(stateDir, 'audit.jsonl'));
     assert.ok(log.some((l) => l.type === 'webhook-rejected'));
@@ -138,7 +138,7 @@ test('caps persist across restarts per session and per day; per-tool caps block 
   const r = await b.call('read_thing'); assert.equal(r.status, 'blocked'); assert.equal(r.cap.cap, 'maxSteps');
   const other = new AgentRuntime(sampleManifest(), { root, session: 'S2', caps: { maxStepsPerDay: 3 } });
   const d = await other.call('read_thing'); assert.equal(d.status, 'blocked'); assert.match(d.reason, /daily step cap/);
-  assert.ok(readAudit(join(root, '.lodestar', 'audit.jsonl')).some((l) => l.cap));
+  assert.ok(readAudit(join(root, '.fairhaul', 'audit.jsonl')).some((l) => l.cap));
   assert.throws(() => { b.caps.maxSteps = 999; }, TypeError, 'caps are frozen');
   assert.equal(capHit({ maxSpendUsd: 0 }, { session: { steps: 0, spend_usd: 0, tools: {} }, today: { steps: 0, spend_usd: 0, tools: {} } }, 'x', 0), null);
 });
@@ -154,7 +154,7 @@ test('safePath refuses symlink escapes and NUL bytes', () => {
   mkdirSync(join(root, 'ok')); assert.ok(safePath(root, 'ok/file.txt').endsWith('file.txt'));
 });
 
-test('MCP: annotations, prompts, 2025-11-25, usage in lodestar_info', async () => {
+test('MCP: annotations, prompts, 2025-11-25, usage in fairhaul_info', async () => {
   const m = sampleManifest({ prompts: [{ name: 'month_end', description: 'Run month end', arguments: [{ name: 'month', required: true }], text: 'Close {{month}} now.' }] });
   const h = createMcpHandler(new AgentRuntime(m, { audit: false }));
   const init = await h({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-11-25' } });
@@ -165,7 +165,7 @@ test('MCP: annotations, prompts, 2025-11-25, usage in lodestar_info', async () =
   const pr = await h({ jsonrpc: '2.0', id: 3, method: 'prompts/get', params: { name: 'month_end', arguments: { month: '2026-10' } } });
   assert.equal(pr.result.messages[0].content.text, 'Close 2026-10 now.');
   assert.equal((await h({ jsonrpc: '2.0', id: 4, method: 'prompts/get', params: { name: 'month_end' } })).error.code, -32602);
-  const info = await h({ jsonrpc: '2.0', id: 5, method: 'tools/call', params: { name: 'lodestar_info' } });
+  const info = await h({ jsonrpc: '2.0', id: 5, method: 'tools/call', params: { name: 'fairhaul_info' } });
   assert.ok(info.result.structuredContent.usage.today);
 });
 
@@ -204,10 +204,10 @@ test('eval report: offline HTML with regression highlighted', async () => {
 test('scaffolder writes a complete agent package', async () => {
   const { spawnSync } = await import('node:child_process');
   const dir = tmp();
-  const r = spawnSync(process.execPath, [fileURLToPath(new URL('../bin/lodestar-new-agent.js', import.meta.url)), 'iris-of-tests', '--dir', dir], { encoding: 'utf8' });
+  const r = spawnSync(process.execPath, [fileURLToPath(new URL('../bin/fairhaul-new-agent.js', import.meta.url)), 'iris-of-tests', '--dir', dir], { encoding: 'utf8' });
   assert.equal(r.status, 0, r.stderr);
   for (const f of ['package.json', 'bin/iris-of-tests.js', 'src/manifest.js', 'evals/cases.json', 'test/logic.test.js', 'LICENSE']) assert.ok(existsSync(join(dir, 'iris-of-tests', f)), f);
-  assert.equal(spawnSync(process.execPath, [fileURLToPath(new URL('../bin/lodestar-new-agent.js', import.meta.url)), 'Bad Name'], { encoding: 'utf8' }).status, 2);
+  assert.equal(spawnSync(process.execPath, [fileURLToPath(new URL('../bin/fairhaul-new-agent.js', import.meta.url)), 'Bad Name'], { encoding: 'utf8' }).status, 2);
 });
 
 test('MCP openWorldHint follows the tool openWorld flag', async () => {

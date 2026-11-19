@@ -12,7 +12,7 @@ const CSV = 'vendor,vendor_id,invoice_number,invoice_date,amount,paid_date,payme
   + 'Bluewater Factoring,V880,7710,2026-02-02,1250.00,2026-03-20,ACH-2,\n'
   + 'Prairie Express,V200,PX-100,2026-02-05,400.00,2026-03-02,ACH-3,\n';
 const root = () => { const r = mkdtempSync(join(tmpdir(), 'duplicates-mem-')); writeFileSync(join(r, 'payments.csv'), CSV); return r; };
-const rtFor = (r, o = {}) => new AgentRuntime(manifest, { root: r, stateDir: join(r, '.lodestar'), mode: 'assist', ...o });
+const rtFor = (r, o = {}) => new AgentRuntime(manifest, { root: r, stateDir: join(r, '.fairhaul'), mode: 'assist', ...o });
 const run = (rt) => rt.call('duplicates_scan', { payments: 'payments.csv', as_of: '2026-11-16' });
 
 test('two vendor records a person confirmed are one carrier are searched as one vendor', async () => {

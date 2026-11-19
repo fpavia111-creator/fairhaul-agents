@@ -67,8 +67,8 @@ for (const a of agents) {
     }
     r.with_output_schema = tools.filter((t) => t.outputSchema).length;
     if (caps.prompts) { const { prompts } = await client.listPrompts(); r.prompts = prompts.length; for (const p of prompts) { try { const args = Object.fromEntries((p.arguments || []).map((x) => [x.name, 'x'])); await client.getPrompt({ name: p.name, arguments: args }); } catch (e) { issues.push(`prompt ${p.name}: ${e.message}`); } } }
-    const info = await client.callTool({ name: 'lodestar_info', arguments: {} });
-    if (info.isError || !info.structuredContent) issues.push('lodestar_info: error or no structuredContent');
+    const info = await client.callTool({ name: 'fairhaul_info', arguments: {} });
+    if (info.isError || !info.structuredContent) issues.push('fairhaul_info: error or no structuredContent');
     // Every tool called with {}: must come back as a tool result (never a protocol crash).
     const sizes = [];
     for (const t of tools) {

@@ -59,7 +59,7 @@ Fairhaul Load Tracking demo (fictional loads, 2026-11-16 10:00) in <demo folder>
 | Tool | What it does | Policy |
 |---|---|---|
 | `tracking_assess` | For each open load: status (late, at_risk, blind, on_track, delivered_not_closed), issues (missed_pickup, no_tracking, stale, eta_past_appointment, past_appointment, delay_reported), last event and its age, ETA and ap… | runs |
-| `tracking_write_report` | Write tracking-exceptions.csv and .html (one row per open load, worst first; carriers by tracking compliance) into out_dir (default lodestar-out/tracking). | runs |
+| `tracking_write_report` | Write tracking-exceptions.csv and .html (one row per open load, worst first; carriers by tracking compliance) into out_dir (default fairhaul-out/tracking). | runs |
 | `tracking_draft_delay_notice` | Write drafts/delay_notice-<customer>.md telling one customer which of their loads are late or at risk, with the appointment, latest ETA and latest event. | asks first (Auto can be opted in) |
 | `tracking_request_send` | After one named human click (even in Auto), record that the reviewed delay notice draft is approved in delay_notice-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `email_send` | Fairhaul Load Tracking never emails customers or carriers. | refused |
@@ -96,7 +96,7 @@ Table inputs can be CSV, TSV, semicolon- or pipe-separated text, Excel `.xlsx`, 
 
 ### Files from other countries
 
-A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-load-tracking inspect <file>` (names and shapes only, never values) and name them in `lodestar-sources.json`:
+A German export in Windows-1252 with semicolons, `1.234,56` and `03.11.2026`, or a Japanese one in Shift_JIS with `2026/11/03`, is read the same way as the English file. [`fixtures/intl/`](fixtures/intl) has both versions of the demo data, and the eval cases `intl-de-*` and `intl-ja-*` require the same results as the English case. A weight, distance or dimension column found by its translated name with no unit in it is read as metric and converted, and the result says so. Columns named differently? Run `npx fairhaul-load-tracking inspect <file>` (names and shapes only, never values) and name them in `fairhaul-sources.json`:
 
 ```json
 { "files": { "exports/bills.csv": { "columns": { "invoice_number": "Beleg" }, "date_order": "dmy", "units": { "weight": "kg" } } } }
@@ -151,7 +151,7 @@ fairhaul-load-tracking demo
 
 ## Audit log and data
 
-Every call is written to `.lodestar/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
+Every call is written to `.fairhaul/audit.jsonl` under the root: hash-chained JSON lines, with arguments stored as a hash, signed with an Ed25519 key when you configure one. Everything runs on your machine on files you choose. No network calls, no telemetry, no credentials. The bundled fixtures are fictional.
 
 <!-- generated:end -->
 

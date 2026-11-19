@@ -67,7 +67,7 @@ Every agent has a `demo` that runs on fictional files, an `eval` that checks it 
 - **Allowlist per agent.** Each agent can call only its own tools. Anything else is blocked, including tools a host model invents.
 - **Refused tools.** Each agent names the live actions near its job (paying, emailing, changing the TMS, posting to the ledger, filing with customs) and blocks them, so a model asking for them gets a clear refusal.
 - **One named click.** Approving a payment, a send, a production change or a journal waits for a named person, even in Auto mode. The approval is tied to the sha256 of the reviewed draft; if the draft changes, the approval no longer matches.
-- **Audit log.** Every call is written to a hash-chained log under `.lodestar/`, signed with an Ed25519 key when you configure one.
+- **Audit log.** Every call is written to a hash-chained log under `.fairhaul/`, signed with an Ed25519 key when you configure one.
 - **Kill switch.** `<agent> kill` stops every tool until `<agent> unkill`.
 - **Hostile input tested.** Spreadsheet formulas, HTML, path tricks and text aimed at the model are planted in every agent's data in CI (`npm run hostile`).
 
@@ -77,7 +77,7 @@ This repository is a Claude Code plugin marketplace. Each agent is a plugin that
 
 ```text
 /plugin marketplace add <path or git URL of this repository>
-/plugin install fairhaul-freight-bill-audit@lodestar-freight
+/plugin install fairhaul-freight-bill-audit@fairhaul-freight
 ```
 
 The plugins start `npx -y <agent>@<version>`, so they need that version on npm. Until then, add an agent from a local checkout:

@@ -2,7 +2,7 @@
 // a shipment list or a tracking export reads the same way in every agent.
 // Each field lists the header names it is also called. The names were written
 // from knowledge of common TMS, carrier and AP exports; none was checked
-// against a live account. A buyer can name columns by hand in lodestar-sources.json.
+// against a live account. A buyer can name columns by hand in fairhaul-sources.json.
 import { readX12, invoicesFrom210 } from './x12.js';
 import { round2, str, num, chargeCode } from './freight.js';
 import { exportProfile } from './exports.js';

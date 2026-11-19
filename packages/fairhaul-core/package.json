@@ -15,10 +15,10 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "lodestar-approve": "bin/lodestar-approve.js",
-    "lodestar-verify-log": "bin/lodestar-verify-log.js",
-    "lodestar-new-agent": "bin/lodestar-new-agent.js",
-    "lodestar-license": "bin/lodestar-license.js"
+    "fairhaul-approve": "bin/fairhaul-approve.js",
+    "fairhaul-verify-log": "bin/fairhaul-verify-log.js",
+    "fairhaul-new-agent": "bin/fairhaul-new-agent.js",
+    "fairhaul-license": "bin/fairhaul-license.js"
   },
   "files": [
     "src",
@@ -46,6 +46,6 @@
     "guardrails",
     "human-in-the-loop",
     "audit-log",
-    "lodestar"
+    "fairhaul"
   ]
 }

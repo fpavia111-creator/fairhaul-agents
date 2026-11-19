@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { analyse, fixText } from './accessorials.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/accessorials';
+const OUT = 'fairhaul-out/accessorials';
 const files = {
   invoices: { type: 'string', description: 'Carrier invoices under --root (CSV, Excel, JSON or X12 210) with charge lines and destination' },
   shipments: { type: 'string', description: 'Optional shipments with the accessorials ordered on each (TMS or BOL export), matched by shipment id, PRO, BOL or PO' },
@@ -42,7 +42,7 @@ Rules: Fairhaul Accessorial Charges never changes the TMS and never pays. An uno
 3. Only when the person asks, call accessorials_draft_address_update, then accessorials_request_apply after they review it. Disputes for charges above contract belong in Fairhaul Freight Bill Audit.` }],
   tools: [
     { name: 'accessorials_analyse', kind: 'read', title: 'Find where accessorials come from', description: 'Accessorial charges by type, location and carrier; charges a shipper could have ordered but did not; charges above the contract; and repeats at the same location with the address-book change that stops them.', inputSchema: { type: 'object', additionalProperties: false, required: ['invoices'], properties: files }, handler: async (a, ctx) => { const r = load(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'accessorials_write_report', kind: 'report', title: 'Write the accessorial report', description: 'Write accessorials.csv and .html (one row per accessorial charge; repeats to fix; totals by type, location and carrier) into out_dir (default lodestar-out/accessorials).', inputSchema: { type: 'object', additionalProperties: false, required: ['invoices'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/accessorials)' } } }, handler: async (a, ctx) => {
+    { name: 'accessorials_write_report', kind: 'report', title: 'Write the accessorial report', description: 'Write accessorials.csv and .html (one row per accessorial charge; repeats to fix; totals by type, location and carrier) into out_dir (default fairhaul-out/accessorials).', inputSchema: { type: 'object', additionalProperties: false, required: ['invoices'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/accessorials)' } } }, handler: async (a, ctx) => {
       const r = load(a, ctx);
       const w = writeWorklist(ctx, a.out_dir || OUT, 'accessorials', { title: 'Accessorial charges', intro: line(r), rows: r.lines, columns: ['invoice_number', 'carrier', 'ship_date', 'location', 'label', 'description', 'amount', 'ordered', 'contract_amount', 'over'], sections: [{ title: 'Repeats to fix at the source', rows: r.fixes, columns: ['location', 'label', 'times', 'ordered_times', 'amount', 'carriers', 'fix'] }, { title: 'By type', rows: r.by_type, columns: ['type', 'count', 'amount'] }, { title: 'By location', rows: r.by_location, columns: ['location', 'count', 'amount'] }, { title: 'By carrier', rows: r.by_carrier, columns: ['carrier', 'count', 'amount'] }], limits: [LIMITS.files, 'A charge that was not ordered is not automatically wrong; check before disputing.', LIMITS.contract] });
       return { summary: `Accessorial report written. ${line(r)}`, files: w.files, output_sha256: w.output_sha256 };

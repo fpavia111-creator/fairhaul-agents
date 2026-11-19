@@ -30,25 +30,25 @@ export function parseFlags(argv) {
 
 export function runtimeFromFlags(manifest, flags) {
   const env = process.env;
-  const mode = flags.mode || env.LODESTAR_MODE || 'assist';
-  const auto = String(flags.auto || env.LODESTAR_AUTO_ACTIONS || '').split(',').map((s) => s.trim()).filter(Boolean);
+  const mode = flags.mode || env.FAIRHAUL_MODE || 'assist';
+  const auto = String(flags.auto || env.FAIRHAUL_AUTO_ACTIONS || '').split(',').map((s) => s.trim()).filter(Boolean);
   const caps = {};
-  if (flags['max-steps'] || env.LODESTAR_MAX_STEPS) caps.maxSteps = Number(flags['max-steps'] || env.LODESTAR_MAX_STEPS);
-  if (flags['max-spend'] || env.LODESTAR_MAX_SPEND_USD) caps.maxSpendUsd = Number(flags['max-spend'] || env.LODESTAR_MAX_SPEND_USD);
-  if (flags['max-steps-per-day'] || env.LODESTAR_MAX_STEPS_PER_DAY) caps.maxStepsPerDay = Number(flags['max-steps-per-day'] || env.LODESTAR_MAX_STEPS_PER_DAY);
-  if (flags['max-spend-per-day'] || env.LODESTAR_MAX_SPEND_USD_PER_DAY) caps.maxSpendUsdPerDay = Number(flags['max-spend-per-day'] || env.LODESTAR_MAX_SPEND_USD_PER_DAY);
+  if (flags['max-steps'] || env.FAIRHAUL_MAX_STEPS) caps.maxSteps = Number(flags['max-steps'] || env.FAIRHAUL_MAX_STEPS);
+  if (flags['max-spend'] || env.FAIRHAUL_MAX_SPEND_USD) caps.maxSpendUsd = Number(flags['max-spend'] || env.FAIRHAUL_MAX_SPEND_USD);
+  if (flags['max-steps-per-day'] || env.FAIRHAUL_MAX_STEPS_PER_DAY) caps.maxStepsPerDay = Number(flags['max-steps-per-day'] || env.FAIRHAUL_MAX_STEPS_PER_DAY);
+  if (flags['max-spend-per-day'] || env.FAIRHAUL_MAX_SPEND_USD_PER_DAY) caps.maxSpendUsdPerDay = Number(flags['max-spend-per-day'] || env.FAIRHAUL_MAX_SPEND_USD_PER_DAY);
   for (const [k, v] of Object.entries(caps)) if (!Number.isFinite(v) || v < 0) throw new Error(`cap ${k} must be a non-negative number`);
   return new AgentRuntime(manifest, {
     mode, autoActions: auto, caps,
-    root: flags.root || env.LODESTAR_ROOT || process.cwd(),
-    stateDir: flags['state-dir'] || env.LODESTAR_STATE_DIR || undefined,
-    session: flags.session || env.LODESTAR_SESSION || undefined,
-    signingKey: flags['signing-key'] || env.LODESTAR_SIGNING_KEY || undefined,
-    auditMirror: flags['audit-mirror'] || env.LODESTAR_AUDIT_MIRROR || undefined,
-    approvalTtlHours: flags['approval-ttl'] || env.LODESTAR_APPROVAL_TTL_HOURS || undefined,
-    approvalWebhook: flags['approval-webhook'] || env.LODESTAR_APPROVAL_WEBHOOK || undefined,
-    memory: !(flags['no-memory'] || /^(1|true|yes)$/i.test(env.LODESTAR_NO_MEMORY || '')),
-    lang: flags.lang || env.LODESTAR_LANG || undefined,
+    root: flags.root || env.FAIRHAUL_ROOT || process.cwd(),
+    stateDir: flags['state-dir'] || env.FAIRHAUL_STATE_DIR || undefined,
+    session: flags.session || env.FAIRHAUL_SESSION || undefined,
+    signingKey: flags['signing-key'] || env.FAIRHAUL_SIGNING_KEY || undefined,
+    auditMirror: flags['audit-mirror'] || env.FAIRHAUL_AUDIT_MIRROR || undefined,
+    approvalTtlHours: flags['approval-ttl'] || env.FAIRHAUL_APPROVAL_TTL_HOURS || undefined,
+    approvalWebhook: flags['approval-webhook'] || env.FAIRHAUL_APPROVAL_WEBHOOK || undefined,
+    memory: !(flags['no-memory'] || /^(1|true|yes)$/i.test(env.FAIRHAUL_NO_MEMORY || '')),
+    lang: flags.lang || env.FAIRHAUL_LANG || undefined,
   });
 }
 
@@ -73,28 +73,28 @@ Usage:
   ${bin} validate-config <schema> <file>   Check a config file (schemas: see "tools --configs")
   ${bin} sources                  List the export files this pack reads directly, by system
   ${bin} inspect <file> [--as KIND]   Show how a file would be read: export recognised, columns mapped
-  ${bin} kill | unkill            Engage or clear the kill switch (.lodestar/KILL)${manifest.memory ? `
+  ${bin} kill | unkill            Engage or clear the kill switch (.fairhaul/KILL)${manifest.memory ? `
   ${bin} memory [list] [--status S] [--kind K]   What this agent has learned (accepted and waiting)
   ${bin} memory accept|reject <id> --as "Name" [--reason TEXT]   A person decides on a waiting fact
   ${bin} memory retire <id> --as "Name" --reason TEXT   A person stops an accepted fact
   ${bin} memory verify [--pubkey public.pem]   Check the memory file's chain against the audit log` : ''}
   ${bin} license status           Licence for the paid tier: plan, expiry, which tools it unlocks
-  ${bin} license install <file>   Check a licence key and copy it to .lodestar/license.key
-  ${bin} license remove           Delete .lodestar/license.key
+  ${bin} license install <file>   Check a licence key and copy it to .fairhaul/license.key
+  ${bin} license remove           Delete .fairhaul/license.key
 
 Options:
   --mode review|assist|auto       Default assist. Auto is opt-in per action:
   --auto tool_a,tool_b            Actions allowed to run without asking in Auto
   --max-steps N --max-spend USD   Caps (always enforced)
   --root DIR                      Folder the tools may read/write (default: cwd)
-  --state-dir DIR                 Audit log, approvals, kill file (default: <root>/.lodestar)
+  --state-dir DIR                 Audit log, approvals, kill file (default: <root>/.fairhaul)
   --session ID                    Session id for persisted caps (default: random per process)
   --max-steps-per-day N --max-spend-per-day USD   Daily caps (persisted in usage.json)
   --signing-key FILE              Ed25519 private key (outside --root): sign every audit line
   --audit-mirror FILE             Also append every audit line to this file
   --approval-ttl HOURS            Approvals expire this long after approval (default 24)
-  --approval-webhook URL          POST pending approvals, HMAC-signed with LODESTAR_WEBHOOK_SECRET
-  --lang en|de|fr|es|pt|it|ja|zh|ko   Language of reports and the approvals page (LODESTAR_LANG); tool results stay in English${manifest.memory ? `
+  --approval-webhook URL          POST pending approvals, HMAC-signed with FAIRHAUL_WEBHOOK_SECRET
+  --lang en|de|fr|es|pt|it|ja|zh|ko   Language of reports and the approvals page (FAIRHAUL_LANG); tool results stay in English${manifest.memory ? `
   --no-memory                     Run without the facts this agent has learned (recall and learn still work)` : ''}
 `;
 }
@@ -124,7 +124,7 @@ export async function runCli(manifest, argv, opts = {}) {
     out(r);
     return r.status === 'executed' || r.status === 'needs_approval' ? 0 : 1;
   }
-  const stateDir = () => resolve(flags.dir || flags['state-dir'] || process.env.LODESTAR_STATE_DIR || join(flags.root || process.env.LODESTAR_ROOT || process.cwd(), '.lodestar'));
+  const stateDir = () => resolve(flags.dir || flags['state-dir'] || process.env.FAIRHAUL_STATE_DIR || join(flags.root || process.env.FAIRHAUL_ROOT || process.cwd(), '.fairhaul'));
   if (cmd === 'approve' || cmd === 'reject') {
     const store = new ApprovalStore(stateDir(), { ttlHours: flags['approval-ttl'] });
     const rec = cmd === 'approve' ? store.approve(pos[1], flags.as, flags.note || '') : store.reject(pos[1], flags.as, flags.note || '');
@@ -137,7 +137,7 @@ export async function runCli(manifest, argv, opts = {}) {
       const port = flags.port !== undefined ? Number(flags.port) : 7457;
       const host = flags.host || '127.0.0.1';
       if (!/^(127\.0\.0\.1|localhost|::1)$/.test(host) && !flags['i-understand-remote']) { out('Refusing to bind beyond localhost. Pass --i-understand-remote to override.'); return 2; }
-      const s2 = await serveApprovals({ stateDir: dir, host, port, ttlHours: flags['approval-ttl'], agent: manifest.name, lang: flags.lang || process.env.LODESTAR_LANG });
+      const s2 = await serveApprovals({ stateDir: dir, host, port, ttlHours: flags['approval-ttl'], agent: manifest.name, lang: flags.lang || process.env.FAIRHAUL_LANG });
       process.stderr.write(`Approvals page: ${s2.url}  (Ctrl+C to stop)\n`);
       return null;
     }
@@ -149,13 +149,13 @@ export async function runCli(manifest, argv, opts = {}) {
   if (cmd === 'usage') { out(runtimeFromFlags(manifest, flags).usageReport()); return 0; }
   if (cmd === 'keygen') {
     if (!flags.out) { out('keygen needs --out DIR (outside the agent root)'); return 2; }
-    const k = generateSigningKey(flags.out, { root: flags.root || process.env.LODESTAR_ROOT || process.cwd() });
+    const k = generateSigningKey(flags.out, { root: flags.root || process.env.FAIRHAUL_ROOT || process.cwd() });
     out(`Signing key ${k.keyId} written. Private: ${k.privateKeyFile} (keep it secret). Public: ${k.publicKeyFile}.`);
     return 0;
   }
   if (cmd === 'rotate-key') {
     if (!flags['signing-key'] || !flags['new-key'] || !flags.as) { out('rotate-key needs --signing-key OLD --new-key NEW --as "Name"'); return 2; }
-    const root = flags.root || process.env.LODESTAR_ROOT || process.cwd();
+    const root = flags.root || process.env.FAIRHAUL_ROOT || process.cwd();
     const log = new AuditLog(join(stateDir(), 'audit.jsonl'), { signer: loadSigner(flags['signing-key'], { root }) });
     const line = log.rotate(loadSigner(flags['new-key'], { root }), { by: String(flags.as), note: flags.note || '' });
     out(`Rotation recorded at ${line.id}: new key ${line.new_key_id}. Start the agent with --signing-key ${flags['new-key']} from now on.`);
@@ -280,7 +280,7 @@ export async function runCli(manifest, argv, opts = {}) {
     return 0;
   }
   if (cmd === 'kill' || cmd === 'unkill') {
-    const dir = resolve(flags['state-dir'] || join(flags.root || process.cwd(), '.lodestar'));
+    const dir = resolve(flags['state-dir'] || join(flags.root || process.cwd(), '.fairhaul'));
     mkdirSync(dir, { recursive: true });
     const f = join(dir, 'KILL');
     if (cmd === 'kill') { writeFileSync(f, `engaged ${new Date().toISOString()}\n`); out(`Kill switch engaged: ${f}`); }

@@ -11,7 +11,7 @@ test('mcp handler: initialize, list, call, errors', async () => {
   assert.equal(await h({ jsonrpc: '2.0', method: 'notifications/initialized' }), null);
   const list = await h({ jsonrpc: '2.0', id: 2, method: 'tools/list' });
   const names = list.result.tools.map((t) => t.name);
-  assert.ok(names.includes('lodestar_info') && names.includes('read_thing'));
+  assert.ok(names.includes('fairhaul_info') && names.includes('read_thing'));
   assert.match(list.result.tools.find((t) => t.name === 'go_live').description, /^\[BLOCK/);
   const call = await h({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'read_thing', arguments: { x: 7 } } });
   assert.equal(call.result.isError, false);

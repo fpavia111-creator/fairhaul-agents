@@ -209,7 +209,7 @@
         "contract": "fixtures/contract.json",
         "shipments": "fixtures/shipments.csv",
         "paid": "fixtures/paid.csv",
-        "out_dir": "lodestar-out/evals/bills_write_report"
+        "out_dir": "fairhaul-out/evals/bills_write_report"
       },
       "expect": {
         "status": "executed",
@@ -231,7 +231,7 @@
         "shipments": "fixtures/shipments.csv",
         "paid": "fixtures/paid.csv",
         "carrier": "EXLT",
-        "out_dir": "lodestar-out/evals/bills_draft_dispute"
+        "out_dir": "fairhaul-out/evals/bills_draft_dispute"
       },
       "expect": {
         "status": "needs_approval",
@@ -247,7 +247,7 @@
         "shipments": "fixtures/shipments.csv",
         "paid": "fixtures/paid.csv",
         "carrier": "EXLT",
-        "out_dir": "lodestar-out/evals/bills_draft_dispute"
+        "out_dir": "fairhaul-out/evals/bills_draft_dispute"
       },
       "approve": "Pat Example",
       "expect": {
@@ -345,7 +345,7 @@
         "shipments": "fixtures/shipments.csv",
         "paid": "fixtures/paid.csv",
         "carrier": "EXLT",
-        "out_dir": "lodestar-out/evals/bills_draft_dispute"
+        "out_dir": "fairhaul-out/evals/bills_draft_dispute"
       },
       "mode": "review",
       "expect": {

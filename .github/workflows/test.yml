@@ -42,5 +42,5 @@ jobs:
         run: |
           for p in packages/*/; do (cd "$p" && npm pack --dry-run --json > /tmp/pack.json && node -e "
             const f=require('/tmp/pack.json')[0].files.map(x=>x.path);
-            const bad=f.filter(x=>/(^|\/)(node_modules|\.lodestar|lodestar-out)\/|\.npmrc$|\.tgz$/.test(x));
+            const bad=f.filter(x=>/(^|\/)(node_modules|\.fairhaul|fairhaul-out)\/|\.npmrc$|\.tgz$/.test(x));
             if(bad.length){console.error('$p', bad);process.exit(1)}") || exit 1; done

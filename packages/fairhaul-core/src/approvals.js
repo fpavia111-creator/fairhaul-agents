@@ -114,7 +114,7 @@ export class ApprovalStore {
 
 /** HMAC-SHA256 signature for a webhook body: "t=<unix>,v1=<hex>". The secret comes from env, never disk. */
 export function signWebhook(body, secret, t = Math.floor(Date.now() / 1000)) {
-  if (!secret) throw new Error('webhook secret is required (set LODESTAR_WEBHOOK_SECRET)');
+  if (!secret) throw new Error('webhook secret is required (set FAIRHAUL_WEBHOOK_SECRET)');
   const mac = createHmac('sha256', secret).update(`${t}.${body}`).digest('hex');
   return `t=${t},v1=${mac}`;
 }

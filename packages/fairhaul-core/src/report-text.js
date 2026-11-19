@@ -1,5 +1,5 @@
 // The words on a report page, in the nine report languages: page headings, section
-// headings and the common column names. `--lang` (or LODESTAR_LANG) picks the language.
+// headings and the common column names. `--lang` (or FAIRHAUL_LANG) picks the language.
 //
 // What does not change with the language: the CSV file (its column names are read by
 // scripts), finding codes and status values, the finding sentences and the notes under

@@ -147,7 +147,7 @@
         "invoices": "fixtures/invoices.csv",
         "shipments": "fixtures/shipments.csv",
         "contract": "fixtures/contract.json",
-        "out_dir": "lodestar-out/evals/accessorials_write_report"
+        "out_dir": "fairhaul-out/evals/accessorials_write_report"
       },
       "expect": {
         "status": "executed",
@@ -167,7 +167,7 @@
         "invoices": "fixtures/invoices.csv",
         "shipments": "fixtures/shipments.csv",
         "contract": "fixtures/contract.json",
-        "out_dir": "lodestar-out/evals/accessorials_draft_address_update"
+        "out_dir": "fairhaul-out/evals/accessorials_draft_address_update"
       },
       "expect": {
         "status": "needs_approval",
@@ -181,7 +181,7 @@
         "invoices": "fixtures/invoices.csv",
         "shipments": "fixtures/shipments.csv",
         "contract": "fixtures/contract.json",
-        "out_dir": "lodestar-out/evals/accessorials_draft_address_update"
+        "out_dir": "fairhaul-out/evals/accessorials_draft_address_update"
       },
       "approve": "Pat Example",
       "expect": {
@@ -261,7 +261,7 @@
         "invoices": "fixtures/invoices.csv",
         "shipments": "fixtures/shipments.csv",
         "contract": "fixtures/contract.json",
-        "out_dir": "lodestar-out/evals/accessorials_draft_address_update"
+        "out_dir": "fairhaul-out/evals/accessorials_draft_address_update"
       },
       "mode": "review",
       "expect": {

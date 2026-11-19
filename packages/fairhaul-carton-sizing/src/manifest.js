@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { PACKAGE_FIELDS, CARTON_SETTINGS_SCHEMA, checkCartons, changeText } from './cartons.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/cartons';
+const OUT = 'fairhaul-out/cartons';
 const files = {
   packages: { type: 'string', description: 'Shipped parcels under --root (WMS or shipping system export): package id, SKU, carton code or carton dimensions, contents dimensions in inches, actual weight in lb, billed amount' },
   cartons: { type: 'string', description: 'Carton catalog JSON: carton names and inside dimensions in inches, plus divisor, padding and average cost per billable lb' },
@@ -39,7 +39,7 @@ Rules: Fairhaul Carton Sizing never changes the WMS and never orders cartons. Sa
 3. Only when the person asks, call cartons_draft_carton_change, then cartons_request_apply after they review it.` }],
   tools: [
     { name: 'cartons_check', kind: 'read', title: 'Check carton fit', description: 'For each package: carton used, fill, dimensional and billable weight now, the smallest catalog carton that fits (any orientation, with padding) and its billable weight, the lb and money saved, oversize risk and data problems. Totals, savings by SKU, carton usage and carton sizes to add.', inputSchema: { type: 'object', additionalProperties: false, required: ['packages', 'cartons'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'cartons_write_report', kind: 'report', title: 'Write the carton report', description: 'Write cartons.csv and .html (one row per package; savings by SKU; carton usage) into out_dir (default lodestar-out/cartons).', inputSchema: { type: 'object', additionalProperties: false, required: ['packages', 'cartons'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/cartons)' } } }, handler: async (a, ctx) => {
+    { name: 'cartons_write_report', kind: 'report', title: 'Write the carton report', description: 'Write cartons.csv and .html (one row per package; savings by SKU; carton usage) into out_dir (default fairhaul-out/cartons).', inputSchema: { type: 'object', additionalProperties: false, required: ['packages', 'cartons'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/cartons)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const w = writeWorklist(ctx, a.out_dir || OUT, 'cartons', { title: 'Carton fit', intro: line(r), rows: r.items.map((i) => ({ ...i, flags: i.flags.join(' ') })), columns: ['package_id', 'sku', 'carton_used', 'used_dims', 'fill_pct', 'weight', 'dim_weight_now', 'billable_now', 'best_carton', 'billable_best', 'billable_lbs_saved', 'est_saving', 'status', 'flags'], sections: [{ title: 'Savings by SKU', rows: r.by_sku, columns: ['sku', 'packages', 'from', 'to', 'est_saving'] }, { title: 'Carton use', rows: r.usage, columns: ['carton', 'dims', 'used', 'best_fit_for'] }], limits: [LIMITS.files, `Dimensional weight uses a ${r.settings.divisor} divisor and ${r.settings.padding_in} in of padding per side; savings use ${r.settings.rate_per_lb} per billable lb. Carrier rules on rounding and oversize vary; check yours.`] });
       return { summary: `Carton report written. ${line(r)}`, files: w.files, output_sha256: w.output_sha256 };

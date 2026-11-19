@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { ENTRY_FIELDS, ENTRY_PROFILES, INVOICE_FIELDS, checkEntries, correctionText } from './entries.js';
 
 const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
-const OUT = 'lodestar-out/entries';
+const OUT = 'fairhaul-out/entries';
 const files = {
   entries: { type: 'string', description: 'Entry lines under --root from your broker or customs portal export: entry number and date, line, invoice number, SKU, tariff code, origin, quantity, entered value, exchange rate, duty rate and duty' },
   invoices: { type: 'string', description: 'Commercial invoice lines: invoice number, SKU, quantity, value, currency, origin' },
@@ -42,7 +42,7 @@ Rules: Fairhaul Customs Entries never files with customs, never pays and never c
 3. Only when the person asks, call entries_draft_correction_request for one entry, then entries_request_send after they review it.` }],
   tools: [
     { name: 'entries_check', kind: 'read', title: 'Check entries against invoices', description: 'Every point found per entry line (value, quantity, origin, duty arithmetic, entered twice, invoice line not entered, missing data) and across entries (same SKU under different codes, same code and origin at different rates), with an estimated duty impact, plus each entry\'s totals and days left to ask for a correction.', inputSchema: { type: 'object', additionalProperties: false, required: ['entries', 'invoices'], properties: files }, handler: async (a, ctx) => { const r = run(a, ctx); return { summary: line(r), ...r }; } },
-    { name: 'entries_write_report', kind: 'report', title: 'Write the entry review', description: 'Write entries.csv and .html (one row per point found; entries by deadline) into out_dir (default lodestar-out/entries).', inputSchema: { type: 'object', additionalProperties: false, required: ['entries', 'invoices'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default lodestar-out/entries)' } } }, handler: async (a, ctx) => {
+    { name: 'entries_write_report', kind: 'report', title: 'Write the entry review', description: 'Write entries.csv and .html (one row per point found; entries by deadline) into out_dir (default fairhaul-out/entries).', inputSchema: { type: 'object', additionalProperties: false, required: ['entries', 'invoices'], properties: { ...files, out_dir: { type: 'string', description: 'Folder under --root for the report (default fairhaul-out/entries)' } } }, handler: async (a, ctx) => {
       const r = run(a, ctx);
       const w = writeWorklist(ctx, a.out_dir || OUT, 'entries', { title: 'Customs entry review', intro: line(r), rows: r.items, columns: ['entry_number', 'line', 'invoice_number', 'sku', 'code', 'detail', 'duty_impact'], sections: [{ title: 'Entries', rows: r.by_entry, columns: ['entry_number', 'entry_date', 'lines', 'entered_value', 'duty', 'findings', 'duty_impact', 'correct_by', 'days_left', 'urgency'] }], limits: [LIMITS.files, 'Duty impact uses the rate on the entry line: positive may be owed, negative may have been overpaid. It is an estimate, not a liability figure. Fairhaul Customs Entries does not say which tariff code or origin is right; your broker or a licensed customs professional does.', LIMITS.advice] });
       return { summary: `Entry review written. ${line(r)}`, files: w.files, output_sha256: w.output_sha256 };
