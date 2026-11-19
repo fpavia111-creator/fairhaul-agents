@@ -8,84 +8,36 @@
   },
   "plugins": [
     {
-      "name": "fairhaul-returns-tracking",
-      "source": "./packages/fairhaul-returns-tracking",
-      "description": "Follows every return from authorisation to credit: return labels never used, returns received but not credited, carriers charging return freight twice, and which customers, SKUs and reasons cost the most freight to bring back.",
+      "name": "fairhaul-accessorial-charges",
+      "source": "./packages/fairhaul-accessorial-charges",
+      "description": "Fairhaul Accessorial Charges: finds where your accessorial charges come from (liftgate, residential, appointment, redelivery, detention and more) by location, carrier and lane, flags charges nobody ordered and charges above your contract, and drafts the address-book fixes that stop the repeat surprises. Never changes your TMS.",
       "version": "0.1.0",
       "category": "freight",
       "keywords": [
         "freight",
         "logistics",
         "freight-audit",
-        "returns",
-        "reverse-logistics",
-        "rma",
-        "credits"
+        "accessorials",
+        "liftgate",
+        "residential",
+        "redelivery",
+        "accessorial-charges"
       ]
     },
     {
-      "name": "fairhaul-ocean-freight-audit",
-      "source": "./packages/fairhaul-ocean-freight-audit",
-      "description": "Audits ocean freight invoices line by line against your service contract: base rate per container by port pair, BAF, peak season and other surcharges with their validity dates, charges the contract does not allow, duplicates and container counts, and drafts disputes to the line or forwarder. Never pays or sends.",
+      "name": "fairhaul-air-freight-audit",
+      "source": "./packages/fairhaul-air-freight-audit",
+      "description": "Fairhaul Air Freight Audit: audits air freight invoices: chargeable weight from actual and volumetric weight, the rate for the right weight break, the minimum charge, fuel and security surcharges per kilo, and other charges your rate sheet does not allow; drafts disputes to the forwarder. Never pays or sends.",
       "version": "0.1.0",
       "category": "freight",
       "keywords": [
         "freight",
         "logistics",
         "freight-audit",
-        "ocean-freight",
-        "baf",
-        "service-contract",
+        "air-freight",
+        "chargeable-weight",
+        "weight-break",
         "forwarder"
-      ]
-    },
-    {
-      "name": "fairhaul-proof-of-delivery",
-      "source": "./packages/fairhaul-proof-of-delivery",
-      "description": "Matches every delivered or invoiced shipment to its proof of delivery, flags missing, unsigned, short or exception-noted PODs and delivery dates that disagree with the invoice, holds the matching invoices for review, and drafts POD requests to carriers. Never releases or holds a payment itself.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "proof-of-delivery",
-        "pod",
-        "delivery-receipt",
-        "invoice-hold"
-      ]
-    },
-    {
-      "name": "fairhaul-carrier-vetting",
-      "source": "./packages/fairhaul-carrier-vetting",
-      "description": "Checks your carrier master and booked loads for warning signs of fraud and double brokering: shared phones, emails or bank accounts, new authority, lapsed insurance, recent remit-to changes. It flags; a person verifies and decides.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "carrier-vetting",
-        "fraud",
-        "double-brokering",
-        "onboarding",
-        "insurance"
-      ]
-    },
-    {
-      "name": "fairhaul-duplicate-payments",
-      "source": "./packages/fairhaul-duplicate-payments",
-      "description": "Searches years of freight payments for invoices paid twice: the same invoice under another number format, the same PRO billed twice, a carrier paid under two vendor names, and same-amount look-alikes, nets off credits already received, and drafts recovery requests. Never moves money.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "duplicate-payments",
-        "recovery-audit",
-        "overpayment",
-        "accounts-payable"
       ]
     },
     {
@@ -106,20 +58,88 @@
       ]
     },
     {
-      "name": "fairhaul-rfp-bid-scoring",
-      "source": "./packages/fairhaul-rfp-bid-scoring",
-      "description": "Scores carrier bids from a freight RFP lane by lane against your incumbent rates and volumes, builds award scenarios with your rules (share caps, incumbent preference, backup carriers, capacity), shows the savings and the lanes nobody covered, and drafts award letters. Never loads rates or sends awards.",
+      "name": "fairhaul-carrier-scorecards",
+      "source": "./packages/fairhaul-carrier-scorecards",
+      "description": "Fairhaul Carrier Scorecards: scores each carrier on on-time pickup and delivery, tender acceptance, billing accuracy, claims, tracking and cost per mile from your own shipment history, with your weights, ranks them and drafts the quarterly review note. Never sends it.",
       "version": "0.1.0",
       "category": "freight",
       "keywords": [
         "freight",
         "logistics",
         "freight-audit",
-        "freight-rfp",
-        "bid-analysis",
-        "procurement",
-        "lane-award",
-        "carrier-bids"
+        "carrier-scorecard",
+        "carrier-performance",
+        "on-time",
+        "otd",
+        "qbr"
+      ]
+    },
+    {
+      "name": "fairhaul-carrier-vetting",
+      "source": "./packages/fairhaul-carrier-vetting",
+      "description": "Checks your carrier master and booked loads for warning signs of fraud and double brokering: shared phones, emails or bank accounts, new authority, lapsed insurance, recent remit-to changes. It flags; a person verifies and decides.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "carrier-vetting",
+        "fraud",
+        "double-brokering",
+        "onboarding",
+        "insurance"
+      ]
+    },
+    {
+      "name": "fairhaul-carton-sizing",
+      "source": "./packages/fairhaul-carton-sizing",
+      "description": "Fairhaul Carton Sizing: checks every parcel's carton against what was inside, finds the smallest carton in your catalog that fits, works out the dimensional weight and freight you would save, flags packages heading for oversize charges, and drafts the carton set and packing rule changes. Never changes your WMS.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "packaging",
+        "dim-weight",
+        "cartonization",
+        "parcel",
+        "box-size"
+      ]
+    },
+    {
+      "name": "fairhaul-container-demurrage",
+      "source": "./packages/fairhaul-container-demurrage",
+      "description": "Fairhaul Container Demurrage: tracks every import container's free time at the port and with the line, counts the days left before demurrage and detention start, prices what is accruing from your tariff tiers, checks the line's demurrage and detention invoices and drafts disputes. Never pays or books anything.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "demurrage",
+        "detention",
+        "per-diem",
+        "containers",
+        "ocean"
+      ]
+    },
+    {
+      "name": "fairhaul-contract-rerating",
+      "source": "./packages/fairhaul-contract-rerating",
+      "description": "Fairhaul Contract Rerating: re-rates your shipment history under every carrier contract you hold (linehaul, minimums, discounts, fuel and accessorials), shows what each carrier would have cost, the cheapest carrier by lane and what you left on the table, and drafts routing guide changes. Never changes your routing guide.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "rate-shopping",
+        "routing-guide",
+        "tariff",
+        "what-if",
+        "ltl"
       ]
     },
     {
@@ -140,156 +160,20 @@
       ]
     },
     {
-      "name": "fairhaul-edi-files",
-      "source": "./packages/fairhaul-edi-files",
-      "description": "Reads X12 transport files (204 load tenders, 210 invoices, 214 status, 990 responses, 997/999 acknowledgements), checks envelopes and counts, converts them to spreadsheets, and reconciles invoices against tenders, status and acknowledgements. Never transmits EDI.",
+      "name": "fairhaul-detention-and-lumper",
+      "source": "./packages/fairhaul-detention-and-lumper",
+      "description": "Fairhaul Detention and Lumper: checks detention, layover and lumper charges against your dock times, appointments, free time and receipts, ranks facilities by dwell and detention cost, and drafts disputes. Never pays and never sends.",
       "version": "0.1.0",
       "category": "freight",
       "keywords": [
         "freight",
         "logistics",
         "freight-audit",
-        "edi",
-        "x12",
-        "204",
-        "210",
-        "214",
-        "990",
-        "997"
-      ]
-    },
-    {
-      "name": "fairhaul-ltl-reweighs",
-      "source": "./packages/fairhaul-ltl-reweighs",
-      "description": "Checks LTL weight and class corrections against your declared dimensions, the density scale and the inspection certificate, separates the corrections worth challenging from the ones that mean your own product data is wrong, and drafts the disputes and item-master fixes. Never pays or sends.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "reweigh",
-        "reclass",
-        "ltl",
-        "weight-and-inspection",
-        "nmfc"
-      ]
-    },
-    {
-      "name": "fairhaul-accessorial-charges",
-      "source": "./packages/fairhaul-accessorial-charges",
-      "description": "Finds where your accessorial charges come from (liftgate, residential, appointment, redelivery, detention and more) by location, carrier and lane, flags charges nobody ordered and charges above your contract, and drafts the address-book fixes that stop the repeat surprises. Never changes your TMS.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "accessorials",
-        "liftgate",
-        "residential",
-        "redelivery",
-        "accessorial-charges"
-      ]
-    },
-    {
-      "name": "fairhaul-air-freight-audit",
-      "source": "./packages/fairhaul-air-freight-audit",
-      "description": "Audits air freight invoices: chargeable weight from actual and volumetric weight, the rate for the right weight break, the minimum charge, fuel and security surcharges per kilo, and other charges your rate sheet does not allow; drafts disputes to the forwarder. Never pays or sends.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "air-freight",
-        "chargeable-weight",
-        "weight-break",
-        "forwarder"
-      ]
-    },
-    {
-      "name": "fairhaul-freight-claims",
-      "source": "./packages/fairhaul-freight-claims",
-      "description": "Finds loss, shortage and damage on delivered shipments, works out the claim amount and the filing deadline from your terms, tracks open claims for carrier acknowledgement, payment and short payment, and drafts claim letters. Never files a claim itself.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "cargo-claims",
-        "osd",
-        "loss-and-damage",
-        "shortage"
-      ]
-    },
-    {
-      "name": "fairhaul-freight-allocation",
-      "source": "./packages/fairhaul-freight-allocation",
-      "description": "Splits each freight bill across the orders, customers, SKUs and cost centers on the shipment by weight, volume, value, pallets or units, gives freight cost per unit by SKU and customer, and drafts the allocation journal for review. Never posts to your ledger.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "freight-allocation",
-        "cost-allocation",
-        "landed-cost",
-        "cost-to-serve",
-        "journal"
-      ]
-    },
-    {
-      "name": "fairhaul-carton-sizing",
-      "source": "./packages/fairhaul-carton-sizing",
-      "description": "Checks every parcel's carton against what was inside, finds the smallest carton in your catalog that fits, works out the dimensional weight and freight you would save, flags packages heading for oversize charges, and drafts the carton set and packing rule changes. Never changes your WMS.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "packaging",
-        "dim-weight",
-        "cartonization",
-        "parcel",
-        "box-size"
-      ]
-    },
-    {
-      "name": "fairhaul-freight-margins",
-      "source": "./packages/fairhaul-freight-margins",
-      "description": "Compares the freight you charged each customer with what the freight actually cost: recovery by customer and freight terms, orders shipped free that should not have been, collect orders you paid for, and how a different free-shipping threshold would have changed the result.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "freight-recovery",
-        "margin",
-        "pricing",
-        "free-shipping",
-        "customers"
-      ]
-    },
-    {
-      "name": "fairhaul-container-demurrage",
-      "source": "./packages/fairhaul-container-demurrage",
-      "description": "Tracks every import container's free time at the port and with the line, counts the days left before demurrage and detention start, prices what is accruing from your tariff tiers, checks the line's demurrage and detention invoices and drafts disputes. Never pays or books anything.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "demurrage",
         "detention",
-        "per-diem",
-        "containers",
-        "ocean"
+        "dwell",
+        "lumper",
+        "layover",
+        "dock"
       ]
     },
     {
@@ -310,91 +194,44 @@
       ]
     },
     {
-      "name": "fairhaul-load-tracking",
-      "source": "./packages/fairhaul-load-tracking",
-      "description": "Reads your open loads and their tracking events, finds loads with stale or no tracking, missed pickups and ETAs that run past the delivery appointment, ranks carriers on tracking compliance and drafts the delay notice to your customer. Never messages anyone itself.",
+      "name": "fairhaul-duplicate-payments",
+      "source": "./packages/fairhaul-duplicate-payments",
+      "description": "Fairhaul Duplicate Payments: searches years of freight payments for invoices paid twice: the same invoice under another number format, the same PRO billed twice, a carrier paid under two vendor names, and same-amount look-alikes, nets off credits already received, and drafts recovery requests. Never moves money.",
       "version": "0.1.0",
       "category": "freight",
       "keywords": [
         "freight",
         "logistics",
         "freight-audit",
-        "shipment-visibility",
-        "tracking",
-        "eta",
-        "late-shipments",
-        "exceptions"
+        "duplicate-payments",
+        "recovery-audit",
+        "overpayment",
+        "accounts-payable"
       ]
     },
     {
-      "name": "fairhaul-lane-spend",
-      "source": "./packages/fairhaul-lane-spend",
-      "description": "Maps your freight spend by lane and mode, tracks cost per hundredweight and per mile month by month, finds LTL shipments on the same lane and day that could ride together and heavy LTL that should be quoted as truckload, and drafts the consolidation plan for your shipping team. Never changes orders or bookings.",
+      "name": "fairhaul-edi-files",
+      "source": "./packages/fairhaul-edi-files",
+      "description": "Fairhaul EDI Files: reads X12 transport files (204 load tenders, 210 invoices, 214 status, 990 responses, 997/999 acknowledgements), checks envelopes and counts, converts them to spreadsheets, and reconciles invoices against tenders, status and acknowledgements. Never transmits EDI.",
       "version": "0.1.0",
       "category": "freight",
       "keywords": [
         "freight",
         "logistics",
         "freight-audit",
-        "lane-analysis",
-        "consolidation",
-        "ltl-to-truckload",
-        "freight-spend",
-        "network"
-      ]
-    },
-    {
-      "name": "fairhaul-spot-quotes",
-      "source": "./packages/fairhaul-spot-quotes",
-      "description": "Lines up the spot quotes you collected for each load on one all-in basis (adding fuel and accessorials a quote leaves out), drops expired quotes and ones that miss the delivery date, compares them with what the lane usually costs you, and drafts the booking confirmation. Never books a load itself.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "spot-quotes",
-        "spot-freight",
-        "load-booking",
-        "rate-comparison"
-      ]
-    },
-    {
-      "name": "fairhaul-freight-bill-audit",
-      "source": "./packages/fairhaul-freight-bill-audit",
-      "description": "Audits truckload and LTL freight bills (CSV, Excel or X12 210) against your own contract rates, fuel table and accessorial terms, finds duplicates and math errors, and drafts carrier disputes. Never pays and never sends.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "ltl",
-        "truckload",
-        "freight-bill-audit",
-        "x12-210"
-      ]
-    },
-    {
-      "name": "fairhaul-standard-freight-cost",
-      "source": "./packages/fairhaul-standard-freight-cost",
-      "description": "Compares the standard freight built into item costs with what freight actually cost per unit, finds the SKUs and lanes where the standard is stale, and drafts new standards for a person to load.",
-      "version": "0.1.0",
-      "category": "freight",
-      "keywords": [
-        "freight",
-        "logistics",
-        "freight-audit",
-        "standard-cost",
-        "landed-cost",
-        "variance",
-        "cost-accounting"
+        "edi",
+        "x12",
+        "204",
+        "210",
+        "214",
+        "990",
+        "997"
       ]
     },
     {
       "name": "fairhaul-freight-accruals",
       "source": "./packages/fairhaul-freight-accruals",
-      "description": "Builds the month-end freight accrual from your shipments and carrier invoices: shipped but not billed, estimated from the quote, your contract or lane history, by cost center, with a draft journal entry and an accuracy check on last month. Never posts to your ledger.",
+      "description": "Fairhaul Freight Accruals: builds the month-end freight accrual from your shipments and carrier invoices: shipped but not billed, estimated from the quote, your contract or lane history, by cost center, with a draft journal entry and an accuracy check on last month. Never posts to your ledger.",
       "version": "0.1.0",
       "category": "freight",
       "keywords": [
@@ -408,37 +245,52 @@
       ]
     },
     {
-      "name": "fairhaul-contract-rerating",
-      "source": "./packages/fairhaul-contract-rerating",
-      "description": "Re-rates your shipment history under every carrier contract you hold (linehaul, minimums, discounts, fuel and accessorials), shows what each carrier would have cost, the cheapest carrier by lane and what you left on the table, and drafts routing guide changes. Never changes your routing guide.",
+      "name": "fairhaul-freight-allocation",
+      "source": "./packages/fairhaul-freight-allocation",
+      "description": "Fairhaul Freight Allocation: splits each freight bill across the orders, customers, SKUs and cost centers on the shipment by weight, volume, value, pallets or units, gives freight cost per unit by SKU and customer, and drafts the allocation journal for review. Never posts to your ledger.",
       "version": "0.1.0",
       "category": "freight",
       "keywords": [
         "freight",
         "logistics",
         "freight-audit",
-        "rate-shopping",
-        "routing-guide",
-        "tariff",
-        "what-if",
-        "ltl"
+        "freight-allocation",
+        "cost-allocation",
+        "landed-cost",
+        "cost-to-serve",
+        "journal"
       ]
     },
     {
-      "name": "fairhaul-carrier-scorecards",
-      "source": "./packages/fairhaul-carrier-scorecards",
-      "description": "Scores each carrier on on-time pickup and delivery, tender acceptance, billing accuracy, claims, tracking and cost per mile from your own shipment history, with your weights, ranks them and drafts the quarterly review note. Never sends it.",
+      "name": "fairhaul-freight-bill-audit",
+      "source": "./packages/fairhaul-freight-bill-audit",
+      "description": "Fairhaul Freight Bill Audit: audits truckload and LTL freight bills (CSV, Excel or X12 210) against your own contract rates, fuel table and accessorial terms, finds duplicates and math errors, and drafts carrier disputes. Never pays and never sends.",
       "version": "0.1.0",
       "category": "freight",
       "keywords": [
         "freight",
         "logistics",
         "freight-audit",
-        "carrier-scorecard",
-        "carrier-performance",
-        "on-time",
-        "otd",
-        "qbr"
+        "ltl",
+        "truckload",
+        "freight-bill-audit",
+        "x12-210"
+      ]
+    },
+    {
+      "name": "fairhaul-freight-claims",
+      "source": "./packages/fairhaul-freight-claims",
+      "description": "Fairhaul Freight Claims: finds loss, shortage and damage on delivered shipments, works out the claim amount and the filing deadline from your terms, tracks open claims for carrier acknowledgement, payment and short payment, and drafts claim letters. Never files a claim itself.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "cargo-claims",
+        "osd",
+        "loss-and-damage",
+        "shortage"
       ]
     },
     {
@@ -458,9 +310,109 @@
       ]
     },
     {
+      "name": "fairhaul-freight-margins",
+      "source": "./packages/fairhaul-freight-margins",
+      "description": "Compares the freight you charged each customer with what the freight actually cost: recovery by customer and freight terms, orders shipped free that should not have been, collect orders you paid for, and how a different free-shipping threshold would have changed the result.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "freight-recovery",
+        "margin",
+        "pricing",
+        "free-shipping",
+        "customers"
+      ]
+    },
+    {
+      "name": "fairhaul-fuel-surcharges",
+      "source": "./packages/fairhaul-fuel-surcharges",
+      "description": "Fairhaul Fuel Surcharges: checks every fuel surcharge against your carriers' fuel tables and the diesel index for the week each load moved, spots carriers billing on the wrong week, compares fuel tables side by side and shows what a diesel move would cost you. Never pays or sends.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "fuel-surcharge",
+        "fuel",
+        "diesel",
+        "fsc"
+      ]
+    },
+    {
+      "name": "fairhaul-lane-spend",
+      "source": "./packages/fairhaul-lane-spend",
+      "description": "Fairhaul Lane Spend: maps your freight spend by lane and mode, tracks cost per hundredweight and per mile month by month, finds LTL shipments on the same lane and day that could ride together and heavy LTL that should be quoted as truckload, and drafts the consolidation plan for your shipping team. Never changes orders or bookings.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "lane-analysis",
+        "consolidation",
+        "ltl-to-truckload",
+        "freight-spend",
+        "network"
+      ]
+    },
+    {
+      "name": "fairhaul-load-tracking",
+      "source": "./packages/fairhaul-load-tracking",
+      "description": "Fairhaul Load Tracking: reads your open loads and their tracking events, finds loads with stale or no tracking, missed pickups and ETAs that run past the delivery appointment, ranks carriers on tracking compliance and drafts the delay notice to your customer. Never messages anyone itself.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "shipment-visibility",
+        "tracking",
+        "eta",
+        "late-shipments",
+        "exceptions"
+      ]
+    },
+    {
+      "name": "fairhaul-ltl-reweighs",
+      "source": "./packages/fairhaul-ltl-reweighs",
+      "description": "Fairhaul LTL Reweighs: checks LTL weight and class corrections against your declared dimensions, the density scale and the inspection certificate, separates the corrections worth challenging from the ones that mean your own product data is wrong, and drafts the disputes and item-master fixes. Never pays or sends.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "reweigh",
+        "reclass",
+        "ltl",
+        "weight-and-inspection",
+        "nmfc"
+      ]
+    },
+    {
+      "name": "fairhaul-ocean-freight-audit",
+      "source": "./packages/fairhaul-ocean-freight-audit",
+      "description": "Fairhaul Ocean Freight Audit: audits ocean freight invoices line by line against your service contract: base rate per container by port pair, BAF, peak season and other surcharges with their validity dates, charges the contract does not allow, duplicates and container counts, and drafts disputes to the line or forwarder. Never pays or sends.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "ocean-freight",
+        "baf",
+        "service-contract",
+        "forwarder"
+      ]
+    },
+    {
       "name": "fairhaul-parcel-refunds",
       "source": "./packages/fairhaul-parcel-refunds",
-      "description": "Audits UPS, FedEx, DHL and USPS invoice data for late deliveries, duplicate tracking numbers, voided labels billed, residential charges on business addresses, repeat address corrections and dimensional-weight overbilling, with claim-by dates and refund request drafts. Never files claims itself.",
+      "description": "Fairhaul Parcel Refunds: audits UPS, FedEx, DHL and USPS invoice data for late deliveries, duplicate tracking numbers, voided labels billed, residential charges on business addresses, repeat address corrections and dimensional-weight overbilling, with claim-by dates and refund request drafts. Never files claims itself.",
       "version": "0.1.0",
       "category": "freight",
       "keywords": [
@@ -476,36 +428,84 @@
       ]
     },
     {
-      "name": "fairhaul-fuel-surcharges",
-      "source": "./packages/fairhaul-fuel-surcharges",
-      "description": "Checks every fuel surcharge against your carriers' fuel tables and the diesel index for the week each load moved, spots carriers billing on the wrong week, compares fuel tables side by side and shows what a diesel move would cost you. Never pays or sends.",
+      "name": "fairhaul-proof-of-delivery",
+      "source": "./packages/fairhaul-proof-of-delivery",
+      "description": "Fairhaul Proof of Delivery: matches every delivered or invoiced shipment to its proof of delivery, flags missing, unsigned, short or exception-noted PODs and delivery dates that disagree with the invoice, holds the matching invoices for review, and drafts POD requests to carriers. Never releases or holds a payment itself.",
       "version": "0.1.0",
       "category": "freight",
       "keywords": [
         "freight",
         "logistics",
         "freight-audit",
-        "fuel-surcharge",
-        "fuel",
-        "diesel",
-        "fsc"
+        "proof-of-delivery",
+        "pod",
+        "delivery-receipt",
+        "invoice-hold"
       ]
     },
     {
-      "name": "fairhaul-detention-and-lumper",
-      "source": "./packages/fairhaul-detention-and-lumper",
-      "description": "Checks detention, layover and lumper charges against your dock times, appointments, free time and receipts, ranks facilities by dwell and detention cost, and drafts disputes. Never pays and never sends.",
+      "name": "fairhaul-returns-tracking",
+      "source": "./packages/fairhaul-returns-tracking",
+      "description": "Follows every return from authorisation to credit: return labels never used, returns received but not credited, carriers charging return freight twice, and which customers, SKUs and reasons cost the most freight to bring back.",
       "version": "0.1.0",
       "category": "freight",
       "keywords": [
         "freight",
         "logistics",
         "freight-audit",
-        "detention",
-        "dwell",
-        "lumper",
-        "layover",
-        "dock"
+        "returns",
+        "reverse-logistics",
+        "rma",
+        "credits"
+      ]
+    },
+    {
+      "name": "fairhaul-rfp-bid-scoring",
+      "source": "./packages/fairhaul-rfp-bid-scoring",
+      "description": "Fairhaul RFP Bid Scoring: scores carrier bids from a freight RFP lane by lane against your incumbent rates and volumes, builds award scenarios with your rules (share caps, incumbent preference, backup carriers, capacity), shows the savings and the lanes nobody covered, and drafts award letters. Never loads rates or sends awards.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "freight-rfp",
+        "bid-analysis",
+        "procurement",
+        "lane-award",
+        "carrier-bids"
+      ]
+    },
+    {
+      "name": "fairhaul-spot-quotes",
+      "source": "./packages/fairhaul-spot-quotes",
+      "description": "Fairhaul Spot Quotes: lines up the spot quotes you collected for each load on one all-in basis (adding fuel and accessorials a quote leaves out), drops expired quotes and ones that miss the delivery date, compares them with what the lane usually costs you, and drafts the booking confirmation. Never books a load itself.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "spot-quotes",
+        "spot-freight",
+        "load-booking",
+        "rate-comparison"
+      ]
+    },
+    {
+      "name": "fairhaul-standard-freight-cost",
+      "source": "./packages/fairhaul-standard-freight-cost",
+      "description": "Compares the standard freight built into item costs with what freight actually cost per unit, finds the SKUs and lanes where the standard is stale, and drafts new standards for a person to load.",
+      "version": "0.1.0",
+      "category": "freight",
+      "keywords": [
+        "freight",
+        "logistics",
+        "freight-audit",
+        "standard-cost",
+        "landed-cost",
+        "variance",
+        "cost-accounting"
       ]
     }
   ]

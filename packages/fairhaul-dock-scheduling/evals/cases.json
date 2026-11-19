@@ -2,6 +2,7 @@
   "suite": "fairhaul-dock-scheduling",
   "root": "..",
   "data_note": "Fictional dock, requests and past appointments in ../fixtures. No model is called.",
+  "pii_none": "Reads appointment requests, past appointments: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "plan-totals",

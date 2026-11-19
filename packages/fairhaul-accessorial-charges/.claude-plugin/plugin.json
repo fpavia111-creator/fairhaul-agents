@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-accessorial-charges",
   "version": "0.1.0",
-  "description": "Finds where your accessorial charges come from (liftgate, residential, appointment, redelivery, detention and more) by location, carrier and lane, flags charges nobody ordered and charges above your contract, and drafts the address-book fixes that stop the repeat surprises. Never changes your TMS.",
+  "description": "Fairhaul Accessorial Charges: finds where your accessorial charges come from (liftgate, residential, appointment, redelivery, detention and more) by location, carrier and lane, flags charges nobody ordered and charges above your contract, and drafts the address-book fixes that stop the repeat surprises. Never changes your TMS.",
   "author": {
     "name": "Kurt Francisco"
   },

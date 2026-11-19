@@ -2,6 +2,14 @@
   "suite": "fairhaul-parcel-refunds",
   "root": "..",
   "data_note": "Fictional parcel invoice data in ../fixtures, measured as of 2026-11-16. No model is called.",
+  "pii_canaries": [
+    "9 Example Ave, Springfield",
+    "100 Example Pkwy, Springfield",
+    "5 Sample Rd, Peoria",
+    "7 Test Ln, Urbana",
+    "8 Demo Ct, Normal",
+    "42 Sample St, Decatur"
+  ],
   "cases": [
     {
       "id": "audit-totals",

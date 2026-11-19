@@ -2,6 +2,7 @@
   "suite": "fairhaul-freight-accruals",
   "root": "..",
   "data_note": "Fictional shipments and invoices in ../fixtures, period ending 2026-10-31. No model is called.",
+  "pii_none": "Reads shipments, carrier invoices, last period accrual: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "accrual-total",

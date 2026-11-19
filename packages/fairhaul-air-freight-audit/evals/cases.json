@@ -2,6 +2,7 @@
   "suite": "fairhaul-air-freight-audit",
   "root": "..",
   "data_note": "Fictional air invoices and rate sheet in ../fixtures. No model is called.",
+  "pii_none": "Reads air invoice lines: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "totals",

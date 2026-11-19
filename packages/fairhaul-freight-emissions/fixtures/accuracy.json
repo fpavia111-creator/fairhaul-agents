@@ -1,0 +1,84 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "rows",
+   "id": "shipment_id",
+   "flags": {
+    "not_estimated": "quality=not_estimated"
+   }
+  }
+ ],
+ "planted": [
+  [
+   "S-805",
+   "not_estimated"
+  ],
+  [
+   "S-809",
+   "not_estimated"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "shipments",
+   "dropWhere": {
+    "shipment_id": [
+     "S-805",
+     "S-809"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "distance missing",
+   "edits": [
+    {
+     "arg": "shipments",
+     "set": [
+      {
+       "where": [
+        "shipment_id",
+        "S-801"
+       ],
+       "column": "distance",
+       "value": ""
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "S-801",
+     "not_estimated"
+    ]
+   ]
+  },
+  {
+   "name": "mode with no factor",
+   "edits": [
+    {
+     "arg": "shipments",
+     "set": [
+      {
+       "where": [
+        "shipment_id",
+        "S-807"
+       ],
+       "column": "mode",
+       "value": "Drone"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "S-807",
+     "not_estimated"
+    ]
+   ]
+  }
+ ]
+}

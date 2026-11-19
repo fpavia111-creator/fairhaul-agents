@@ -2,6 +2,7 @@
   "suite": "fairhaul-ltl-reweighs",
   "root": "..",
   "data_note": "Fictional LTL corrections in ../fixtures. No model is called.",
+  "pii_none": "Reads weight and class corrections: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "totals",

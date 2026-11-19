@@ -1,0 +1,4 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs.",
+ "not_measured": "prices past shipments under every contract; its evals check the prices"
+}

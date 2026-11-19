@@ -1,0 +1,141 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "rows",
+   "id": "order_id",
+   "codes": "flags"
+  }
+ ],
+ "planted": [
+  [
+   "SO-6006",
+   "freight_over_pct"
+  ],
+  [
+   "SO-6001",
+   "freight_over_pct"
+  ],
+  [
+   "SO-6007",
+   "collect_but_we_paid"
+  ],
+  [
+   "SO-6009",
+   "free_below_threshold"
+  ],
+  [
+   "SO-6009",
+   "freight_over_pct"
+  ],
+  [
+   "SO-6005",
+   "prepaid_add_not_billed"
+  ],
+  [
+   "SO-6005",
+   "freight_over_pct"
+  ],
+  [
+   "SO-6004",
+   "free_below_threshold"
+  ],
+  [
+   "SO-6004",
+   "freight_over_pct"
+  ],
+  [
+   "SO-6002",
+   "free_below_threshold"
+  ],
+  [
+   "SO-6002",
+   "freight_over_pct"
+  ],
+  [
+   "SO-6010",
+   "no_cost"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "orders",
+   "dropWhere": {
+    "order_id": [
+     "SO-6001",
+     "SO-6002",
+     "SO-6004",
+     "SO-6005",
+     "SO-6006",
+     "SO-6007",
+     "SO-6009",
+     "SO-6010"
+    ]
+   }
+  },
+  {
+   "arg": "costs",
+   "dropWhere": {
+    "shipment_id": [
+     "S-901",
+     "S-903",
+     "S-904",
+     "S-905",
+     "S-906",
+     "S-908"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "prepaid and add, freight not billed",
+   "edits": [
+    {
+     "arg": "orders",
+     "set": [
+      {
+       "where": [
+        "order_id",
+        "SO-6003"
+       ],
+       "column": "freight_billed",
+       "value": "0"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "SO-6003",
+     "prepaid_add_not_billed"
+    ]
+   ]
+  },
+  {
+   "name": "collect order we paid freight on",
+   "edits": [
+    {
+     "arg": "orders",
+     "set": [
+      {
+       "where": [
+        "order_id",
+        "SO-6008"
+       ],
+       "column": "terms",
+       "value": "Collect"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "SO-6008",
+     "collect_but_we_paid"
+    ]
+   ]
+  }
+ ]
+}

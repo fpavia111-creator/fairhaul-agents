@@ -2,6 +2,7 @@
   "suite": "fairhaul-freight-margins",
   "root": "..",
   "data_note": "Fictional orders and freight costs in ../fixtures. No model is called.",
+  "pii_none": "Reads orders, freight cost per shipment: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "totals",

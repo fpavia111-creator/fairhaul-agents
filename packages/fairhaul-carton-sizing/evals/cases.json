@@ -2,6 +2,7 @@
   "suite": "fairhaul-carton-sizing",
   "root": "..",
   "data_note": "Fictional parcels and carton catalog in ../fixtures. No model is called.",
+  "pii_none": "Reads shipped parcels: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "totals",

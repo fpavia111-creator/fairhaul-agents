@@ -1,0 +1,116 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "rows",
+   "id": "sku",
+   "codes": "status",
+   "ignore": [
+    "ok"
+   ]
+  }
+ ],
+ "planted": [
+  [
+   "FLOOR-RUG",
+   "standard_too_low"
+  ],
+  [
+   "LAMP-SHADE",
+   "standard_too_low"
+  ],
+  [
+   "BOOKENDS",
+   "standard_too_high"
+  ],
+  [
+   "DOOR-MAT",
+   "no_standard"
+  ],
+  [
+   "MIRROR",
+   "thin_data"
+  ],
+  [
+   "PLANTER",
+   "no_shipments"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "items",
+   "dropWhere": {
+    "sku": [
+     "FLOOR-RUG",
+     "LAMP-SHADE",
+     "BOOKENDS",
+     "MIRROR",
+     "PLANTER"
+    ]
+   }
+  },
+  {
+   "arg": "actuals",
+   "dropWhere": {
+    "sku": [
+     "FLOOR-RUG",
+     "LAMP-SHADE",
+     "BOOKENDS",
+     "MIRROR",
+     "DOOR-MAT"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "standard below actual",
+   "edits": [
+    {
+     "arg": "items",
+     "set": [
+      {
+       "where": [
+        "sku",
+        "CANDLE-SET"
+       ],
+       "column": "standard_freight",
+       "value": "0.40"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "CANDLE-SET",
+     "standard_too_low"
+    ]
+   ]
+  },
+  {
+   "name": "standard above actual",
+   "edits": [
+    {
+     "arg": "items",
+     "set": [
+      {
+       "where": [
+        "sku",
+        "THROW-BLANKET"
+       ],
+       "column": "standard_freight",
+       "value": "3.50"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "THROW-BLANKET",
+     "standard_too_high"
+    ]
+   ]
+  }
+ ]
+}

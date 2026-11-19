@@ -2,6 +2,7 @@
   "suite": "fairhaul-ocean-freight-audit",
   "root": "..",
   "data_note": "Fictional ocean invoices and contracts in ../fixtures. No model is called.",
+  "pii_none": "Reads ocean invoice lines: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "totals",

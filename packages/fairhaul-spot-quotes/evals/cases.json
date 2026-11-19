@@ -2,6 +2,7 @@
   "suite": "fairhaul-spot-quotes",
   "root": "..",
   "data_note": "Fictional loads and quotes in ../fixtures, as of 2026-11-16. No model is called.",
+  "pii_none": "Reads loads needing a truck, quotes collected: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "board",

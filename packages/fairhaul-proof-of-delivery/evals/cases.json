@@ -2,6 +2,14 @@
   "suite": "fairhaul-proof-of-delivery",
   "root": "..",
   "data_note": "Fictional loads and PODs in ../fixtures, as of 2026-11-16. No model is called.",
+  "pii_canaries": [
+    "J. Ortiz",
+    "M. Chen",
+    "R. Patel",
+    "A. Brooks",
+    "K. Diaz",
+    "L. Green"
+  ],
   "cases": [
     {
       "id": "totals",

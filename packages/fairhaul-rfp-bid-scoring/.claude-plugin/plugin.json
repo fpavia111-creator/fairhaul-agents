@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-rfp-bid-scoring",
   "version": "0.1.0",
-  "description": "Scores carrier bids from a freight RFP lane by lane against your incumbent rates and volumes, builds award scenarios with your rules (share caps, incumbent preference, backup carriers, capacity), shows the savings and the lanes nobody covered, and drafts award letters. Never loads rates or sends awards.",
+  "description": "Fairhaul RFP Bid Scoring: scores carrier bids from a freight RFP lane by lane against your incumbent rates and volumes, builds award scenarios with your rules (share caps, incumbent preference, backup carriers, capacity), shows the savings and the lanes nobody covered, and drafts award letters. Never loads rates or sends awards.",
   "author": {
     "name": "Kurt Francisco"
   },

@@ -1,0 +1,128 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "lines",
+   "id": [
+    "invoice_number",
+    "code"
+   ],
+   "flags": {
+    "not_ordered": "ordered=false&orderable=true",
+    "over_contract": "over>0",
+    "not_allowed": "not_allowed=true"
+   }
+  }
+ ],
+ "planted": [
+  [
+   "INV-8001/liftgate",
+   "not_ordered"
+  ],
+  [
+   "INV-8001/residential",
+   "not_ordered"
+  ],
+  [
+   "INV-8002/residential",
+   "not_ordered"
+  ],
+  [
+   "INV-8002/liftgate",
+   "over_contract"
+  ],
+  [
+   "INV-8003/residential",
+   "not_ordered"
+  ],
+  [
+   "INV-8003/liftgate",
+   "not_ordered"
+  ],
+  [
+   "INV-8005/appointment",
+   "not_ordered"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "invoices",
+   "dropWhere": {
+    "invoice_number": [
+     "INV-8001",
+     "INV-8002",
+     "INV-8003",
+     "INV-8005"
+    ]
+   }
+  },
+  {
+   "arg": "shipments",
+   "dropWhere": {
+    "shipment_id": [
+     "B-01",
+     "B-02",
+     "B-03",
+     "B-05"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "inside delivery billed above the contract",
+   "edits": [
+    {
+     "arg": "invoices",
+     "set": [
+      {
+       "where": [
+        [
+         "invoice_number",
+         "INV-8009"
+        ],
+        [
+         "charge_description",
+         "Inside Delivery"
+        ]
+       ],
+       "column": "charge_amount",
+       "value": "75"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "INV-8009/inside",
+     "over_contract"
+    ]
+   ]
+  },
+  {
+   "name": "appointment billed but not ordered",
+   "edits": [
+    {
+     "arg": "shipments",
+     "set": [
+      {
+       "where": [
+        "shipment_id",
+        "B-04"
+       ],
+       "column": "accessorials_ordered",
+       "value": ""
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "INV-8004/appointment",
+     "not_ordered"
+    ]
+   ]
+  }
+ ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-freight-claims",
   "version": "0.1.0",
-  "description": "Finds loss, shortage and damage on delivered shipments, works out the claim amount and the filing deadline from your terms, tracks open claims for carrier acknowledgement, payment and short payment, and drafts claim letters. Never files a claim itself.",
+  "description": "Fairhaul Freight Claims: finds loss, shortage and damage on delivered shipments, works out the claim amount and the filing deadline from your terms, tracks open claims for carrier acknowledgement, payment and short payment, and drafts claim letters. Never files a claim itself.",
   "author": {
     "name": "Kurt Francisco"
   },

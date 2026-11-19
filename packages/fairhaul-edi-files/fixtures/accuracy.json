@@ -1,0 +1,4 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs.",
+ "not_measured": "reads and validates EDI files; its evals check broken and non-EDI files"
+}

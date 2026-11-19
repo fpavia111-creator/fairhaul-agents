@@ -172,7 +172,9 @@ test('runtime: ctx.records maps by argument, reports once per file, warns at the
   const rt = new AgentRuntime(manifest(), { root });
   const r = await rt.call('list_people', { people: 'hr.csv', previous: 'own.csv', other: 'free.csv' });
   assert.equal(r.status, 'executed', r.reason);
-  assert.deepEqual(r.result.rows, [{ 'Emp #': '7', name: 'Ana Ortiz', email: 'ana@example.test', start: '2026-03-04', status: 'active', pay: '0' }]);
+  // The e-mail is filled from the domain setting, then masked in the result the model sees.
+  assert.deepEqual(r.result.rows, [{ 'Emp #': '7', name: 'Ana Ortiz', email: '[EMAIL]', start: '2026-03-04', status: 'active', pay: '0' }]);
+  assert.ok(!JSON.stringify(r).includes('ana@example.test'));
   assert.deepEqual(r.result.previous, [{ name: 'Ben', start: '2026-01-01' }]);
   assert.deepEqual(r.result.other, [{ 'Full Name': 'Cy', Anything: '1' }], 'an argument that is not a declared source is read as it is');
   assert.equal(r.sources.length, 1); assert.equal(r.sources[0].arg, 'people'); assert.equal(r.sources[0].file, 'hr.csv');

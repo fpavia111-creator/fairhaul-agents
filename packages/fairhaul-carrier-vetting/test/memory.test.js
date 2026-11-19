@@ -34,7 +34,9 @@ test('an email domain on the watch list flags a dispatch email on a booked load'
   const r = root(); const rt = rtFor(r);
   await learnAndAccept(rt, 'vetting', 'watch_contact', { type: 'email_domain', value: 'gmail.com', reason: 'brokers here never dispatch from free mail' });
   const out = await vet(rt);
-  assert.match(JSON.stringify(out.result), /dispatch email domain swiftlane\.dispatch@gmail\.com is on your watch list/);
+  // The model sees the address masked; the report written on disk keeps it.
+  assert.match(JSON.stringify(out.result), /dispatch email domain \[EMAIL\] is on your watch list/);
+  assert.ok(!JSON.stringify(out).includes('swiftlane.dispatch@gmail.com'));
 });
 
 test('the watch list only adds: no fact can clear a sign, and a full bank account number is refused', async () => {

@@ -2,6 +2,7 @@
   "suite": "fairhaul-freight-emissions",
   "root": "..",
   "data_note": "Fictional shipments and example factors (not from any framework) in ../fixtures. No model is called.",
+  "pii_none": "Reads shipments: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "totals",

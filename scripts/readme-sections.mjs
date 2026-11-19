@@ -29,7 +29,9 @@ function demoText(n) {
   const root = mkdtempSync(join(tmpdir(), `${n}-readme-`));
   try {
     const out = execFileSync(process.execPath, [join(PK, n, 'bin', `${n}.js`), 'demo'], { cwd: root, encoding: 'utf8', env: { ...process.env, NO_COLOR: '1' }, timeout: 60000 });
-    return out.replace(/ in \/[^\s,]*(?=,| )/g, '').replace(/\/tmp\/[^\s)]*/g, '<demo folder>').replace(/\r/g, '').trimEnd().split('\n').slice(0, 70).join('\n');
+    // Temporary folders differ per machine (/tmp/... on Linux and macOS, C:\Users\...\Temp\... on Windows).
+    const tmp = tmpdir().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return out.replace(new RegExp(` in ${tmp}[\\\\/][^\\s,]*(?=,| )`, 'g'), '').replace(new RegExp(`${tmp}[\\\\/][^\\s),]*`, 'g'), '<demo folder>').replace(/ in \/[^\s,]*(?=,| )/g, '').replace(/\/tmp\/[^\s)]*/g, '<demo folder>').replace(/\r/g, '').trimEnd().split('\n').slice(0, 70).join('\n');
   } finally { rmSync(root, { recursive: true, force: true }); }
 }
 
@@ -92,7 +94,7 @@ for (const n of readdirSync(PK).filter((x) => /^fair[a-z]+-(?!core$)/.test(x) &&
   // The hand-written tool table is replaced by the generated one.
   if (!txt.includes(START)) txt = txt.replace(/\n## Tools\n[\s\S]*?(?=\n## )/, '\n');
   const next = txt.includes(START) ? txt.replace(new RegExp(`${START}[\\s\\S]*?${END}`), block) : txt.includes('\n## Limits') ? txt.replace(/\n## Limits\b/, `\n${block}\n\n## Limits`) : `${txt.trimEnd()}\n\n${block}\n`;
-  if (next === readFileSync(f, 'utf8')) continue;
+  if (next === readFileSync(f, 'utf8').replace(/\r\n/g, '\n')) continue; // a Windows clone may have CRLF
   if (check) { console.log(`${n}: README generated part is out of date`); stale++; continue; }
   writeFileSync(f, next); console.log(`${n}: README updated`);
 }

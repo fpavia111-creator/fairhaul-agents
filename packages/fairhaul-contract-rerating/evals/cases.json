@@ -2,6 +2,7 @@
   "suite": "fairhaul-contract-rerating",
   "root": "..",
   "data_note": "Fictional contracts and history in ../fixtures. No model is called.",
+  "pii_none": "Reads shipment history: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "totals",

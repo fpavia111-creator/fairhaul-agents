@@ -2,6 +2,7 @@
   "suite": "fairhaul-rfp-bid-scoring",
   "root": "..",
   "data_note": "Fictional lanes, bids and rules in ../fixtures. No model is called.",
+  "pii_none": "Reads rfp lanes, carrier bids: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "with-rules",

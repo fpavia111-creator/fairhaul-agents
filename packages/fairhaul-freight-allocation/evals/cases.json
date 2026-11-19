@@ -2,6 +2,7 @@
   "suite": "fairhaul-freight-allocation",
   "root": "..",
   "data_note": "Fictional October shipments and order lines in ../fixtures. No model is called.",
+  "pii_none": "Reads freight cost per shipment, order lines: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "totals",

@@ -14,6 +14,7 @@ import { AgentRuntime } from './runtime.js';
 import { adaptRecords } from './sources.js';
 import { ONE_CLICK_CATEGORIES } from './manifest.js';
 import { parseCsvRows } from './csv.js';
+import { piiKindOf } from './pii.js';
 
 const FILE_ARG = /\.(csv|tsv|txt|json|jsonl|xlsx|edi|x12)$/i;
 const VOLATILE = /(^|_)(ms|at|time|generated|ran|date_written|written_at|elapsed|file|files|draft|path|dir|out_dir|report|html|csv|md)$/i;
@@ -235,6 +236,27 @@ export function agentContract({ manifest, casesFile }) {
       }
     });
   }
+
+  // Customer data: the fictional names, phones and ids listed under "pii_canaries" in the
+  // cases file never reach a result the model sees (files written on disk keep them).
+  const canaries = (data.pii_canaries || []).filter((x) => String(x).trim().length >= 4);
+  test(`${manifest.name} contract: customer names and contact details never reach a result (masking)`, async () => {
+    if (data.pii_none) {
+      // An agent that reads no customer data says why, and none of its columns is a customer field.
+      assert.ok(String(data.pii_none).length > 20, 'pii_none must say why the agent reads no customer data');
+      for (const [kind, def] of Object.entries(manifest.sources || {})) for (const f of Object.keys(def.fields)) assert.equal(piiKindOf(f), null, `${kind}.${f} is customer data; list pii_canaries instead of pii_none`);
+      return;
+    }
+    assert.ok(canaries.length >= 3, 'list at least three fictional customer identifiers under "pii_canaries" in evals/cases.json');
+    const root = sandbox(); let calls = 0;
+    for (const c of cases) {
+      const rt = rtIn(root, { mode: c.mode || 'assist', autoActions: c.auto_actions || [] });
+      const r = await run(rt, c.tool, c.args || {}); calls++;
+      const text = JSON.stringify(r).toLowerCase();
+      for (const x of canaries) assert.ok(!text.includes(String(x).toLowerCase()), `${c.id}: "${x}" reached the result`);
+    }
+    assert.ok(calls > 0);
+  });
 
   const kinds = Object.entries(manifest.sources || {});
   if (kinds.length) {

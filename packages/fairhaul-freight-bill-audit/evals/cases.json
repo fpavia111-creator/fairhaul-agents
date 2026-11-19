@@ -2,6 +2,7 @@
   "suite": "fairhaul-freight-bill-audit",
   "root": "..",
   "data_note": "Fictional carriers, contract and invoices in ../fixtures. Deterministic checks; no model is called.",
+  "pii_none": "Reads carrier invoices or freight bills, paid invoice history, shipments or bols: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "audit-totals",

@@ -2,6 +2,7 @@
   "suite": "fairhaul-carrier-scorecards",
   "root": "..",
   "data_note": "Fictional loads in ../fixtures, July to November 2026. No model is called.",
+  "pii_none": "Reads shipment history: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "ranking",

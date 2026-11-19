@@ -2,6 +2,14 @@
   "suite": "fairhaul-carrier-vetting",
   "root": "..",
   "data_note": "Fictional carriers and loads in ../fixtures, as of 2026-11-16. No model is called.",
+  "pii_canaries": [
+    "(312) 555-0140",
+    "(816) 555-0177",
+    "(904) 555-0102",
+    "(469) 555-0199",
+    "469-555-0199",
+    "(303) 555-0155"
+  ],
   "cases": [
     {
       "id": "totals",
@@ -52,7 +60,7 @@
       "expect": {
         "contains": [
           "contact_differs_on_load",
-          "dispatch phone (913) 555-0123 differs"
+          "dispatch phone [PHONE] differs"
         ]
       }
     },

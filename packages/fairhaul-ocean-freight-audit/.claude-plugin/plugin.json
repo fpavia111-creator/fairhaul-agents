@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-ocean-freight-audit",
   "version": "0.1.0",
-  "description": "Audits ocean freight invoices line by line against your service contract: base rate per container by port pair, BAF, peak season and other surcharges with their validity dates, charges the contract does not allow, duplicates and container counts, and drafts disputes to the line or forwarder. Never pays or sends.",
+  "description": "Fairhaul Ocean Freight Audit: audits ocean freight invoices line by line against your service contract: base rate per container by port pair, BAF, peak season and other surcharges with their validity dates, charges the contract does not allow, duplicates and container counts, and drafts disputes to the line or forwarder. Never pays or sends.",
   "author": {
     "name": "Kurt Francisco"
   },

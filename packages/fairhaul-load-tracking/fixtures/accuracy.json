@@ -1,0 +1,124 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "board",
+ "extract": [
+  {
+   "list": "items",
+   "id": "shipment_id",
+   "codes": "status",
+   "ignore": [
+    "on_track"
+   ]
+  }
+ ],
+ "planted": [
+  [
+   "T-604",
+   "late"
+  ],
+  [
+   "T-603",
+   "late"
+  ],
+  [
+   "T-606",
+   "at_risk"
+  ],
+  [
+   "T-602",
+   "blind"
+  ],
+  [
+   "T-607",
+   "delivered_not_closed"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "loads",
+   "dropWhere": {
+    "shipment_id": [
+     "T-602",
+     "T-603",
+     "T-604",
+     "T-606",
+     "T-607"
+    ]
+   }
+  },
+  {
+   "arg": "events",
+   "dropWhere": {
+    "shipment_id": [
+     "T-602",
+     "T-603",
+     "T-604",
+     "T-606",
+     "T-607"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "ETA slips past the appointment",
+   "edits": [
+    {
+     "arg": "events",
+     "set": [
+      {
+       "where": [
+        [
+         "shipment_id",
+         "T-601"
+        ],
+        [
+         "at",
+         "2026-11-16 08:10"
+        ]
+       ],
+       "column": "eta",
+       "value": "2026-11-16 17:30"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "T-601",
+     "at_risk"
+    ]
+   ]
+  },
+  {
+   "name": "no update for 22 hours",
+   "edits": [
+    {
+     "arg": "events",
+     "set": [
+      {
+       "where": [
+        [
+         "shipment_id",
+         "T-605"
+        ],
+        [
+         "at",
+         "2026-11-16 07:45"
+        ]
+       ],
+       "column": "at",
+       "value": "2026-11-15 12:00"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "T-605",
+     "blind"
+    ]
+   ]
+  }
+ ]
+}

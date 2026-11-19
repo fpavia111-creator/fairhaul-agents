@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-carrier-scorecards",
   "version": "0.1.0",
-  "description": "Scores each carrier on on-time pickup and delivery, tender acceptance, billing accuracy, claims, tracking and cost per mile from your own shipment history, with your weights, ranks them and drafts the quarterly review note. Never sends it.",
+  "description": "Fairhaul Carrier Scorecards: scores each carrier on on-time pickup and delivery, tender acceptance, billing accuracy, claims, tracking and cost per mile from your own shipment history, with your weights, ranks them and drafts the quarterly review note. Never sends it.",
   "author": {
     "name": "Kurt Francisco"
   },

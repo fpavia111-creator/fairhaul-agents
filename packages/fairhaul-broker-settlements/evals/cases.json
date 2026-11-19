@@ -2,6 +2,7 @@
   "suite": "fairhaul-broker-settlements",
   "root": "..",
   "data_note": "Fictional broker loads in ../fixtures, as of 2026-11-16. No model is called.",
+  "pii_none": "Reads rate confirmations, carrier invoices, payments made, notices of assignment: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "totals",

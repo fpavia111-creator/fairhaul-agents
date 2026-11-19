@@ -1,0 +1,139 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": "rma",
+   "codes": "code"
+  }
+ ],
+ "planted": [
+  [
+   "RMA-3003",
+   "credited_not_received"
+  ],
+  [
+   "RMA-3004",
+   "received_not_credited"
+  ],
+  [
+   "RMA-3004",
+   "freight_billed_twice"
+  ],
+  [
+   "RMA-3005",
+   "short_received"
+  ],
+  [
+   "RMA-3005",
+   "over_credited"
+  ],
+  [
+   "RMA-3006",
+   "received_not_credited"
+  ],
+  [
+   "RMA-3009",
+   "label_unused"
+  ],
+  [
+   "",
+   "freight_without_rma"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "rmas",
+   "dropWhere": {
+    "rma": [
+     "RMA-3003",
+     "RMA-3004",
+     "RMA-3005",
+     "RMA-3006",
+     "RMA-3009"
+    ]
+   }
+  },
+  {
+   "arg": "credits",
+   "dropWhere": {
+    "rma": [
+     "RMA-3003",
+     "RMA-3005"
+    ]
+   }
+  },
+  {
+   "arg": "receipts",
+   "dropWhere": {
+    "tracking": [
+     "1Z-RT-0004",
+     "1Z-RT-0005",
+     "1Z-RT-0006"
+    ]
+   }
+  },
+  {
+   "arg": "charges",
+   "dropWhere": {
+    "tracking": [
+     "1Z-RT-0004",
+     "1Z-RT-0005",
+     "1Z-RT-0006",
+     "1Z-RT-0099"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "credit above the value received",
+   "edits": [
+    {
+     "arg": "credits",
+     "set": [
+      {
+       "where": [
+        "rma",
+        "RMA-3002"
+       ],
+       "column": "credit",
+       "value": "200.00"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "RMA-3002",
+     "over_credited"
+    ]
+   ]
+  },
+  {
+   "name": "return label unused for 57 days",
+   "edits": [
+    {
+     "arg": "rmas",
+     "set": [
+      {
+       "where": [
+        "rma",
+        "RMA-3007"
+       ],
+       "column": "authorised_at",
+       "value": "2026-09-20"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "RMA-3007",
+     "label_unused"
+    ]
+   ]
+  }
+ ]
+}

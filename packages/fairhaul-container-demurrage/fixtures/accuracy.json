@@ -1,0 +1,135 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "board",
+ "extract": [
+  {
+   "list": "items",
+   "id": "container",
+   "codes": "status",
+   "ignore": [
+    "in_free_time",
+    "closed"
+   ]
+  },
+  {
+   "list": "charges",
+   "id": [
+    "container",
+    "invoice_number"
+   ],
+   "codes": "status",
+   "ignore": [
+    "ok"
+   ]
+  }
+ ],
+ "planted": [
+  [
+   "BMLU1000001",
+   "act_now"
+  ],
+  [
+   "BMLU1000002",
+   "accruing"
+  ],
+  [
+   "BMLU1000003",
+   "accruing"
+  ],
+  [
+   "NSCU2000004",
+   "act_now"
+  ],
+  [
+   "HSLU3000007",
+   "no_terms"
+  ],
+  [
+   "BMLU1000002/BML-DD-4410",
+   "over"
+  ],
+  [
+   "NSCU2000005/NSL-PD-0921",
+   "over"
+  ],
+  [
+   "HSLU3000007/HSL-DD-0077",
+   "not_checked"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "containers",
+   "dropWhere": {
+    "container": [
+     "BMLU1000001",
+     "BMLU1000002",
+     "BMLU1000003",
+     "NSCU2000004",
+     "HSLU3000007"
+    ]
+   }
+  },
+  {
+   "arg": "charges",
+   "dropWhere": {
+    "container": [
+     "BMLU1000002",
+     "BMLU1000003",
+     "NSCU2000005",
+     "HSLU3000007"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "container discharged a week earlier, not picked up",
+   "edits": [
+    {
+     "arg": "containers",
+     "set": [
+      {
+       "where": [
+        "container",
+        "BMLU1000006"
+       ],
+       "column": "discharged",
+       "value": "2026-11-09"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "BMLU1000006",
+     "accruing"
+    ]
+   ]
+  },
+  {
+   "name": "empty never returned",
+   "edits": [
+    {
+     "arg": "containers",
+     "set": [
+      {
+       "where": [
+        "container",
+        "NSCU2000005"
+       ],
+       "column": "empty_returned",
+       "value": ""
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "NSCU2000005",
+     "accruing"
+    ]
+   ]
+  }
+ ]
+}

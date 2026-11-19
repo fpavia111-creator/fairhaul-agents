@@ -1,0 +1,99 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "board",
+ "extract": [
+  {
+   "list": "items",
+   "id": "load_id",
+   "codes": "status",
+   "ignore": [
+    "ready"
+   ]
+  }
+ ],
+ "planted": [
+  [
+   "Q-702",
+   "check_price"
+  ],
+  [
+   "Q-704",
+   "requote"
+  ],
+  [
+   "Q-705",
+   "no_quotes"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "loads",
+   "dropWhere": {
+    "load_id": [
+     "Q-702",
+     "Q-704",
+     "Q-705"
+    ]
+   }
+  },
+  {
+   "arg": "quotes",
+   "dropWhere": {
+    "load_id": [
+     "Q-702",
+     "Q-704"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "best quote far above lane history",
+   "edits": [
+    {
+     "arg": "loads",
+     "set": [
+      {
+       "where": [
+        "load_id",
+        "Q-701"
+       ],
+       "column": "lane_history_avg",
+       "value": "1500"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "Q-701",
+     "check_price"
+    ]
+   ]
+  },
+  {
+   "name": "every quote misses the delivery date",
+   "edits": [
+    {
+     "arg": "loads",
+     "set": [
+      {
+       "where": [
+        "load_id",
+        "Q-703"
+       ],
+       "column": "deliver_by",
+       "value": "2026-11-19"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "Q-703",
+     "requote"
+    ]
+   ]
+  }
+ ]
+}

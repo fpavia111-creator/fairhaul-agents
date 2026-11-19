@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-freight-allocation",
   "version": "0.1.0",
-  "description": "Splits each freight bill across the orders, customers, SKUs and cost centers on the shipment by weight, volume, value, pallets or units, gives freight cost per unit by SKU and customer, and drafts the allocation journal for review. Never posts to your ledger.",
+  "description": "Fairhaul Freight Allocation: splits each freight bill across the orders, customers, SKUs and cost centers on the shipment by weight, volume, value, pallets or units, gives freight cost per unit by SKU and customer, and drafts the allocation journal for review. Never posts to your ledger.",
   "author": {
     "name": "Kurt Francisco"
   },

@@ -1,0 +1,61 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "plan-totals",
+ "extract": [
+  {
+   "list": "schedule",
+   "id": "load_id",
+   "codes": "status",
+   "ignore": [
+    "scheduled"
+   ]
+  }
+ ],
+ "planted": [
+  [
+   "PO-4408",
+   "no_slot"
+  ],
+  [
+   "PO-4410",
+   "no_slot"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "requests",
+   "dropWhere": {
+    "load_id": [
+     "PO-4408",
+     "PO-4410"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "a flatbed with no flatbed door",
+   "edits": [
+    {
+     "arg": "requests",
+     "set": [
+      {
+       "where": [
+        "load_id",
+        "PO-4409"
+       ],
+       "column": "door_type",
+       "value": "flatbed"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "PO-4409",
+     "no_slot"
+    ]
+   ]
+  }
+ ]
+}

@@ -202,7 +202,8 @@ export function adaptRecords(table, def, { override = null, kind = '', arg = '',
     }
     const uf = !!unitOf(f, fd);
     // The agent's own name (any letter case or punctuation) is not a rename.
-    if (has(f)) { const k = index.get(normHeader(f)); plan.push({ f, fd, spec: {}, from: [f] }); if (k !== f) consumed.add(k); continue; }
+    // Written differently ("ID" for id, "Load_ID" for load_id), the column is still renamed to the agent's own name.
+    if (has(f)) { const k = index.get(normHeader(f)); plan.push({ f, fd, spec: {}, from: [f] }); if (k !== f) { consumed.add(k); mapped[f] = k; renamed++; } continue; }
     if (uf && col(f, true) !== undefined) { const k = col(f, true); plan.push({ f, fd, spec: {}, from: [k] }); mapped[f] = k; consumed.add(k); renamed++; continue; }
     // A nested JSON object is never taken for a column by its name alone.
     const alias = (fd.aliases || []).find((a) => { const k = col(a, uf); return k !== undefined && !nested.has(k); });

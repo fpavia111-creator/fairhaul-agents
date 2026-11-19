@@ -1,0 +1,107 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "scan-totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": "shipment_id",
+   "codes": "status",
+   "ignore": [
+    "filed",
+    "not_a_claim",
+    "below_minimum"
+   ]
+  }
+ ],
+ "planted": [
+  [
+   "L-2001",
+   "file"
+  ],
+  [
+   "L-2002",
+   "file"
+  ],
+  [
+   "L-2003",
+   "file"
+  ],
+  [
+   "L-2004",
+   "file_now"
+  ],
+  [
+   "L-2005",
+   "expired"
+  ],
+  [
+   "L-2008",
+   "review"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "exceptions",
+   "dropWhere": {
+    "shipment_id": [
+     "L-2001",
+     "L-2002",
+     "L-2003",
+     "L-2004",
+     "L-2005",
+     "L-2008"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "damage worth filing",
+   "edits": [
+    {
+     "arg": "exceptions",
+     "set": [
+      {
+       "where": [
+        "shipment_id",
+        "L-2009"
+       ],
+       "column": "goods_value",
+       "value": "400.00"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "L-2009",
+     "file"
+    ]
+   ]
+  },
+  {
+   "name": "claim missing from the log",
+   "edits": [
+    {
+     "arg": "claims",
+     "set": [
+      {
+       "where": [
+        "claim_id",
+        "C-501"
+       ],
+       "column": "shipment_id",
+       "value": "L-2099"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "L-2007",
+     "file"
+    ]
+   ]
+  }
+ ]
+}

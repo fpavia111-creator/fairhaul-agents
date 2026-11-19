@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-ltl-reweighs",
   "version": "0.1.0",
-  "description": "Checks LTL weight and class corrections against your declared dimensions, the density scale and the inspection certificate, separates the corrections worth challenging from the ones that mean your own product data is wrong, and drafts the disputes and item-master fixes. Never pays or sends.",
+  "description": "Fairhaul LTL Reweighs: checks LTL weight and class corrections against your declared dimensions, the density scale and the inspection certificate, separates the corrections worth challenging from the ones that mean your own product data is wrong, and drafts the disputes and item-master fixes. Never pays or sends.",
   "author": {
     "name": "Kurt Francisco"
   },

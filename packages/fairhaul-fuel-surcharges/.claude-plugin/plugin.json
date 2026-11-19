@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-fuel-surcharges",
   "version": "0.1.0",
-  "description": "Checks every fuel surcharge against your carriers' fuel tables and the diesel index for the week each load moved, spots carriers billing on the wrong week, compares fuel tables side by side and shows what a diesel move would cost you. Never pays or sends.",
+  "description": "Fairhaul Fuel Surcharges: checks every fuel surcharge against your carriers' fuel tables and the diesel index for the week each load moved, spots carriers billing on the wrong week, compares fuel tables side by side and shows what a diesel move would cost you. Never pays or sends.",
   "author": {
     "name": "Kurt Francisco"
   },

@@ -1,0 +1,144 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "audit-totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": "invoice_number",
+   "codes": "findings.code"
+  }
+ ],
+ "planted": [
+  [
+   "INV-7001",
+   "fuel_over"
+  ],
+  [
+   "INV-7001",
+   "accessorial_over"
+  ],
+  [
+   "INV-7002",
+   "accessorial_not_allowed"
+  ],
+  [
+   "INV-7004",
+   "duplicate_pro"
+  ],
+  [
+   "INV-7005",
+   "already_paid"
+  ],
+  [
+   "INV-7006",
+   "lines_do_not_add_up"
+  ],
+  [
+   "INV-7007",
+   "weight_over_bol"
+  ],
+  [
+   "INV-8101",
+   "linehaul_over"
+  ],
+  [
+   "INV-8101",
+   "accessorial_over"
+  ],
+  [
+   "INV-8101",
+   "quote_exceeded"
+  ],
+  [
+   "INV-8102",
+   "rate_needs_data"
+  ],
+  [
+   "INV-9001",
+   "contract_expired"
+  ],
+  [
+   "INV-9100",
+   "no_contract"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "invoices",
+   "dropWhere": {
+    "invoice_number": [
+     "INV-7001",
+     "INV-7002",
+     "INV-7004",
+     "INV-7005",
+     "INV-7006",
+     "INV-7007",
+     "INV-8101",
+     "INV-8102",
+     "INV-9001",
+     "INV-9100"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "BOL weight lower than billed",
+   "edits": [
+    {
+     "arg": "shipments",
+     "set": [
+      {
+       "where": [
+        "shipment_id",
+        "S-503"
+       ],
+       "column": "weight",
+       "value": "700"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "INV-7003",
+     "weight_over_bol"
+    ]
+   ]
+  },
+  {
+   "name": "fuel billed above the table",
+   "edits": [
+    {
+     "arg": "invoices",
+     "set": [
+      {
+       "where": [
+        [
+         "invoice_number",
+         "INV-7003"
+        ],
+        [
+         "charge_description",
+         "Fuel Surcharge"
+        ]
+       ],
+       "column": "charge_amount",
+       "value": "60"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "INV-7003",
+     "fuel_over"
+    ],
+    [
+     "INV-7003",
+     "lines_do_not_add_up"
+    ]
+   ]
+  }
+ ]
+}

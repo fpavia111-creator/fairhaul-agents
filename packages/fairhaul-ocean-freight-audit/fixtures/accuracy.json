@@ -1,0 +1,91 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": "invoice_number",
+   "codes": "findings.code"
+  }
+ ],
+ "planted": [
+  [
+   "BML-90012",
+   "rate_over"
+  ],
+  [
+   "BML-90012",
+   "surcharge_out_of_window"
+  ],
+  [
+   "BML-90012",
+   "surcharge_included"
+  ],
+  [
+   "BML-90013",
+   "duplicate_charge"
+  ],
+  [
+   "BML-90013",
+   "surcharge_not_in_contract"
+  ],
+  [
+   "BML-90014",
+   "container_count"
+  ],
+  [
+   "NSL-4410",
+   "contract_expired"
+  ],
+  [
+   "BML-90015",
+   "currency_mismatch"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "invoices",
+   "dropWhere": {
+    "invoice_number": [
+     "BML-90012",
+     "BML-90013",
+     "BML-90014",
+     "NSL-4410",
+     "BML-90015"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "ocean freight above the contract",
+   "edits": [
+    {
+     "arg": "invoices",
+     "set": [
+      {
+       "where": [
+        [
+         "invoice_number",
+         "BML-90011"
+        ],
+        [
+         "charge_code",
+         "Ocean Freight"
+        ]
+       ],
+       "column": "amount",
+       "value": "4600"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "BML-90011",
+     "rate_over"
+    ]
+   ]
+  }
+ ]
+}

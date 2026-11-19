@@ -1,0 +1,117 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": "shipment_id",
+   "codes": "status",
+   "ignore": [
+    "ok",
+    "waiting"
+   ]
+  }
+ ],
+ "planted": [
+  [
+   "D-502",
+   "claim_review"
+  ],
+  [
+   "D-503",
+   "fix"
+  ],
+  [
+   "D-504",
+   "claim_review"
+  ],
+  [
+   "D-505",
+   "chase"
+  ],
+  [
+   "D-506",
+   "fix"
+  ],
+  [
+   "D-508",
+   "chase"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "loads",
+   "dropWhere": {
+    "shipment_id": [
+     "D-502",
+     "D-503",
+     "D-504",
+     "D-505",
+     "D-506",
+     "D-508"
+    ]
+   }
+  },
+  {
+   "arg": "pods",
+   "dropWhere": {
+    "pro": [
+     "RF-910002",
+     "RF-910003",
+     "CL-62004",
+     "CL-62006"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "POD with no signature",
+   "edits": [
+    {
+     "arg": "pods",
+     "set": [
+      {
+       "where": [
+        "pro",
+        "RF-910001"
+       ],
+       "column": "signed_by",
+       "value": ""
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "D-501",
+     "fix"
+    ]
+   ]
+  },
+  {
+   "name": "POD shows a piece short",
+   "edits": [
+    {
+     "arg": "pods",
+     "set": [
+      {
+       "where": [
+        "pro",
+        "PX-31007"
+       ],
+       "column": "pieces_delivered",
+       "value": "4"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "D-507",
+     "claim_review"
+    ]
+   ]
+  }
+ ]
+}

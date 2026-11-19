@@ -62,7 +62,7 @@ Fairhaul Freight Accruals demo (fictional shipments, period ending 2026-10-31) i
 | Tool | What it does | Policy |
 |---|---|---|
 | `accruals_accrue` | List shipments shipped by period end with no invoice dated by period end, each with an estimate and its basis; totals by GL account and cost center; reversal and accuracy of the prior accrual. | runs |
-| `accruals_write_report` | Write accruals-accrual.csv and .html (one row per shipment accrued, by cost center and the prior-period reversal) and journal-entry-draft.csv (debits by GL and cost center, one credit to accrued freight) into out_dir (… | runs |
+| `accruals_write_report` | Write accruals-accrual.csv and .html (one row per shipment accrued, by cost center and the prior-period reversal) and journal-entry-draft.csv (debits by GL and cost center, one credit to accrued freight) into out_dir … | runs |
 | `accruals_request_post` | After one named human click, record in post-approvals.csv that the reviewed journal-entry-draft.csv (by sha256) may be posted. | asks first (Auto can be opted in) |
 | `erp_post_journal` | Fairhaul Freight Accruals never posts to your ledger; a person posts the reviewed entry. | refused |
 

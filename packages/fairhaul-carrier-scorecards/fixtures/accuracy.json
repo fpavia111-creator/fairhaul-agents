@@ -1,0 +1,4 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs.",
+ "not_measured": "ranks carriers on several measures; its evals check the ranking and the measures"
+}

@@ -2,6 +2,7 @@
   "suite": "fairhaul-fuel-surcharges",
   "root": "..",
   "data_note": "Fictional invoices, fuel tables and diesel prices in ../fixtures. No model is called.",
+  "pii_none": "Reads carrier invoices: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "check-totals",

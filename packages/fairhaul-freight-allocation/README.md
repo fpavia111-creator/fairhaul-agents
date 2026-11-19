@@ -60,7 +60,7 @@ Fairhaul Freight Allocation demo (fictional October shipments) in <demo folder>
 | Tool | What it does | Policy |
 |---|---|---|
 | `allocation_allocate` | Allocate each shipment's cost to its order lines by the chosen basis (falling back when a line lacks it), with totals by customer, SKU and GL account plus cost center, freight per unit and freight as a percent of value. | runs |
-| `allocation_write_report` | Write allocation.csv and .html (one row per order line, by customer, SKU and cost center, and the problems) and allocation-journal-draft.csv (debits by GL and cost center, one credit to the clearing account) in… | runs |
+| `allocation_write_report` | Write allocation.csv and .html (one row per order line, by customer, SKU and cost center, and the problems) and allocation-journal-draft.csv (debits by GL and cost center, one credit to the clearing account) into out_… | runs |
 | `allocation_request_post` | After one named human click, record in post-approvals.csv that the reviewed allocation-journal-draft.csv (by sha256) may be posted. | asks first (Auto can be opted in) |
 | `erp_post_journal` | Fairhaul Freight Allocation never posts to your ledger; a person posts the reviewed entry. | refused |
 | `erp_update_order_cost` | Fairhaul Freight Allocation never writes landed cost back into orders or items. | refused |

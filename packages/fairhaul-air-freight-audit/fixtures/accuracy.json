@@ -1,0 +1,155 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": "invoice_number",
+   "codes": "findings.code"
+  }
+ ],
+ "planted": [
+  [
+   "SKY-5002",
+   "rate_over"
+  ],
+  [
+   "SKY-5003",
+   "weight_over"
+  ],
+  [
+   "SKY-5003",
+   "rate_over"
+  ],
+  [
+   "SKY-5003",
+   "surcharge_over"
+  ],
+  [
+   "SKY-5004",
+   "rate_over"
+  ],
+  [
+   "SKY-5005",
+   "charge_not_on_rate_sheet"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "invoices",
+   "dropWhere": {
+    "invoice_number": [
+     "SKY-5003"
+    ]
+   }
+  },
+  {
+   "arg": "invoices",
+   "dropWhere": {
+    "charge_code": [
+     "Terminal Handling"
+    ]
+   }
+  },
+  {
+   "arg": "invoices",
+   "set": [
+    {
+     "where": [
+      [
+       "invoice_number",
+       "SKY-5002"
+      ],
+      [
+       "charge_code",
+       "Air Freight"
+      ]
+     ],
+     "column": "amount",
+     "value": "1440"
+    }
+   ]
+  },
+  {
+   "arg": "invoices",
+   "set": [
+    {
+     "where": [
+      [
+       "invoice_number",
+       "SKY-5004"
+      ],
+      [
+       "charge_code",
+       "Air Freight"
+      ]
+     ],
+     "column": "amount",
+     "value": "380"
+    }
+   ]
+  }
+ ],
+ "mutations": [
+  {
+   "name": "fuel surcharge above the rate sheet",
+   "edits": [
+    {
+     "arg": "invoices",
+     "set": [
+      {
+       "where": [
+        [
+         "invoice_number",
+         "SKY-5001"
+        ],
+        [
+         "charge_code",
+         "Fuel Surcharge"
+        ]
+       ],
+       "column": "amount",
+       "value": "450"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "SKY-5001",
+     "surcharge_over"
+    ]
+   ]
+  },
+  {
+   "name": "air freight above the rate break",
+   "edits": [
+    {
+     "arg": "invoices",
+     "set": [
+      {
+       "where": [
+        [
+         "invoice_number",
+         "SKY-5001"
+        ],
+        [
+         "charge_code",
+         "Air Freight"
+        ]
+       ],
+       "column": "amount",
+       "value": "1700"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "SKY-5001",
+     "rate_over"
+    ]
+   ]
+  }
+ ]
+}

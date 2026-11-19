@@ -1,0 +1,123 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": "load_id",
+   "codes": "code"
+  }
+ ],
+ "planted": [
+  [
+   "L-5102",
+   "invoice_over_ratecon"
+  ],
+  [
+   "L-5103",
+   "past_due"
+  ],
+  [
+   "L-5104",
+   "no_pod"
+  ],
+  [
+   "L-5105",
+   "paid_wrong_party"
+  ],
+  [
+   "L-5108",
+   "paid_twice"
+  ],
+  [
+   "L-5199",
+   "invoice_without_ratecon"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "ratecons",
+   "dropWhere": {
+    "load_id": [
+     "L-5102",
+     "L-5103",
+     "L-5104",
+     "L-5105",
+     "L-5108"
+    ]
+   }
+  },
+  {
+   "arg": "invoices",
+   "dropWhere": {
+    "load_id": [
+     "L-5102",
+     "L-5103",
+     "L-5104",
+     "L-5105",
+     "L-5108",
+     "L-5199"
+    ]
+   }
+  },
+  {
+   "arg": "payments",
+   "dropWhere": {
+    "load_id": [
+     "L-5105",
+     "L-5108"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "carrier invoices 100 over the rate confirmation",
+   "edits": [
+    {
+     "arg": "invoices",
+     "set": [
+      {
+       "where": [
+        "load_id",
+        "L-5107"
+       ],
+       "column": "amount",
+       "value": "2850.00"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "L-5107",
+     "invoice_over_ratecon"
+    ]
+   ]
+  },
+  {
+   "name": "no proof of delivery on a ready load",
+   "edits": [
+    {
+     "arg": "ratecons",
+     "set": [
+      {
+       "where": [
+        "load_id",
+        "L-5107"
+       ],
+       "column": "pod",
+       "value": "no"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "L-5107",
+     "no_pod"
+    ]
+   ]
+  }
+ ]
+}

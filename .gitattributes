@@ -1,0 +1,6 @@
+# Code and generated docs are LF everywhere, so the --check scripts also pass on a fresh Windows clone.
+# Fixtures are test data in the exact bytes an export has (legacy encodings, CRLF line ends): never converted.
+* text=auto eol=lf
+**/fixtures/** -text
+*.xlsx binary
+*.png binary

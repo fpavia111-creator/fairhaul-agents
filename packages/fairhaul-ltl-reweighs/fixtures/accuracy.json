@@ -1,0 +1,86 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": "pro",
+   "codes": "status",
+   "ignore": [
+    "accept"
+   ]
+  }
+ ],
+ "planted": [
+  [
+   "PRO-7101",
+   "fix_our_data"
+  ],
+  [
+   "PRO-7102",
+   "fix_our_data"
+  ],
+  [
+   "PRO-7103",
+   "challenge"
+  ],
+  [
+   "PRO-7104",
+   "challenge"
+  ],
+  [
+   "PRO-7105",
+   "ask_for_certificate"
+  ],
+  [
+   "PRO-7106",
+   "challenge"
+  ],
+  [
+   "PRO-7108",
+   "fix_our_data"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "corrections",
+   "dropWhere": {
+    "pro": [
+     "PRO-7101",
+     "PRO-7102",
+     "PRO-7103",
+     "PRO-7104",
+     "PRO-7105",
+     "PRO-7106",
+     "PRO-7108"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "no inspection certificate",
+   "edits": [
+    {
+     "arg": "corrections",
+     "set": [
+      {
+       "where": [
+        "pro",
+        "PRO-7107"
+       ],
+       "column": "certificate",
+       "value": "N"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "PRO-7107",
+     "ask_for_certificate"
+    ]
+   ]
+  }
+ ]
+}

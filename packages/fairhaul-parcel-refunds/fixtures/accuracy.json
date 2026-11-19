@@ -1,0 +1,108 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "audit-totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": [
+    "tracking",
+    "invoice_number"
+   ],
+   "codes": "findings.code"
+  }
+ ],
+ "planted": [
+  [
+   "1ZEX0000000000001/UPS-1105",
+   "late_delivery"
+  ],
+  [
+   "1ZEX0000000000002/UPS-1105",
+   "residential_on_business"
+  ],
+  [
+   "1ZEX0000000000003/UPS-1105",
+   "dim_overbilled"
+  ],
+  [
+   "1ZEX0000000000004/UPS-1112",
+   "duplicate_tracking"
+  ],
+  [
+   "1ZEX0000000000005/UPS-1112",
+   "voided_label_billed"
+  ],
+  [
+   "1ZEX0000000000006/UPS-1112",
+   "address_correction"
+  ],
+  [
+   "1ZEX0000000000007/UPS-1112",
+   "address_correction"
+  ],
+  [
+   "748900000001/FDX-1020",
+   "late_delivery"
+  ],
+  [
+   "748900000003/FDX-1110",
+   "missing_delivery_scan"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "invoices",
+   "dropWhere": {
+    "invoice_number": [
+     "UPS-1112",
+     "FDX-1020"
+    ]
+   }
+  },
+  {
+   "arg": "invoices",
+   "dropWhere": {
+    "tracking": [
+     "1ZEX0000000000001",
+     "1ZEX0000000000002",
+     "1ZEX0000000000003",
+     "748900000003"
+    ]
+   }
+  },
+  {
+   "arg": "voids",
+   "dropWhere": {
+    "tracking": [
+     "1ZEX0000000000005"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "ground package delivered after the commitment",
+   "edits": [
+    {
+     "arg": "invoices",
+     "set": [
+      {
+       "where": [
+        "tracking",
+        "748900000002"
+       ],
+       "column": "delivered_at",
+       "value": "2026-11-09T10:00:00"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "748900000002/FDX-1110",
+     "late_delivery"
+    ]
+   ]
+  }
+ ]
+}

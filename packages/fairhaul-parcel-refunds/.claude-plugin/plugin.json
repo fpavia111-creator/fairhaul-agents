@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-parcel-refunds",
   "version": "0.1.0",
-  "description": "Audits UPS, FedEx, DHL and USPS invoice data for late deliveries, duplicate tracking numbers, voided labels billed, residential charges on business addresses, repeat address corrections and dimensional-weight overbilling, with claim-by dates and refund request drafts. Never files claims itself.",
+  "description": "Fairhaul Parcel Refunds: audits UPS, FedEx, DHL and USPS invoice data for late deliveries, duplicate tracking numbers, voided labels billed, residential charges on business addresses, repeat address corrections and dimensional-weight overbilling, with claim-by dates and refund request drafts. Never files claims itself.",
   "author": {
     "name": "Kurt Francisco"
   },

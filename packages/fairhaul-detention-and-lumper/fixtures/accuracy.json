@@ -1,0 +1,152 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "audit-totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": "load_id",
+   "codes": "findings.code"
+  }
+ ],
+ "planted": [
+  [
+   "L-101",
+   "detention_over"
+  ],
+  [
+   "L-101",
+   "hours_over_record"
+  ],
+  [
+   "L-102",
+   "arrived_late"
+  ],
+  [
+   "L-103",
+   "no_timestamps"
+  ],
+  [
+   "L-104",
+   "layover_not_earned"
+  ],
+  [
+   "L-105",
+   "lumper_over_receipt"
+  ],
+  [
+   "L-106",
+   "lumper_no_receipt"
+  ],
+  [
+   "L-107",
+   "detention_over"
+  ],
+  [
+   "L-108",
+   "layover_over"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "charges",
+   "dropWhere": {
+    "load_id": [
+     "L-101",
+     "L-102",
+     "L-103",
+     "L-104",
+     "L-106"
+    ]
+   }
+  },
+  {
+   "arg": "charges",
+   "set": [
+    {
+     "where": [
+      "load_id",
+      "L-105"
+     ],
+     "column": "amount",
+     "value": "150"
+    }
+   ]
+  },
+  {
+   "arg": "charges",
+   "set": [
+    {
+     "where": [
+      "load_id",
+      "L-107"
+     ],
+     "column": "amount",
+     "value": "75"
+    }
+   ]
+  },
+  {
+   "arg": "charges",
+   "set": [
+    {
+     "where": [
+      "load_id",
+      "L-108"
+     ],
+     "column": "amount",
+     "value": "250"
+    }
+   ]
+  }
+ ],
+ "mutations": [
+  {
+   "name": "detention billed above the dock times",
+   "edits": [
+    {
+     "arg": "charges",
+     "set": [
+      {
+       "where": [
+        "load_id",
+        "L-100"
+       ],
+       "column": "amount",
+       "value": "250"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "L-100",
+     "detention_over"
+    ]
+   ]
+  },
+  {
+   "name": "lumper receipt lower than billed",
+   "edits": [
+    {
+     "arg": "stops",
+     "set": [
+      {
+       "where": [
+        "load_id",
+        "L-105"
+       ],
+       "column": "lumper_receipt_amount",
+       "value": "120"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "L-105",
+     "lumper_over_receipt"
+    ]
+   ]
+  }
+ ]
+}

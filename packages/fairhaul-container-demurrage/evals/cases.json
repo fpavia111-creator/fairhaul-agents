@@ -2,6 +2,7 @@
   "suite": "fairhaul-container-demurrage",
   "root": "..",
   "data_note": "Fictional containers, terms and charges in ../fixtures, as of 2026-11-16. No model is called.",
+  "pii_none": "Reads import containers, d&d charges: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "board",

@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-lane-spend",
   "version": "0.1.0",
-  "description": "Maps your freight spend by lane and mode, tracks cost per hundredweight and per mile month by month, finds LTL shipments on the same lane and day that could ride together and heavy LTL that should be quoted as truckload, and drafts the consolidation plan for your shipping team. Never changes orders or bookings.",
+  "description": "Fairhaul Lane Spend: maps your freight spend by lane and mode, tracks cost per hundredweight and per mile month by month, finds LTL shipments on the same lane and day that could ride together and heavy LTL that should be quoted as truckload, and drafts the consolidation plan for your shipping team. Never changes orders or bookings.",
   "author": {
     "name": "Kurt Francisco"
   },

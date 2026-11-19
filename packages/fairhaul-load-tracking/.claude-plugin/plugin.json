@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-load-tracking",
   "version": "0.1.0",
-  "description": "Reads your open loads and their tracking events, finds loads with stale or no tracking, missed pickups and ETAs that run past the delivery appointment, ranks carriers on tracking compliance and drafts the delay notice to your customer. Never messages anyone itself.",
+  "description": "Fairhaul Load Tracking: reads your open loads and their tracking events, finds loads with stale or no tracking, missed pickups and ETAs that run past the delivery appointment, ranks carriers on tracking compliance and drafts the delay notice to your customer. Never messages anyone itself.",
   "author": {
     "name": "Kurt Francisco"
   },

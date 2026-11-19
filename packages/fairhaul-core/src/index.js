@@ -25,6 +25,7 @@ export { EXPORTS, exportProfile, carryGroup, firstRowPer, fullName, EXPORTS_BASI
 export { adaptRecords, readYesNo, parseAnyDate, inferDateOrder, cleanAmount, inferDecimal, normHeader, findHeaderRow, encodingWarning, conceptOf, stripUnit, unitInHeader, UNITS, DEFAULT_UNITS, describeSources, loadSourceOverrides, overrideFor, kindsByArg, columnShape, SOURCES_CONFIG_SCHEMA, SOURCES_FILE, FIELD_TYPES } from './sources.js';
 export { sha256, sha256File, canonical, safePath, readRecords, toNumber, round2 } from './util.js';
 export { demoRuntime, printStep } from './demo.js';
+export { PiiMasker, PII_MODES, PII_KEY_FILE, piiKindOf, loadPiiKey } from './pii.js';
 export { foldText, readNumber, numberReader } from './intl.js';
 export { decodeText, encodingName, ENCODINGS } from './encoding.js';
 export { COLUMN_WORDS, COLUMN_LANGUAGES, FIELD_CONCEPTS, translatedNames, namesFor } from './i18n/columns.js';

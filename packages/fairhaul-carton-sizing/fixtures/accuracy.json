@@ -1,0 +1,105 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": "package_id",
+   "codes": "status",
+   "ignore": [
+    "ok"
+   ]
+  }
+ ],
+ "planted": [
+  [
+   "P-01",
+   "smaller_carton"
+  ],
+  [
+   "P-02",
+   "smaller_carton"
+  ],
+  [
+   "P-03",
+   "smaller_carton"
+  ],
+  [
+   "P-05",
+   "smaller_carton"
+  ],
+  [
+   "P-07",
+   "no_fit"
+  ],
+  [
+   "P-08",
+   "no_fit"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "packages",
+   "dropWhere": {
+    "package_id": [
+     "P-01",
+     "P-02",
+     "P-03",
+     "P-05",
+     "P-07",
+     "P-08"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "bookends packed in a medium carton",
+   "edits": [
+    {
+     "arg": "packages",
+     "set": [
+      {
+       "where": [
+        "package_id",
+        "P-09"
+       ],
+       "column": "carton",
+       "value": "M1"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "P-09",
+     "smaller_carton"
+    ]
+   ]
+  },
+  {
+   "name": "candles packed in the largest carton",
+   "edits": [
+    {
+     "arg": "packages",
+     "set": [
+      {
+       "where": [
+        "package_id",
+        "P-04"
+       ],
+       "column": "carton",
+       "value": "M2"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "P-04",
+     "smaller_carton"
+    ]
+   ]
+  }
+ ]
+}

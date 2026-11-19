@@ -2,6 +2,7 @@
   "suite": "fairhaul-detention-and-lumper",
   "root": "..",
   "data_note": "Fictional charges, dock log and terms in ../fixtures. No model is called.",
+  "pii_none": "Reads detention, layover and lumper charges, dock or yard log: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "audit-totals",

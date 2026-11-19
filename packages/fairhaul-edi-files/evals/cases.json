@@ -2,6 +2,7 @@
   "suite": "fairhaul-edi-files",
   "root": "..",
   "data_note": "Fictional X12 004010 files in ../fixtures. No model is called.",
+  "pii_none": "Reads freight files: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "clean-files-read",

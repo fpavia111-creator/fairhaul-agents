@@ -1,0 +1,85 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "accrual-total",
+ "extract": [
+  {
+   "list": "lines",
+   "id": "shipment_id",
+   "flags": {
+    "no_estimate": "basis=no_estimate",
+    "over_60_days": "age_days>60"
+   }
+  }
+ ],
+ "planted": [
+  [
+   "S-6",
+   "no_estimate"
+  ],
+  [
+   "S-9",
+   "over_60_days"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "shipments",
+   "dropWhere": {
+    "shipment_id": [
+     "S-6",
+     "S-9"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "an old shipment never billed",
+   "edits": [
+    {
+     "arg": "shipments",
+     "set": [
+      {
+       "where": [
+        "shipment_id",
+        "S-2"
+       ],
+       "column": "ship_date",
+       "value": "2026-08-15"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "S-2",
+     "over_60_days"
+    ]
+   ]
+  },
+  {
+   "name": "a carrier with no contract and no quote",
+   "edits": [
+    {
+     "arg": "shipments",
+     "set": [
+      {
+       "where": [
+        "shipment_id",
+        "S-5"
+       ],
+       "column": "carrier",
+       "value": "Nova Carriers"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "S-5",
+     "no_estimate"
+    ]
+   ]
+  }
+ ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-freight-bill-audit",
   "version": "0.1.0",
-  "description": "Audits truckload and LTL freight bills (CSV, Excel or X12 210) against your own contract rates, fuel table and accessorial terms, finds duplicates and math errors, and drafts carrier disputes. Never pays and never sends.",
+  "description": "Fairhaul Freight Bill Audit: audits truckload and LTL freight bills (CSV, Excel or X12 210) against your own contract rates, fuel table and accessorial terms, finds duplicates and math errors, and drafts carrier disputes. Never pays and never sends.",
   "author": {
     "name": "Kurt Francisco"
   },

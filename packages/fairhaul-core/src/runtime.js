@@ -6,6 +6,7 @@ import { MODES, ONE_CLICK_CATEGORIES } from './manifest.js';
 import { AuditLog } from './audit.js';
 import { ApprovalStore, signWebhook } from './approvals.js';
 import { UsageStore, capHit } from './usage.js';
+import { PiiMasker, PII_MODES, loadPiiKey } from './pii.js';
 import { validate, assertValid } from './schema.js';
 import { loadSigner } from './signing.js';
 import { checkLicense, readLicenseToken, licenseHas, licenseView } from './license.js';
@@ -74,6 +75,8 @@ export const DEFAULT_CAPS = Object.freeze({ maxSteps: 50, maxSpendUsd: 5 });
  *                   learn still work). Only for agents whose manifest declares memory.
  *   validateInputs  false to skip inputSchema validation (default true)
  *   injectionScan   false to skip the check for instruction-like text in results (default true)
+ *   pii             customer-data masking of every result: 'mask' (default), 'strict' or 'off'
+ *                   (see pii.js; FAIRHAUL_PII sets it too). 'off' is recorded on every audit line.
  *   license         licence key text (default: FAIRHAUL_LICENSE, FAIRHAUL_LICENSE_FILE, then <stateDir>/license.key)
  *   licenseFile     path to a file holding the licence key
  *   licenseKeys     trusted public keys for licences (PEM strings or a Map). Default: the keys
@@ -102,6 +105,10 @@ export class AgentRuntime {
     this.signer = options.signingKey ? (typeof options.signingKey === 'string' ? loadSigner(options.signingKey, { root: this.root }) : options.signingKey) : null;
     this.audit = new AuditLog(persist ? join(this.stateDir, 'audit.jsonl') : null, { signer: this.signer, mirror: options.auditMirror ? resolve(options.auditMirror) : null });
     this.approvals = new ApprovalStore(persist ? this.stateDir : null, { ttlHours: options.approvalTtlHours });
+    this.piiMode = options.pii || process.env.FAIRHAUL_PII || 'mask';
+    if (!PII_MODES.includes(this.piiMode)) throw new Error(`pii must be one of ${PII_MODES.join(', ')}`);
+    this.piiPersist = persist;
+    this._piiKey = Buffer.isBuffer(options.piiKey) ? options.piiKey : null; // demos pass a fixed key for fictional data
     this.usage = new UsageStore(persist ? this.stateDir : null);
     // Domain memory (only for agents whose manifest declares it): one file per agent
     // under <stateDir>/memory/. Accepted facts are used unless memory: false.
@@ -137,6 +144,15 @@ export class AgentRuntime {
 
   kill() { this.killed = true; }
 
+  /** The pseudonym key: <stateDir>/pii.key when state is kept, otherwise one key per process. */
+  get piiKey() {
+    if (!this._piiKey) this._piiKey = loadPiiKey(this.piiPersist ? this.stateDir : null);
+    return this._piiKey;
+  }
+
+  /** A customer-data masker for one call. */
+  piiMasker() { return new PiiMasker({ mode: this.piiMode, key: this.piiKey }); }
+
   isKilled() {
     if (this.killed) return true;
     if (/^(1|true|yes)$/i.test(process.env.FAIRHAUL_KILL || '')) return true;
@@ -164,7 +180,7 @@ export class AgentRuntime {
    * `kind`), an export from a real system is mapped onto the agent's own columns.
    * Returns { rows, report } where report is null for a file of no declared kind.
    */
-  #readSource(p, opt, args, toolName, config) {
+  #readSource(p, opt, args, toolName, config, pii = null) {
     const root = this.root; const abs = safePath(root, p);
     const o = typeof opt === 'string' ? { kind: opt } : opt || {};
     const sources = this.manifest.sources || {};
@@ -182,16 +198,18 @@ export class AgentRuntime {
       const rows = table.records || rowsToRecords(table.matrix, Number(ov.skip_rows) || 0);
       // A file read without column mapping still says when its text encoding was a guess.
       const w = encodingWarning(table);
+      if (pii) pii.registerRecords(rows);
       return { rows, report: w ? { arg: o.arg || '', file: rel, kind: null, format: table.format, encoding: table.encoding.name, adapted: false, rows: rows.length, mapped: {}, unmapped: [], missing: [], skipped_rows: 0, warnings: [w] } : null, table };
     }
     const r = adaptRecords(table, sources[kind], { override: ov, kind, arg, file: rel });
+    if (pii) pii.registerRecords(r.rows, Object.fromEntries(Object.entries(sources[kind].fields || {}).filter(([, fd]) => fd && fd.pii).map(([f, fd]) => [f, fd.pii])));
     return { ...r, table };
   }
 
   context(args = {}, toolName = null, seen = [], call = {}) {
     const root = this.root;
     const configSchemas = this.manifest.configSchemas || {};
-    const applied = call.applied || []; const memWarnings = call.memWarnings || [];
+    const applied = call.applied || []; const memWarnings = call.memWarnings || []; const pii = call.pii || null; const usedArgs = new Set();
     let config; let memState;
     return {
       root,
@@ -204,6 +222,9 @@ export class AgentRuntime {
       // Empty when the memory file does not verify, or the runtime runs with memory: false.
       memory: this.memory,
       approvedBy: call.approvedBy || null,
+      // Customer-data masker for this call: pii.register(kind, value) masks a value the tool
+      // found some other way; pii.same(raw, given) matches a pseudonym the model passed back.
+      pii,
       approvalId: call.approvalId || null,
       memoryFacts: (kind) => {
         if (!this.memory || !this.useMemory) return [];
@@ -222,7 +243,10 @@ export class AgentRuntime {
       // records(path, { raw: true }) skips column mapping.
       records: (p, opt) => {
         if (config === undefined) config = loadSourceOverrides(root);
-        const r = this.#readSource(p, opt, args, toolName, config);
+        // The same file given for two arguments is read once per argument, in order, each with
+        // its own column layout (not twice with the first argument's).
+        if (!opt) { const byArg = kindsByArg(this.manifest, toolName); const k = Object.keys(args || {}).find((a) => byArg.has(a) && args[a] === p && !usedArgs.has(a)); if (k) { usedArgs.add(k); opt = { kind: byArg.get(k), arg: k }; } }
+        const r = this.#readSource(p, opt, args, toolName, config, pii);
         if (r.report && (r.report.adapted || r.report.warnings.length) && !seen.some((x) => x.file === r.report.file && x.kind === r.report.kind)) seen.push(r.report);
         return r.rows;
       },
@@ -263,7 +287,7 @@ export class AgentRuntime {
       session: this.session, agent: this.manifest.name, agent_version: this.manifest.version,
       model: `${this.manifest.model.provider}/${this.manifest.model.id}`, mode: this.mode, tool,
       kind: t ? t.kind : null, category: t ? t.category || null : null,
-      args_sha256: sha256(canonical(args || {})), ...fields,
+      args_sha256: sha256(canonical(args || {})), ...(this.piiMode !== 'mask' ? { pii_mode: this.piiMode } : {}), ...fields,
     });
     this.log.push(entry);
     return entry;
@@ -334,7 +358,21 @@ export class AgentRuntime {
     }
   }
 
+  /**
+   * Run one tool. Every result passes through the customer-data masker (pii.js) before it
+   * is returned, whatever the path.
+   */
   async call(tool, args = {}) {
+    const pii = this.piiMasker();
+    let out;
+    try { out = await this.#callInner(tool, args, pii); } catch (e) { out = { status: 'error', decision: null, reason: clip(friendlyError(e, this.root)) }; }
+    if (!pii.on) return { ...out, warnings: [...(out.warnings || []), 'Customer-data masking is OFF (pii: off): customer names, phones and addresses in this result are real.'] };
+    const masked = pii.maskResult(out);
+    const rep = pii.report();
+    return Object.keys(rep.masked).length ? { ...masked, pii_masked: rep.masked } : masked;
+  }
+
+  async #callInner(tool, args = {}, pii) {
     if (args === null || typeof args !== 'object' || Array.isArray(args)) args = {};
     if (this.isKilled()) {
       this.#record(tool, args, { decision: 'block', status: 'blocked', reason: 'kill switch engaged' });
@@ -425,7 +463,7 @@ export class AgentRuntime {
     const started = Date.now();
     try {
       const seen = []; const applied = []; const memWarnings = [];
-      const result = await t.handler(args, this.context(args, tool, seen, { approvedBy, approvalId: approvedBy ? approvalId : null, applied, memWarnings }));
+      const result = await t.handler(args, this.context(args, tool, seen, { approvedBy, approvalId: approvedBy ? approvalId : null, applied, memWarnings, pii }));
       // Results quote the person's data back to a model. Flag text that reads like
       // instructions to an AI, so the model and the audit trail both see it.
       let signals = [];
@@ -439,7 +477,7 @@ export class AgentRuntime {
       warnings.push(...memWarnings);
       this.#record(tool, args, {
         decision: d.decision, status: 'executed', reason: d.reason, approved_by: approvedBy, approval_id: approvalId,
-        auto: !!d.auto, ms: Date.now() - started, summary: result && result.summary ? String(result.summary).slice(0, 500) : null,
+        auto: !!d.auto, ms: Date.now() - started, summary: result && result.summary ? pii.maskText(String(result.summary)).slice(0, 500) : null,
         ...(result && result.output_sha256 ? { output_sha256: result.output_sha256 } : {}),
         ...(ignored.length ? { ignored_args: ignored.slice(0, 20) } : {}),
         ...(signals.length ? { injection_signals: signals } : {}),
@@ -449,7 +487,7 @@ export class AgentRuntime {
       return { status: 'executed', decision: d.decision, approved_by: approvedBy, auto: !!d.auto, result, ...(seen.length ? { sources: seen.slice(0, 20) } : {}), ...(applied.length ? { memory_applied: applied.slice(0, 100) } : {}), ...(warnings.length ? { warnings } : {}) };
     } catch (err) {
       this.usage.add(this.session, tool, 1, cost);
-      const reason = friendlyError(err, this.root);
+      const reason = pii.maskText(friendlyError(err, this.root));
       this.#record(tool, args, { decision: d.decision, status: 'error', reason: reason.slice(0, 500), ...(err && err.errors ? { errors: err.errors.slice(0, 10) } : {}) });
       return { status: 'error', decision: d.decision, reason: clip(reason), ...(err && err.errors ? { errors: clipErrors(err.errors) } : {}) };
     }

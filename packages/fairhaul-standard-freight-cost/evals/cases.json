@@ -2,6 +2,7 @@
   "suite": "fairhaul-standard-freight-cost",
   "root": "..",
   "data_note": "Fictional items and August to October freight in ../fixtures. No model is called.",
+  "pii_none": "Reads item master, actual freight by sku: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "totals",

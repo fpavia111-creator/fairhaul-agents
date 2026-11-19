@@ -70,7 +70,7 @@ Fairhaul Freight Claims demo (fictional shipments, as of 2026-11-16) in <demo fo
 |---|---|---|
 | `claims_scan` | For each exception: type (loss, shortage, damage, concealed damage, overage), claim amount, filing deadline, days left, status (file_now, file, filed, expired, below_minimum, review, not_a_claim) and evidence notes su… | runs |
 | `claims_track` | For each filed claim: age, outstanding amount and what to chase: no acknowledgement, past the expected resolution time, short paid, or declined. | runs |
-| `claims_write_report` | Write claims.csv and .html (one row per exception with amount, deadline and action, plus the open claims to chase) and claim-deadlines.ics (one event per claim to file, reminders 14 and 3 days before) into out… | runs |
+| `claims_write_report` | Write claims.csv and .html (one row per exception with amount, deadline and action, plus the open claims to chase) and claim-deadlines.ics (one event per claim to file, reminders 14 and 3 days before) into out_dir (de… | runs |
 | `claims_draft_claim` | Write drafts/claim-<shipment>.md: a freight claim letter for one exception with the amount worked out (goods value plus freight, less salvage, capped by any liability limit in your terms), the filing deadline and a li… | asks first (Auto can be opted in) |
 | `claims_request_file` | After one named human click (even in Auto), record that the reviewed claim draft is approved in claim-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `carrier_portal_submit` | Fairhaul Freight Claims never files a claim in a carrier portal; a person files it. | refused |

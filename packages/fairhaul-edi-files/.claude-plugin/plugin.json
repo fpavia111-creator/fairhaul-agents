@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-edi-files",
   "version": "0.1.0",
-  "description": "Reads X12 transport files (204 load tenders, 210 invoices, 214 status, 990 responses, 997/999 acknowledgements), checks envelopes and counts, converts them to spreadsheets, and reconciles invoices against tenders, status and acknowledgements. Never transmits EDI.",
+  "description": "Fairhaul EDI Files: reads X12 transport files (204 load tenders, 210 invoices, 214 status, 990 responses, 997/999 acknowledgements), checks envelopes and counts, converts them to spreadsheets, and reconciles invoices against tenders, status and acknowledgements. Never transmits EDI.",
   "author": {
     "name": "Kurt Francisco"
   },

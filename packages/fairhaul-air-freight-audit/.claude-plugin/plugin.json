@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-air-freight-audit",
   "version": "0.1.0",
-  "description": "Audits air freight invoices: chargeable weight from actual and volumetric weight, the rate for the right weight break, the minimum charge, fuel and security surcharges per kilo, and other charges your rate sheet does not allow; drafts disputes to the forwarder. Never pays or sends.",
+  "description": "Fairhaul Air Freight Audit: audits air freight invoices: chargeable weight from actual and volumetric weight, the rate for the right weight break, the minimum charge, fuel and security surcharges per kilo, and other charges your rate sheet does not allow; drafts disputes to the forwarder. Never pays or sends.",
   "author": {
     "name": "Kurt Francisco"
   },

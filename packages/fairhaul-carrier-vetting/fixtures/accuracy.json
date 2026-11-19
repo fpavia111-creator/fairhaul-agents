@@ -1,0 +1,160 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "rows",
+   "id": "carrier_id",
+   "codes": "signal_list.code"
+  },
+  {
+   "list": "load_rows",
+   "id": "load_id",
+   "flags": {
+    "carrier_not_in_master": "level=unknown"
+   }
+  }
+ ],
+ "planted": [
+  [
+   "NORT",
+   "shared_bank"
+  ],
+  [
+   "NORT",
+   "shared_phone"
+  ],
+  [
+   "NORT",
+   "new_authority"
+  ],
+  [
+   "NORT",
+   "insurance_expired"
+  ],
+  [
+   "NORT",
+   "free_email"
+  ],
+  [
+   "SWFT",
+   "shared_bank"
+  ],
+  [
+   "SWFT",
+   "shared_phone"
+  ],
+  [
+   "SWFT",
+   "new_authority"
+  ],
+  [
+   "SWFT",
+   "bank_changed_recently"
+  ],
+  [
+   "SWFT",
+   "free_email"
+  ],
+  [
+   "PRAI",
+   "remit_to_other_name"
+  ],
+  [
+   "PRAI",
+   "contact_differs_on_load"
+  ],
+  [
+   "COAS",
+   "insurance_expiring"
+  ],
+  [
+   "COAS",
+   "bank_changed_recently"
+  ],
+  [
+   "SUMM",
+   "conditional_rating"
+  ],
+  [
+   "L-9006",
+   "carrier_not_in_master"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "carriers",
+   "dropWhere": {
+    "carrier_id": [
+     "NORT",
+     "SWFT",
+     "PRAI",
+     "COAS",
+     "SUMM"
+    ]
+   }
+  },
+  {
+   "arg": "loads",
+   "dropWhere": {
+    "load_id": [
+     "L-9002",
+     "L-9003",
+     "L-9004",
+     "L-9005",
+     "L-9006"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "insurance on file has expired",
+   "edits": [
+    {
+     "arg": "carriers",
+     "set": [
+      {
+       "where": [
+        "carrier_id",
+        "RIDG"
+       ],
+       "column": "insurance_expiry",
+       "value": "2026-11-10"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "RIDG",
+     "insurance_expired"
+    ]
+   ]
+  },
+  {
+   "name": "dispatch phone on the load differs from the master",
+   "edits": [
+    {
+     "arg": "loads",
+     "set": [
+      {
+       "where": [
+        "load_id",
+        "L-9001"
+       ],
+       "column": "dispatch_phone",
+       "value": "(999) 555-0100"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "RIDG",
+     "contact_differs_on_load"
+    ]
+   ]
+  }
+ ]
+}

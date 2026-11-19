@@ -1,0 +1,86 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": "invoice_numbers",
+   "codes": "rule"
+  }
+ ],
+ "planted": [
+  [
+   "CL-90311+CL-90377",
+   "same_pro"
+  ],
+  [
+   "INV-00418+418",
+   "invoice_number_variant"
+  ],
+  [
+   "INV-00519+INV-00519",
+   "two_vendor_records"
+  ],
+  [
+   "PX-3101+PX-3101",
+   "exact_duplicate"
+  ],
+  [
+   "CL-90402+CL-90402-B",
+   "same_pro"
+  ],
+  [
+   "PX-2207+PX-2209",
+   "same_amount_and_date"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "payments",
+   "dropWhere": {
+    "invoice_number": [
+     "418",
+     "CL-90377",
+     "CL-90402-B",
+     "PX-2209",
+     "PX-3101",
+     "CM-3101"
+    ]
+   }
+  },
+  {
+   "arg": "payments",
+   "dropWhere": {
+    "vendor_id": [
+     "V187"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "the same invoice number paid twice",
+   "edits": [
+    {
+     "arg": "payments",
+     "set": [
+      {
+       "where": [
+        "invoice_number",
+        "SC-1002"
+       ],
+       "column": "invoice_number",
+       "value": "SC-1001"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "SC-1001+SC-1001",
+     "exact_duplicate"
+    ]
+   ]
+  }
+ ]
+}

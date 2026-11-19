@@ -1,4 +1,5 @@
 import { mkdtempSync, cpSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { AgentRuntime } from './runtime.js';
@@ -7,7 +8,8 @@ import { AgentRuntime } from './runtime.js';
 export function demoRuntime(manifest, fixturesDir, options = {}) {
   const root = mkdtempSync(join(tmpdir(), `${manifest.name}-demo-`));
   cpSync(fixturesDir, root, { recursive: true });
-  return new AgentRuntime(manifest, { root, ...options });
+  // A fixed, published pseudonym key for the fictional demo data, so the captured demo output in each README stays the same.
+  return new AgentRuntime(manifest, { root, piiKey: createHash('sha256').update('fairhaul-demo-fictional-data').digest(), ...options });
 }
 
 export function printStep(label, r) {

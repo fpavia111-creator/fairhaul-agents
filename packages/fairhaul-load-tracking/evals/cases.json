@@ -2,6 +2,7 @@
   "suite": "fairhaul-load-tracking",
   "root": "..",
   "data_note": "Fictional loads and events in ../fixtures, as of 2026-11-16 10:00. No model is called.",
+  "pii_none": "Reads open loads, tracking events: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "board",

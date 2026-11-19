@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-detention-and-lumper",
   "version": "0.1.0",
-  "description": "Checks detention, layover and lumper charges against your dock times, appointments, free time and receipts, ranks facilities by dwell and detention cost, and drafts disputes. Never pays and never sends.",
+  "description": "Fairhaul Detention and Lumper: checks detention, layover and lumper charges against your dock times, appointments, free time and receipts, ranks facilities by dwell and detention cost, and drafts disputes. Never pays and never sends.",
   "author": {
     "name": "Kurt Francisco"
   },

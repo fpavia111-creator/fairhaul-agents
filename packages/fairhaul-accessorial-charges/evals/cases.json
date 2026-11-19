@@ -2,6 +2,7 @@
   "suite": "fairhaul-accessorial-charges",
   "root": "..",
   "data_note": "Fictional invoices, shipments and contract in ../fixtures. No model is called.",
+  "pii_none": "Reads carrier invoices, shipments with accessorials ordered: carriers, loads, amounts and dates; no column holds a person's name or contact details.",
   "cases": [
     {
       "id": "totals",

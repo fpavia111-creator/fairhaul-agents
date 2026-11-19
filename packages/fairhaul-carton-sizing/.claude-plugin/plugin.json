@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-carton-sizing",
   "version": "0.1.0",
-  "description": "Checks every parcel's carton against what was inside, finds the smallest carton in your catalog that fits, works out the dimensional weight and freight you would save, flags packages heading for oversize charges, and drafts the carton set and packing rule changes. Never changes your WMS.",
+  "description": "Fairhaul Carton Sizing: checks every parcel's carton against what was inside, finds the smallest carton in your catalog that fits, works out the dimensional weight and freight you would save, flags packages heading for oversize charges, and drafts the carton set and packing rule changes. Never changes your WMS.",
   "author": {
     "name": "Kurt Francisco"
   },

@@ -1,7 +1,7 @@
 {
   "name": "fairhaul-freight-accruals",
   "version": "0.1.0",
-  "description": "Builds the month-end freight accrual from your shipments and carrier invoices: shipped but not billed, estimated from the quote, your contract or lane history, by cost center, with a draft journal entry and an accuracy check on last month. Never posts to your ledger.",
+  "description": "Fairhaul Freight Accruals: builds the month-end freight accrual from your shipments and carrier invoices: shipped but not billed, estimated from the quote, your contract or lane history, by cost center, with a draft journal entry and an accuracy check on last month. Never posts to your ledger.",
   "author": {
     "name": "Kurt Francisco"
   },

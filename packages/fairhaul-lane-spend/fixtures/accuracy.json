@@ -1,0 +1,89 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "groups",
+   "id": "shipments",
+   "flags": {
+    "consolidate": "worth_it=true"
+   }
+  },
+  {
+   "list": "heavy",
+   "id": "shipment_id",
+   "code": "heavy_ltl"
+  }
+ ],
+ "planted": [
+  [
+   "M-01+M-02+M-03",
+   "consolidate"
+  ],
+  [
+   "M-08",
+   "heavy_ltl"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "shipments",
+   "dropWhere": {
+    "shipment_id": [
+     "M-01",
+     "M-08"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "two same-day shipments cost more than a truck",
+   "edits": [
+    {
+     "arg": "shipments",
+     "set": [
+      {
+       "where": [
+        "shipment_id",
+        "M-06"
+       ],
+       "column": "cost",
+       "value": "1500"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "M-05+M-06",
+     "consolidate"
+    ]
+   ]
+  },
+  {
+   "name": "a heavy shipment sent LTL",
+   "edits": [
+    {
+     "arg": "shipments",
+     "set": [
+      {
+       "where": [
+        "shipment_id",
+        "M-04"
+       ],
+       "column": "weight",
+       "value": "14000"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "M-04",
+     "heavy_ltl"
+    ]
+   ]
+  }
+ ]
+}

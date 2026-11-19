@@ -65,7 +65,7 @@ Fairhaul Container Demurrage demo (fictional containers, as of 2026-11-16) in <d
 | Tool | What it does | Policy |
 |---|---|---|
 | `demurrage_clocks` | For each container: last free day at the port and days left, return-by date for the empty, chargeable days and cost so far for demurrage and detention, status (act_now, accruing, in_free_time, closed, no_terms), and a… | runs |
-| `demurrage_write_report` | Write demurrage-containers.csv and .html (one row per container, worst first; charges checked; totals by line) and free-time.ics (last free days and return-by dates, reminder the day before) into out_dir (default lode… | runs |
+| `demurrage_write_report` | Write demurrage-containers.csv and .html (one row per container, worst first; charges checked; totals by line) and free-time.ics (last free days and return-by dates, reminder the day before) into out_dir (default fair… | runs |
 | `demurrage_draft_dispute` | Write drafts/dispute-<line>.md listing each demurrage or detention charge above your free time and rates, with the dates and the days your terms give. | asks first (Auto can be opted in) |
 | `demurrage_request_send` | After one named human click (even in Auto), record that the reviewed dispute draft is approved in dispute-requests.csv. | one named click, even in Auto (`binding_send`) |
 | `ap_pay_invoice` | Fairhaul Container Demurrage never pays the line or terminal. | refused |

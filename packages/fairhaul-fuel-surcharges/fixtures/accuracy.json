@@ -1,0 +1,127 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "check-totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": "invoice_number",
+   "codes": "status",
+   "ignore": [
+    "ok"
+   ]
+  }
+ ],
+ "planted": [
+  [
+   "F-1004",
+   "wrong_week"
+  ],
+  [
+   "F-1005",
+   "wrong_week"
+  ],
+  [
+   "F-1006",
+   "fuel_over"
+  ],
+  [
+   "F-1007",
+   "index_stale"
+  ],
+  [
+   "F-1008",
+   "not_checked"
+  ],
+  [
+   "F-1009",
+   "fuel_not_in_contract"
+  ],
+  [
+   "F-1010",
+   "fuel_under"
+  ],
+  [
+   "F-1011",
+   "no_contract"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "invoices",
+   "dropWhere": {
+    "invoice_number": [
+     "F-1004",
+     "F-1005",
+     "F-1006",
+     "F-1007",
+     "F-1008",
+     "F-1009",
+     "F-1010",
+     "F-1011"
+    ]
+   }
+  }
+ ],
+ "mutations": [
+  {
+   "name": "fuel billed above the table",
+   "edits": [
+    {
+     "arg": "invoices",
+     "set": [
+      {
+       "where": [
+        [
+         "invoice_number",
+         "F-1001"
+        ],
+        [
+         "charge_description",
+         "Fuel Surcharge"
+        ]
+       ],
+       "column": "charge_amount",
+       "value": "210"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "F-1001",
+     "fuel_over"
+    ]
+   ]
+  },
+  {
+   "name": "fuel billed below the table",
+   "edits": [
+    {
+     "arg": "invoices",
+     "set": [
+      {
+       "where": [
+        [
+         "invoice_number",
+         "F-1002"
+        ],
+        [
+         "charge_description",
+         "Fuel Surcharge"
+        ]
+       ],
+       "column": "charge_amount",
+       "value": "230"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "F-1002",
+     "fuel_under"
+    ]
+   ]
+  }
+ ]
+}

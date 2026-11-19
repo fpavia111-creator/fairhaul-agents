@@ -1,0 +1,178 @@
+{
+ "about": "Accuracy spec for scripts/accuracy.mjs: planted problems in these fictional fixtures, how to make a clean set, and one-fact mutations.",
+ "case": "totals",
+ "extract": [
+  {
+   "list": "items",
+   "id": [
+    "entry_number",
+    "sku"
+   ],
+   "codes": "code"
+  }
+ ],
+ "planted": [
+  [
+   "ABC-1002002-2/FLOOR-RUG",
+   "value_below_invoice"
+  ],
+  [
+   "ABC-1002002-2/THROW-BLANKET",
+   "duty_math"
+  ],
+  [
+   "ABC-1003003-3/BOOKENDS",
+   "value_below_invoice"
+  ],
+  [
+   "ABC-1003003-3/BOOKENDS",
+   "quantity_mismatch"
+  ],
+  [
+   "ABC-1003003-3/BOOKENDS",
+   "origin_mismatch"
+  ],
+  [
+   "ABC-1003003-3/MIRROR",
+   "entered_twice"
+  ],
+  [
+   "/PLANTER",
+   "invoice_line_not_entered"
+  ],
+  [
+   "ABC-1001001-1 ABC-1003003-3/LAMP-SHADE",
+   "code_inconsistent"
+  ],
+  [
+   "ABC-1001001-1 ABC-1003003-3/MIRROR",
+   "rate_inconsistent"
+  ]
+ ],
+ "clean": [
+  {
+   "arg": "entries",
+   "dropWhere": {
+    "entry_number": [
+     "ABC-1003003-3"
+    ]
+   }
+  },
+  {
+   "arg": "invoices",
+   "dropWhere": {
+    "invoice_number": [
+     "CI-2340"
+    ]
+   }
+  },
+  {
+   "arg": "invoices",
+   "dropWhere": {
+    "sku": [
+     "PLANTER"
+    ]
+   }
+  },
+  {
+   "arg": "invoices",
+   "set": [
+    {
+     "where": [
+      [
+       "invoice_number",
+       "CI-2290"
+      ],
+      [
+       "sku",
+       "FLOOR-RUG"
+      ]
+     ],
+     "column": "value",
+     "value": "8333.34"
+    }
+   ]
+  },
+  {
+   "arg": "entries",
+   "set": [
+    {
+     "where": [
+      [
+       "entry_number",
+       "ABC-1002002-2"
+      ],
+      [
+       "line",
+       "2"
+      ]
+     ],
+     "column": "duty",
+     "value": "552.50"
+    }
+   ]
+  }
+ ],
+ "mutations": [
+  {
+   "name": "quantity entered differs from the invoice",
+   "edits": [
+    {
+     "arg": "entries",
+     "set": [
+      {
+       "where": [
+        [
+         "entry_number",
+         "ABC-1001001-1"
+        ],
+        [
+         "line",
+         "1"
+        ]
+       ],
+       "column": "quantity",
+       "value": "480"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "ABC-1001001-1/LAMP-SHADE",
+     "quantity_mismatch"
+    ]
+   ]
+  },
+  {
+   "name": "duty does not match value times rate",
+   "edits": [
+    {
+     "arg": "entries",
+     "set": [
+      {
+       "where": [
+        [
+         "entry_number",
+         "ABC-1001001-1"
+        ],
+        [
+         "line",
+         "3"
+        ]
+       ],
+       "column": "duty",
+       "value": "220.00"
+      }
+     ]
+    }
+   ],
+   "expect": [
+    [
+     "ABC-1001001-1/MIRROR",
+     "duty_math"
+    ]
+   ]
+  }
+ ]
+}
