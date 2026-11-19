@@ -34,7 +34,7 @@ Cada agente tiene una `demo` con archivos ficticios, un `eval` con sus propios c
 
 ## Cómo se prueban
 
-Cada agente tiene pruebas propias de sus reglas, las mismas pruebas de contrato que todos los demás (argumentos, archivos fuera de `--root`, modo Revisión, parada de emergencia, aprobación de borradores, resultados repetibles) y de 14 a 22 casos de evaluación sobre archivos ficticios. Cada caso con hojas de cálculo se repite como exportación alemana, francesa, española, brasileña, italiana, japonesa, china y coreana, y se insertan datos hostiles en los archivos de cada agente. En total: 915 pruebas y 520 casos de evaluación, superados en Node 20, 22 y 24. [REVIEW-ver3.md](REVIEW-ver3.md) (en inglés) enumera los cambios de la versión 2 y los errores encontrados.
+Cada agente tiene pruebas propias de sus reglas, las mismas pruebas de contrato que todos los demás (argumentos, archivos fuera de `--root`, modo Revisión, parada de emergencia, aprobación de borradores, resultados repetibles) y de 14 a 22 casos de evaluación sobre archivos ficticios. Cada caso con hojas de cálculo se repite como exportación alemana, francesa, española, brasileña, italiana, japonesa, china y coreana, y se insertan datos hostiles en los archivos de cada agente. En total: 953 pruebas y 551 casos de evaluación (revisión final del 19/11/2026 en Windows con Node 24; la CI cubre Node 20 y 22). [REVIEW-ver3.md](REVIEW-ver3.md) (en inglés) enumera los cambios de la versión 2 y los errores encontrados.
 
 ## Límites
 

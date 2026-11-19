@@ -34,7 +34,7 @@ Chaque agent a une `demo` sur fichiers fictifs, un `eval` sur ses propres cas de
 
 ## Comment ils sont testés
 
-Chaque agent a ses propres tests sur ses règles, les mêmes tests de contrat que tous les autres (arguments, fichiers hors de `--root`, mode Revue, arrêt d'urgence, approbation des brouillons, résultats reproductibles) et 14 à 22 cas d'évaluation sur des fichiers fictifs. Chaque cas avec un tableau est rejoué comme un export allemand, français, espagnol, brésilien, italien, japonais, chinois et coréen, et des données hostiles sont glissées dans les fichiers de chaque agent. Au total : 915 tests et 520 cas d'évaluation, réussis sur Node 20, 22 et 24. [REVIEW-ver3.md](REVIEW-ver3.md) (en anglais) liste les changements de la version 2 et les bogues trouvés.
+Chaque agent a ses propres tests sur ses règles, les mêmes tests de contrat que tous les autres (arguments, fichiers hors de `--root`, mode Revue, arrêt d'urgence, approbation des brouillons, résultats reproductibles) et 14 à 22 cas d'évaluation sur des fichiers fictifs. Chaque cas avec un tableau est rejoué comme un export allemand, français, espagnol, brésilien, italien, japonais, chinois et coréen, et des données hostiles sont glissées dans les fichiers de chaque agent. Au total : 953 tests et 551 cas d'évaluation (dernière vérification le 19/11/2026 sous Windows avec Node 24 ; la CI couvre Node 20 et 22). [REVIEW-ver3.md](REVIEW-ver3.md) (en anglais) liste les changements de la version 2 et les bogues trouvés.
 
 ## Limites
 

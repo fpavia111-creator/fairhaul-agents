@@ -1,0 +1,44 @@
+{
+  "product": "Fairhaul",
+  "repo": "https://github.com/fpavia111-creator/fairhaul-agents",
+  "try_it": ["git clone https://github.com/fpavia111-creator/fairhaul-agents", "cd fairhaul-agents", "npm install", "node packages/fairhaul-freight-bill-audit/bin/fairhaul-freight-bill-audit.js demo"],
+  "accuracy": { "agents": 30, "planted_found": 174, "planted_total": 174, "clean_rows": 197, "clean_false_positives": 0, "mutation_cases": 46, "mutation_caught": 46, "note": "On fictional test data, 19 Nov 2026. 26 of 30 agents measured: each problem planted in their test files found, nothing else reported, no finding on the same files with the problems removed, and each one-fact change caught. The bid scoring, re-rating, scorecard and EDI agents rank, price or read files and are checked by their own test cases. The rules and the test files were written by the same author. No real shipper or carrier file has been measured yet." },
+  "real_data": [
+    ["U.S. EIA weekly retail diesel price (via FRED, series GASDESW)", "https://fred.stlouisfed.org/series/GASDESW", "19 Nov 2026", "EIA data, US government work (public domain)", "151 real weekly prices (2024-01-01 to 2026-11-16) as the fuel index for 151 test invoices, 16 of them billed at the wrong week's price: the fuel surcharge check agreed with an independent calculation on every week, amount and status (0 disagreements)"],
+    ["FMCSA Company Census File", "https://data.transportation.gov/Trucking-and-Motorcoaches/Company-Census-File/az4n-8mr2", "19 Nov 2026", "US government open data", "5,000 real active interstate carriers through carrier vetting: the first run missed 31 consumer mailboxes (comcast.net, live.com, ymail.com, msn.com, att.net), now fixed; after the fix shared phones, free mailboxes and new authorities agree with an independent count (0 differences)"]
+  ],
+  "formats": [
+    ["TMS (generic)", "Freight bill export, one row per charge line", "written from knowledge of the export; not yet checked against documentation or a real export"],
+    ["SAP Transportation Management", "Freight settlement documents, list export (English and German labels)", "written from knowledge of the export; not yet checked against documentation or a real export"],
+    ["FedEx Billing Online", "Invoice download (CSV)", "written from knowledge of the export; not yet checked against documentation or a real export"],
+    ["UPS Billing Center", "Billing data file (CSV)", "written from knowledge of the export; not yet checked against documentation or a real export"],
+    ["ShipStation", "Shipments export (CSV)", "written from knowledge of the export; not yet checked against documentation or a real export"],
+    ["Container visibility platform (generic)", "Container milestones export", "written from knowledge of the export; not yet checked against documentation or a real export"],
+    ["U.S. CBP ACE Reports", "Entry Summary Line Details (ES-003)", "written from knowledge of the export; not yet checked against documentation or a real export"],
+    ["NetSuite", "Transaction saved search", "written from knowledge of the export; not yet checked against documentation or a real export"],
+    ["QuickBooks Online", "Transaction List by Vendor", "written from knowledge of the export; not yet checked against documentation or a real export"],
+    ["Xero", "Bills export (CSV)", "written from knowledge of the export; not yet checked against documentation or a real export"],
+    ["SAP S/4HANA or ECC", "Vendor line items (FBL1N)", "written from knowledge of the export; not yet checked against documentation or a real export"],
+    ["Shopify", "Orders export (CSV)", "written from knowledge of the export; not yet checked against documentation or a real export"],
+    ["ANSI X12", "EDI 204, 210, 214, 990 and 997 files", "written from knowledge of the export; not yet checked against documentation or a real export"]
+  ],
+  "human_review": [
+    ["Freight close", "The controller decides the accrual and every journal line; the drafts are posted by a person in the ledger."],
+    ["Carrier pay", "A person approves each payment batch and confirms any change of payee or bank details by phone before money moves."],
+    ["Bill recovery", "A person reads each dispute draft, checks it against the contract, and sends it to the carrier."],
+    ["Import and ocean", "A person and the customs broker decide any entry correction; the agents never file with customs or pay a line."],
+    ["Procurement", "A person chooses the awards and talks to carriers; the scores and re-rated prices are inputs to that decision."]
+  ],
+  "common_problems": [
+    "Freight bills above the contract: fuel over the table, accessorials not allowed or above the agreed amount, linehaul over the rate.",
+    "The same bill paid twice: the same PRO, an invoice number written two ways, or one carrier under two vendor records.",
+    "Fuel surcharges priced on the wrong week's diesel price.",
+    "Detention and lumper charges the dock times or receipts do not support.",
+    "Carrier pay to the wrong party after a notice of assignment, or invoices above the rate confirmation.",
+    "Parcel refunds left unclaimed: late deliveries, voided labels billed, residential charges on business addresses.",
+    "Containers past their last free day, and demurrage billed above your terms.",
+    "Carriers with warning signs before pickup: shared bank or phone with another carrier, new authority, expired insurance."
+  ],
+  "reaches_the_model": "When an AI assistant calls a Fairhaul tool, the agent reads the files on the user's computer and returns a result. Before it leaves the agent, names of parcel and return recipients, people who signed for a delivery, contacts and drivers are replaced with stable pseudonyms, and phone numbers, e-mails and street addresses with placeholders. Carrier, vendor and customer company names, PRO, BOL, load and invoice numbers, places, dates, weights and amounts are sent as they are (strict mode also hides company names); free-text notes are sent with known names and phone, e-mail and SSN patterns replaced. Results go to whatever model the user's assistant uses; for data that may not be shared with that provider, use a local model or one covered by the user's agreements. The reports written on the user's computer keep the real values.",
+  "rules_maintained": "The rates, fuel tables, free time, claim windows and award rules come from the customer's own contract and terms files; Fairhaul has no built-in tariff. The 43 day counts and limits the agents apply when a file leaves them out (for example 270 days to file a freight claim, 15 days to request a parcel refund, 180 days for a new carrier authority) and the NMFC density scale recalled from the 2025 changes are working examples written for version 0.1.0 in November 2026, not a statement of any law or carrier tariff. Each default is in the agent's source and is a named setting or a field in the customer's terms file; Mythos Machines updates defaults in a new release with a changelog line."
+}
