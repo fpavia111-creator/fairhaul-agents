@@ -4,6 +4,7 @@
   "description": "Fairhaul freight and shipping cost agents monorepo.",
   "license": "MIT",
   "workspaces": [
+    "vendor/fair-agent-core",
     "packages/fairhaul-core",
     "packages/*"
   ],
