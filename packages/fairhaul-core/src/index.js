@@ -35,3 +35,5 @@ export { parseX12, readX12, x12Segments, x12Delimiters, x12DateTime, n2, read204
 export { REPORT_TEXT, reportText } from './report-text.js';
 export { MODEL_PIN, OPEN_MARKER, filesHash, appendRow, htmlTable, writeWorklist, refusedTools, draftPair, LIMITS } from './kit.js';
 export { INVOICE_LINE_FIELDS, INVOICE_PROFILES, SHIPMENT_FIELDS, FREIGHT_SOURCE_FIELDS, looksX12, x12InvoiceLines, readInvoiceLines, groupInvoices } from './freight-sources.js';
+export { stateSeal, envSeal, generateStateKey, parseStateKey, convertStateFile, StateKeyError, STATE_KINDS } from './state.js';
+export { FAMILY_PROFILE } from './engine.js';
