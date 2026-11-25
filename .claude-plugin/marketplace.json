@@ -197,7 +197,7 @@
       "name": "fairhaul-duplicate-payments",
       "source": "./packages/fairhaul-duplicate-payments",
       "description": "Fairhaul Duplicate Payments: searches years of freight payments for invoices paid twice: the same invoice under another number format, the same PRO billed twice, a carrier paid under two vendor names, and same-amount look-alikes, nets off credits already received, and drafts recovery requests. Never moves money.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "category": "freight",
       "keywords": [
         "freight",
@@ -265,7 +265,7 @@
       "name": "fairhaul-freight-bill-audit",
       "source": "./packages/fairhaul-freight-bill-audit",
       "description": "Fairhaul Freight Bill Audit: audits truckload and LTL freight bills (CSV, Excel or X12 210) against your own contract rates, fuel table and accessorial terms, finds duplicates and math errors, and drafts carrier disputes. Never pays and never sends.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "category": "freight",
       "keywords": [
         "freight",

@@ -11,7 +11,7 @@ const files = {
   as_of: { type: 'string', format: 'date', description: 'Date to count ages from, YYYY-MM-DD (default today)' },
 };
 const run = (a, ctx) => findDuplicates(ctx.records(a.payments, 'payments'), { dateWindowDays: a.date_window_days ?? 3, asOf: a.as_of, sameVendors: vendorGroups(ctx) });
-const line = (r) => `${r.payments} payment(s), ${r.paid_total} paid: ${r.groups} possible duplicate group(s). To recover: ${r.to_recover_high} high confidence, ${r.to_recover_medium} medium, ${r.to_recover_low} low.${r.already_credited ? ` ${r.already_credited} already credited.` : ''}`;
+const line = (r) => `To recover: ${r.to_recover_high} high confidence, ${r.to_recover_medium} medium, ${r.to_recover_low} low. ${r.payments} payment(s), ${r.paid_total} paid: ${r.groups} possible duplicate group(s).${r.already_credited ? ` ${r.already_credited} already credited.` : ''}`;
 const conf = { type: 'array', items: { type: 'string', enum: ['high', 'medium', 'low'] }, description: 'Which confidence levels to include in the request (default high only)' };
 
 const pair = draftPair({

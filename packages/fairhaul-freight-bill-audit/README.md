@@ -53,7 +53,7 @@ Fairhaul Freight Bill Audit demo (fictional carriers, lanes and invoices), Auto 
 
 ▶ Audit eleven freight bills against the contract
   status: executed  decision: allow
-  11 invoice(s), 7046.3 billed: 4 to dispute, 2 duplicate(s), 4 need review, 1 clean. Disputable 1065.8 (15.13% of billed).
+  Disputable 1065.8 (15.13% of billed). 11 invoice(s), 7046.3 billed: 4 to dispute, 2 duplicate(s), 4 need review, 1 clean.
     INV-7001  Example Linehaul       454.8  dispute      15.8  fuel_over, accessorial_over
     INV-7002  Example Linehaul       257.5  dispute        85  accessorial_not_allowed
     INV-7003  Example Linehaul         414  ok              0  
@@ -72,11 +72,11 @@ Fairhaul Freight Bill Audit demo (fictional carriers, lanes and invoices), Auto 
 
 ▶ Read the same carrier bills from an X12 210 file
   status: executed  decision: allow
-  2 invoice(s), 604.8 billed: 1 to dispute, 0 duplicate(s), 0 need review, 1 clean. Disputable 12.2 (2.02% of billed).
+  Disputable 12.2 (2.02% of billed). 2 invoice(s), 604.8 billed: 1 to dispute, 0 duplicate(s), 0 need review, 1 clean.
 
 ▶ Write the audit worklist
   status: executed  decision: allow
-  Audit worklist written: 11 invoice(s), 7046.3 billed: 4 to dispute, 2 duplicate(s), 4 need review, 1 clean. Disputable 1065.8 (15.13% of billed).
+  Audit worklist written: Disputable 1065.8 (15.13% of billed). 11 invoice(s), 7046.3 billed: 4 to dispute, 2 duplicate(s), 4 need review, 1 clean.
 
 ▶ Draft a dispute letter to Example Linehaul (Auto is opted in for drafts here)
   status: executed  decision: allow  (auto)

@@ -24,7 +24,7 @@ const run = (a, ctx) => {
   if (learned.used.length || learned.skipped.length) Object.defineProperty(r, 'learned', { value: { used: learned.used, skipped: learned.skipped }, enumerable: false });
   return { contract, x12: inv.x12, r };
 };
-const sumLine = (r) => `${r.invoices} invoice(s), ${r.billed} billed: ${r.dispute} to dispute, ${r.duplicate} duplicate(s), ${r.review} need review, ${r.ok} clean. Disputable ${r.disputable} (${r.disputable_pct}% of billed).`;
+const sumLine = (r) => `Disputable ${r.disputable} (${r.disputable_pct}% of billed). ${r.invoices} invoice(s), ${r.billed} billed: ${r.dispute} to dispute, ${r.duplicate} duplicate(s), ${r.review} need review, ${r.ok} clean.`;
 
 const pair = draftPair({
   prefix: 'bills', noun: 'dispute', verb: 'send', category: 'binding_send', outDir: OUT, actor: 'a person on your team',

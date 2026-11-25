@@ -40,7 +40,7 @@ Fairhaul Duplicate Payments demo (fictional payments, 2025 to 2026) in <demo fol
 
 ▶ Search the payment history for invoices paid twice
   status: executed  decision: allow
-  14 payment(s), 16245 paid: 6 possible duplicate group(s). To recover: 4950 high confidence, 185 medium, 1200 low. 1 already credited.
+  To recover: 4950 high confidence, 185 medium, 1200 low. 14 payment(s), 16245 paid: 6 possible duplicate group(s). 1 already credited.
     high   same_pro                CL-90311 / CL-90377          2150  recover
     high   invoice_number_variant  INV-00418 / 418              1840  recover
     high   two_vendor_records      INV-00519 / INV-00519         960  recover
@@ -50,7 +50,7 @@ Fairhaul Duplicate Payments demo (fictional payments, 2025 to 2026) in <demo fol
 
 ▶ Write the report
   status: executed  decision: allow
-  Duplicate payment report written. 14 payment(s), 16245 paid: 6 possible duplicate group(s). To recover: 4950 high confidence, 185 medium, 1200 low. 1 already credited.
+  Duplicate payment report written. To recover: 4950 high confidence, 185 medium, 1200 low. 14 payment(s), 16245 paid: 6 possible duplicate group(s). 1 already credited.
 
 ▶ Draft the refund request to Ridgeline Freight
   status: executed  decision: allow  (auto)

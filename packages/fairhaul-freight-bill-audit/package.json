@@ -1,6 +1,6 @@
 {
   "name": "fairhaul-freight-bill-audit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "mcpName": "io.github.fpavia111-creator/fairhaul-freight-bill-audit",
   "description": "Fairhaul Freight Bill Audit: audits truckload and LTL freight bills (CSV, Excel or X12 210) against your own contract rates, fuel table and accessorial terms, finds duplicates and math errors, and drafts carrier disputes. Never pays and never sends.",
   "type": "module",

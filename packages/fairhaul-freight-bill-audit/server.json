@@ -3,7 +3,7 @@
   "name": "io.github.fpavia111-creator/fairhaul-freight-bill-audit",
   "title": "Fairhaul Freight Bill Audit",
   "description": "Fairhaul Freight Bill Audit: audits truckload and LTL freight bills (CSV, Excel or X12 210) against your own…",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "url": "https://github.com/fpavia111-creator/fairhaul-agents",
     "source": "github",
@@ -14,7 +14,7 @@
     {
       "registryType": "npm",
       "identifier": "fairhaul-freight-bill-audit",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "transport": {
         "type": "stdio"
       },
