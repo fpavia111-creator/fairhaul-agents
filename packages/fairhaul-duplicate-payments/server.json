@@ -3,7 +3,7 @@
   "name": "io.github.fpavia111-creator/fairhaul-duplicate-payments",
   "title": "Fairhaul Duplicate Payments",
   "description": "Fairhaul Duplicate Payments: searches years of freight payments for invoices paid twice: the same invoice…",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "url": "https://github.com/fpavia111-creator/fairhaul-agents",
     "source": "github",
@@ -14,7 +14,7 @@
     {
       "registryType": "npm",
       "identifier": "fairhaul-duplicate-payments",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "transport": {
         "type": "stdio"
       },

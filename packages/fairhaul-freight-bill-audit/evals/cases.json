@@ -218,7 +218,7 @@
           "result.files": 2
         },
         "contains": [
-          "Audit worklist written: 11 invoice(s), 7046.3 billed: 4 to dispute, 2 duplicate(s), 4 need review, 1 clean",
+          "Audit worklist written: Disputable 1065.8 (15.13% of billed). 11 invoice(s), 7046.3 billed: 4 to dispute, 2 duplicate(s), 4 need review, 1 clean",
           "Disputable 1065.8 (15.13% of billed)"
         ]
       }

@@ -1,6 +1,6 @@
 {
   "name": "fairhaul-duplicate-payments",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Fairhaul Duplicate Payments: searches years of freight payments for invoices paid twice: the same invoice under another number format, the same PRO billed twice, a carrier paid under two vendor names, and same-amount look-alikes, nets off credits already received, and drafts recovery requests. Never moves money.",
   "author": {
     "name": "Kurt Francisco"
